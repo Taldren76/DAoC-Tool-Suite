@@ -1,0 +1,46 @@
+{
+    "Servers": {
+        "Server": [
+            {
+                "Name": "YWain1",
+                "Index": 41
+            },
+            {
+                "Name": "YWain2",
+                "Index": 49
+            },
+            {
+                "Name": "YWain3",
+                "Index": 50
+            },
+            {
+                "Name": "YWain4",
+                "Index": 51
+            },
+            {
+                "Name": "YWain5",
+                "Index": 52
+            },
+            {
+                "Name": "YWain6",
+                "Index": 53
+            },
+            {
+                "Name": "YWain7",
+                "Index": 54
+            },
+            {
+                "Name": "YWain8",
+                "Index": 55
+            },
+            {
+                "Name": "YWain9",
+                "Index": 56
+            },
+            {
+                "Name": "YWain10",
+                "Index": 57
+            }
+        ]
+    }
+}

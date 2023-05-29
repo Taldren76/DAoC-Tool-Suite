@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAoC Tool Suite", "DAoC Tool Suite\DAoC Tool Suite.csproj", "{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChimpTool", "ChimpTool\ChimpTool.csproj", "{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharacterTool", "CharacterTool\CharacterTool.csproj", "{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLLibrary", "SQLLibrary\SQLLibrary.csproj", "{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9049D320-6AA2-49E9-9282-E39E9A96112A}"
+	ProjectSection(SolutionItems) = preProject
+		CharacterDB.db = CharacterDB.db
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}.Debug|x86.Build.0 = Debug|Any CPU
+		{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}.Release|x86.ActiveCfg = Release|Any CPU
+		{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}.Release|x86.Build.0 = Release|Any CPU
+		{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}.Debug|x86.ActiveCfg = Debug|x86
+		{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}.Debug|x86.Build.0 = Debug|x86
+		{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}.Release|x86.ActiveCfg = Release|x86
+		{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}.Release|x86.Build.0 = Release|x86
+		{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}.Debug|x86.Build.0 = Debug|Any CPU
+		{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}.Release|x86.ActiveCfg = Release|Any CPU
+		{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}.Release|x86.Build.0 = Release|Any CPU
+		{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}.Debug|x86.ActiveCfg = Debug|x86
+		{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}.Debug|x86.Build.0 = Debug|x86
+		{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}.Release|x86.ActiveCfg = Release|x86
+		{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {65951C29-D8CD-4D09-83B7-59DB4D8E2F05}
+	EndGlobalSection
+EndGlobal
