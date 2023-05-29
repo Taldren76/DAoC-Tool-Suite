@@ -12,9 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLLibrary", "SQLLibrary\SQLLibrary.csproj", "{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9049D320-6AA2-49E9-9282-E39E9A96112A}"
-	ProjectSection(SolutionItems) = preProject
-		CharacterDB.db = CharacterDB.db
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
