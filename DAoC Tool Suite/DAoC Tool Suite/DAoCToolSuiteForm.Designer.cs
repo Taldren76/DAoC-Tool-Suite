@@ -37,6 +37,7 @@ namespace DAoCToolSuite
             chimpLabel = new Label();
             characterToolLabel = new Label();
             LogTool = new Label();
+            button1 = new Button();
             SuspendLayout();
             // 
             // chimpToolButton
@@ -100,11 +101,22 @@ namespace DAoCToolSuite
             LogTool.Text = "LogTool";
             LogTool.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // button1
+            // 
+            button1.Location = new Point(441, 153);
+            button1.Name = "button1";
+            button1.Size = new Size(19, 23);
+            button1.TabIndex = 6;
+            button1.Text = "R";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // DAoCToolSuiteForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(460, 181);
+            Controls.Add(button1);
             Controls.Add(LogTool);
             Controls.Add(characterToolLabel);
             Controls.Add(chimpLabel);
@@ -113,7 +125,9 @@ namespace DAoCToolSuite
             Controls.Add(chimpToolButton);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DAoCToolSuiteForm";
-            Text = "DAoC Tool Suite";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "DAoC Tool Suite v0.1.0";
+            FormClosing += DAoCTestSuiteForm_FormClosing;
             ResumeLayout(false);
         }
 
@@ -125,5 +139,6 @@ namespace DAoCToolSuite
         private Label chimpLabel;
         private Label characterToolLabel;
         private Label LogTool;
+        private Button button1;
     }
 }

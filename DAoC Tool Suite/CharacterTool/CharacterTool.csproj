@@ -16,6 +16,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ApplicationManifest>G:\Repos\DAoCToolSuite\DAoC Tool Suite\DAoC Tool Suite\app.manifest</ApplicationManifest>
     <PackageIcon>CharacterTool.png</PackageIcon>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,8 +37,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="NLog.Config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Update="RealmClassConfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

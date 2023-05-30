@@ -1,5 +1,7 @@
+using System.ComponentModel;
 using System.Data;
 using System.IO;
+using System.Windows.Forms;
 using DAoCToolSuite.CharacterTool.Logging;
 using Newtonsoft.Json;
 
@@ -98,6 +100,42 @@ namespace DAoCToolSuite.CharacterTool
             ServerNames = serverList;
             CreateDataTable();
             ReDrawTable();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MainForm? form = sender as MainForm;
+            if (form is null)
+                return;
+            Properties.Settings.Default.WindowLocation = form.Location;
+            Properties.Settings.Default.Save();
+            Logger.Debug($"Shutting down.");
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            long currentCount = CharacterTool.Properties.Settings.Default.LoadCount;
+            if (currentCount > 0)
+            {
+                this.Location = CharacterTool.Properties.Settings.Default.WindowLocation;
+            }
+            else
+            {
+                //ScreenCentered by Default
+                CharacterTool.Properties.Settings.Default.WindowLocation = this.Location;
+            }
+            if (currentCount != long.MaxValue)
+            {
+
+                CharacterTool.Properties.Settings.Default.LoadCount = currentCount + 1;
+            }
+            CharacterTool.Properties.Settings.Default.Save();
         }
 
         #region Copy Tab

@@ -13,20 +13,24 @@ using Newtonsoft.Json;
 using SQLLibrary;
 using SQLLibrary.Enums;
 using DAoCToolSuite.ChimpTool.Extensions;
+using System.Runtime.CompilerServices;
 
 namespace DAoCToolSuite.ChimpTool
 {
     public partial class MainForm : Form
     {
         internal static WaitCursor WaitCursor = new();
-        private static readonly System.Windows.Forms.ToolTip tooltip1 = new();
+        private static readonly System.Windows.Forms.ToolTip MouseOverTooltip = new();
         private static List<AccountModel> Accounts { get; set; } = new List<AccountModel>();
-        private static List<CharacterModel> Characters { get; set; } = new List<CharacterModel>();
         private static List<GuildModel> Guilds { get; set; } = new List<GuildModel>();
+
+        #region DataGridView Data
+        private static List<CharacterModel> Characters { get; set; } = new List<CharacterModel>();
         private static List<CharacterModel>? CharactersByAccountLastDateUpdated { get; set; } = new List<CharacterModel>();
         private static List<CharacterModel>? CharactersByAccountFirstDateUpdated { get; set; } = new List<CharacterModel>();
         private static List<CharacterModel>? CharactersLastDateOnly { get; set; } = new List<CharacterModel>();
-        private static List<ChimpJson> CharactersByAccountLastDateUpdated_Json => CharactersByAccountLastDateUpdated?.Select(x => x.CovertToChimp())?.ToList() ?? new();
+        private BindingSource BindingSource { get; set; } = new();
+        #endregion
 
         private static Logger? _Logger = null;
         public static Logger Logger
@@ -77,6 +81,7 @@ namespace DAoCToolSuite.ChimpTool
             LoadAccounts();
             SetToLastAccount();
             SetAutoCompleteCharacterList();
+            SearchGridView.DataSource = BindingSource;
             RestoreButton.Enabled = HasBackupChimpRepository();
             SearchButton.Enabled = UseSelenium || UseAPI;
             SearchComboBox.Enabled = UseSelenium || UseAPI;
@@ -85,19 +90,17 @@ namespace DAoCToolSuite.ChimpTool
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-
             bool check = AlwaysOnTop;
             OnTopCheckBox.Checked = check;
             GridPanel.Visible = true;
             LoadCharacters();
             CalculateRPTotals();
             WaitCursor.PopAll();
-
         }
 
         private void SearchGridView_CellValueNeeded(object sender, EventArgs e)
         {
-
+            //this won't work w/o VirtualMode = true and RowCount = int being set.
         }
 
         private void SearchGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -129,7 +132,11 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void MainForm_Closing(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Upgrade();
+            MainForm? form = sender as MainForm;
+            if (form is null)
+                return;
+            Properties.Settings.Default.WindowLocation = form.Location;
+            Properties.Settings.Default.Save();
             Logger.Debug($"Shutting down.");
             CamelotHerald.Quit();
         }
@@ -224,7 +231,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             linkLabel1.BorderStyle = BorderStyle.None;
             linkLabel1.LinkBehavior = LinkBehavior.NeverUnderline;
-            _ = linkLabel1.Links.Add(0, linkLabel1.Text.ToString().Length, System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\ChimpTool.log");
+            _ = linkLabel1.Links.Add(0, linkLabel1.Text.ToString().Length, System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\DAoCTools.log");
         }
 
         public static void UpdateDataLinkColor(string level, string message)
@@ -581,115 +588,25 @@ namespace DAoCToolSuite.ChimpTool
                 }
                 // get x and y position of cell		response	error CS0103: 
 
-                System.Drawing.Rectangle rec = dataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                Rectangle rec = dataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
                 Point p = rec.Location;
                 // add offset to move tip up
                 p.Offset(0, -40);
                 // changed dataGridView1 to panel1, use offset cell position, and timeout
 
-                tooltip1.BackColor = Color.White;
-                tooltip1.ForeColor = Color.Black;
-                tooltip1.Show(toShow, GridPanel, p, 10000); // show tool tip
+                MouseOverTooltip.BackColor = Color.White;
+                MouseOverTooltip.ForeColor = Color.Black;
+                MouseOverTooltip.Show(toShow, GridPanel, p, 10000); // show tool tip
             }
             UpdateDebugLinkBackColor();
         }
+
         private void SearchGridView_DataSourceChanged(object sender, EventArgs e)
         {
             UpdateCharacterLists();
-
             DataGridView thisSearchGrid = (DataGridView)sender;
-            List<string> visibleColumns = Settings.DisplayedDatabaseColumnNames;
-            List<string> visibleColumnHeaderNames = Settings.DisplayedDataGridViewHeaderNames;
+            thisSearchGrid.FormatTable();
 
-            int rowCount = thisSearchGrid.Rows.Count;
-            int columnCount = thisSearchGrid.Columns.Count;
-            int nonVisibleIndex = visibleColumns.Count;
-            SearchProgressBar.MarqueeAnimationSpeed = 0;
-            SearchProgressBar.Maximum = columnCount + rowCount;
-            SearchProgressBar.Minimum = 0;
-            SearchProgressBar.Value = 0;
-            SearchProgressBar.Visible = true;
-
-            //Sets the column dames, order, and what data from the DB to display.
-            //Values pulled from the config file.
-
-            if (columnCount > 0)
-            {
-                for (int index = 0; index < columnCount; index++)
-                {
-                    SearchProgressBar.Value++;
-                    //SearchProgressBar.Refresh();
-                    DataGridViewColumn column = thisSearchGrid.Columns[index];
-                    if (!visibleColumns.Contains(column.Name))
-                    {
-                        column.Visible = false;
-                        column.DisplayIndex = nonVisibleIndex;
-                        //Logger.Debug($"{column.Name},{index},{column.DisplayIndex},{column.Visible}");
-                        nonVisibleIndex++;
-                    }
-                    else
-                    {
-                        column.DisplayIndex = visibleColumns.IndexOf(column.Name);
-                        column.HeaderCell.Style.Font = new Font("Verdana", 9F, System.Drawing.FontStyle.Bold);
-                        column.HeaderText = visibleColumnHeaderNames[visibleColumns.IndexOf(column.Name)];
-                        column.ValueType = typeof(string);
-                        //Logger.Debug($"{column.Name},{index},{column.DisplayIndex},{column.Visible}");
-                        column.AutoSizeMode = column.Name switch
-                        {
-                            "MasterLevel_Name" => DataGridViewAutoSizeColumnMode.Fill,
-                            _ => DataGridViewAutoSizeColumnMode.AllCells,
-                        };
-                    }
-                }
-            }
-
-            ////Formats the row color by Realm
-            if (rowCount > 0)
-            {
-                for (int index = 0; index < rowCount; index++)
-                {
-                    SearchProgressBar.Value++;
-                    //SearchProgressBar.Refresh();
-                    DataGridViewRow? row = SearchGridView.Rows[index];
-                    string? realm = row?.Cells["Realm"]?.Value?.ToString();
-                    if (row is null || realm is null)
-                    {
-                        continue;
-                    }
-
-                    switch (realm)
-                    {
-                        case "Albion":
-                            row.DefaultCellStyle.ForeColor = Color.White;
-                            row.DefaultCellStyle.BackColor = Color.DarkRed;
-                            row.DefaultCellStyle.SelectionBackColor = Color.White;
-                            row.DefaultCellStyle.SelectionForeColor = Color.DarkRed;
-                            row.DefaultCellStyle.Font =
-                                 new Font("Verdana", 9F, System.Drawing.FontStyle.Bold);
-                            break;
-                        case "Hibernia":
-                            row.DefaultCellStyle.ForeColor = Color.White;
-                            row.DefaultCellStyle.BackColor = Color.DarkGreen;
-                            row.DefaultCellStyle.SelectionBackColor = Color.White;
-                            row.DefaultCellStyle.SelectionForeColor = Color.DarkGreen;
-                            row.DefaultCellStyle.Font =
-                                 new Font("Verdana", 9F, System.Drawing.FontStyle.Bold);
-                            break;
-                        case "Midgard":
-                            row.DefaultCellStyle.ForeColor = Color.White;
-                            row.DefaultCellStyle.BackColor = Color.DarkBlue;
-                            row.DefaultCellStyle.SelectionBackColor = Color.White;
-                            row.DefaultCellStyle.SelectionForeColor = Color.DarkBlue;
-                            row.DefaultCellStyle.Font =
-                                 new Font("Verdana", 9F, System.Drawing.FontStyle.Bold);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-            SearchProgressBar.Visible = false;
-            SearchProgressBar.Value = 0;
         }
         #endregion
 
@@ -705,7 +622,7 @@ namespace DAoCToolSuite.ChimpTool
 
             UpdateCharacterLists();
             AttachCharacters();
-
+            SearchGridView.FormatTable(SearchProgressBar);
             LoadingTabelLabel.Visible = false;
             SearchGridView.Visible = true;
             GridPanel.Refresh();
@@ -713,8 +630,10 @@ namespace DAoCToolSuite.ChimpTool
 
         private void AttachCharacters()
         {
+            BindingSource.DataSource = CharactersByAccountLastDateUpdated?.ToChimpJsonList() ?? new();
+
             //SearchGridView.DataSource = null;
-            SearchGridView.DataSource = CharactersByAccountLastDateUpdated_Json;
+            //SearchGridView.DataSource = CharactersByAccountLastDateUpdated_Json;
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
@@ -781,17 +700,41 @@ namespace DAoCToolSuite.ChimpTool
             int failed = CharactersByAccountLastDateUpdated.Count - refreshed;
             Logger.Debug($"Success:{refreshed} Failure:{failed} in {stopWatch.Elapsed:c})");
 
+            SearchProgressBar.Minimum = 0;
+            SearchProgressBar.Maximum = chimpRefreshResults.Count;
+            SearchProgressBar.Value = 0;
+            SearchProgressBar.CustomText = "Updating Database";
+            SearchProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
+            SearchProgressBar.Visible = true;
+            GridPanel.Refresh();
+
+            //List<CharacterModel>? charRefreshResults = chimpRefreshResults?.Select(x=>x.ConvertToCharacterModel()).ToList();        
+            //if (charRefreshResults is not null)
+            //{
+            //    SqliteDataAccess.AddCharacters(charRefreshResults, date, AccountComboBox.Text);
+            //    List<GuildModel>? guildModels = chimpRefreshResults?.Select(x => x.ConvertToGuildModel()).ToList();
+            //    if(guildModels is not null)
+            //    {
+            //        SqliteDataAccess.AddGuilds(guildModels);
+            //    }
+            //}
+
             foreach (ChimpJson result in chimpRefreshResults)
             {
+                SearchProgressBar.Value++;
                 SqliteDataAccess.AddCharacter(result.ConvertToCharacterModel(), date, AccountComboBox.Text);
                 SqliteDataAccess.AddGuild(result.ConvertToGuildModel());
             }
+            SearchProgressBar.Visible = false;
+            GridPanel.Refresh();
 
             LoadCharacters();
             CalculateRPTotals();
             WaitCursor.Pop();
             SearchProgressBar.Visible = false;
-            SearchProgressBar.Update();
+            SearchProgressBar.CustomText = "";
+            SearchProgressBar.VisualMode = ProgressBarDisplayMode.Percentage;
+            SearchProgressBar.Refresh();
             UpdateDebugLinkBackColor();
         }
 
@@ -1055,6 +998,12 @@ namespace DAoCToolSuite.ChimpTool
                 CharactersByAccountLastDateUpdated = charactersByAccountLastDateUpdated;
                 CharactersByAccountFirstDateUpdated = null;
                 CharactersByAccountFirstDateUpdated = charactersByAccountFirstDateUpdated;
+
+
+                //DataView view = charactersByAccountLastDateUpdated.ToDataTable().DefaultView;
+                //view.Sort = "Name ASC, TotalRealmPoints DESC";
+                //BindingSource = view;
+
             }
             else
             {
@@ -1070,9 +1019,39 @@ namespace DAoCToolSuite.ChimpTool
         {
 
         }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+        }
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            long currentCount = ChimpTool.Properties.Settings.Default.LoadCount;
+            if (currentCount > 0)
+            {
+                this.Location = ChimpTool.Properties.Settings.Default.WindowLocation;
+            }
+            else
+            {
+                //ScreenCentered by Default
+                ChimpTool.Properties.Settings.Default.WindowLocation = this.Location;
+            }
+            if (currentCount != long.MaxValue)
+            {
+                ChimpTool.Properties.Settings.Default.LoadCount = currentCount + 1;
+            }
+            ChimpTool.Properties.Settings.Default.Save();
+        }
+
+        private void SortButton_Click(object sender, EventArgs e)
+        {
+            BindingSource.DataSource = CharactersByAccountLastDateUpdated?.ToChimpJsonList() ?? new(); //.ToChimpJsonList()?
+            BindingSource.Filter = $"Account = '{AccountComboBox.Text}'";
+            SearchGridView.FormatTable(SearchProgressBar);
+        }
     }
-
-
 
     public class MyTextBox : TextBox
     {

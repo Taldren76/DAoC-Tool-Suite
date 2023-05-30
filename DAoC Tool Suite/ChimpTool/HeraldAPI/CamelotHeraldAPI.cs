@@ -187,13 +187,15 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             }
 
         }
-        public static List<ChimpJson> GetChimps(List<ChimpJson> chimps, ProgressBar progressBar)
+        public static List<ChimpJson> GetChimps(List<ChimpJson> chimps, TextProgressBar progressBar)
         {
 
             progressBar.Visible = true;
             progressBar.Value = 0;
             progressBar.Maximum = chimps.Count;
             progressBar.Minimum = 0;
+            progressBar.CustomText = "Retrieving Character Data";
+            progressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
             progressBar.Refresh();
 
             List<ChimpJson> results = new();
@@ -283,6 +285,8 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                 }
             }
             progressBar.Visible = false;
+            progressBar.CustomText = "";
+            progressBar.VisualMode = ProgressBarDisplayMode.Percentage;
             progressBar.Refresh();
             return results;
         }

@@ -202,7 +202,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 return new ChimpJson(true);
             }
         }
-        internal static List<ChimpJson> GetChimps(List<string> playerNames, ServerCluster cluster, ProgressBar progressBar, int secondsToTry = 5)
+        internal static List<ChimpJson> GetChimps(List<string> playerNames, ServerCluster cluster, TextProgressBar progressBar, int secondsToTry = 5)
         {
             if (!IsInitialized || Browser == null || Browser.IsBrowserInitialized || ChromeDrvService == null || !ChromeDrvService.IsRunning)
             {
@@ -213,6 +213,8 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             progressBar.Value = 0;
             progressBar.Maximum = playerNames.Count;
             progressBar.Minimum = 0;
+            progressBar.CustomText = "Retrieving Character Data";
+            progressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
             progressBar.Refresh();
 
             List<ChimpJson> results = new();
@@ -252,10 +254,15 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                     }
                 }
             }
+
+            progressBar.Visible = false;
+            progressBar.CustomText = "";
+            progressBar.VisualMode = ProgressBarDisplayMode.Percentage;
+            progressBar.Refresh();
             return results;
         }
 
-        internal static List<ChimpJson> GetChimps(List<ChimpJson> chimps, ProgressBar progressBar)
+        internal static List<ChimpJson> GetChimps(List<ChimpJson> chimps, TextProgressBar progressBar)
         {
             if (!IsInitialized || Browser == null || Browser.IsBrowserInitialized || ChromeDrvService == null || !ChromeDrvService.IsRunning)
             {
@@ -309,6 +316,10 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                     }
                 }
             }
+            progressBar.Visible = false;
+            progressBar.CustomText = "";
+            progressBar.VisualMode = ProgressBarDisplayMode.Percentage;
+            progressBar.Refresh();
             return results;
         }
 

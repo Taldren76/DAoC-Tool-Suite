@@ -32,6 +32,8 @@ namespace DAoCToolSuite.ChimpTool
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             GridPanel = new Panel();
             LoadingTabelLabel = new Label();
@@ -58,7 +60,7 @@ namespace DAoCToolSuite.ChimpTool
             BackupButton = new Button();
             label1 = new Label();
             TotalRPTextBox = new TextBox();
-            SearchProgressBar = new ProgressBar();
+            SearchProgressBar = new TextProgressBar();
             GridPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SearchGridView).BeginInit();
             panel2.SuspendLayout();
@@ -81,34 +83,54 @@ namespace DAoCToolSuite.ChimpTool
             // 
             // LoadingTabelLabel
             // 
-            LoadingTabelLabel.AutoSize = true;
             LoadingTabelLabel.Font = new Font("Verdana", 72F, FontStyle.Bold, GraphicsUnit.Point);
-            LoadingTabelLabel.Location = new Point(279, 267);
+            LoadingTabelLabel.Location = new Point(19, 17);
             LoadingTabelLabel.Margin = new Padding(4, 0, 4, 0);
             LoadingTabelLabel.Name = "LoadingTabelLabel";
-            LoadingTabelLabel.Size = new Size(883, 116);
+            LoadingTabelLabel.Size = new Size(1360, 617);
             LoadingTabelLabel.TabIndex = 14;
-            LoadingTabelLabel.Text = "Loading table ..";
+            LoadingTabelLabel.Text = "Loading table ...";
+            LoadingTabelLabel.TextAlign = ContentAlignment.MiddleCenter;
             LoadingTabelLabel.Visible = false;
             // 
             // SearchGridView
             // 
             SearchGridView.AllowUserToAddRows = false;
             SearchGridView.AllowUserToDeleteRows = false;
+            SearchGridView.AllowUserToResizeColumns = false;
             SearchGridView.AllowUserToResizeRows = false;
             SearchGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             SearchGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             SearchGridView.BackgroundColor = SystemColors.Control;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            SearchGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             SearchGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.NullValue = "null";
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            SearchGridView.DefaultCellStyle = dataGridViewCellStyle2;
             SearchGridView.Dock = DockStyle.Fill;
             SearchGridView.Location = new Point(0, 0);
             SearchGridView.Margin = new Padding(4, 3, 4, 3);
             SearchGridView.Name = "SearchGridView";
             SearchGridView.RowHeadersVisible = false;
             SearchGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            SearchGridView.ShowCellErrors = false;
+            SearchGridView.ShowEditingIcon = false;
+            SearchGridView.ShowRowErrors = false;
             SearchGridView.Size = new Size(1396, 650);
             SearchGridView.TabIndex = 15;
-            SearchGridView.VirtualMode = true;
             SearchGridView.Visible = false;
             SearchGridView.DataSourceChanged += SearchGridView_DataSourceChanged;
             SearchGridView.CellFormatting += SearchGridView_CellFormatting;
@@ -252,7 +274,7 @@ namespace DAoCToolSuite.ChimpTool
             linkLabel1.Location = new Point(4, 6);
             linkLabel1.Margin = new Padding(4, 0, 4, 0);
             linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(201, 29);
+            linkLabel1.Size = new Size(114, 29);
             linkLabel1.TabIndex = 7;
             linkLabel1.TabStop = true;
             linkLabel1.Text = "Debug.Log";
@@ -376,13 +398,18 @@ namespace DAoCToolSuite.ChimpTool
             // SearchProgressBar
             // 
             SearchProgressBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            SearchProgressBar.CustomText = "";
             SearchProgressBar.ForeColor = Color.Lime;
             SearchProgressBar.Location = new Point(327, 6);
             SearchProgressBar.Margin = new Padding(4, 3, 4, 3);
             SearchProgressBar.Name = "SearchProgressBar";
+            SearchProgressBar.ProgressColor = Color.Chartreuse;
             SearchProgressBar.Size = new Size(770, 25);
             SearchProgressBar.TabIndex = 25;
+            SearchProgressBar.TextColor = Color.Black;
+            SearchProgressBar.TextFont = new Font("Verdana", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             SearchProgressBar.Visible = false;
+            SearchProgressBar.VisualMode = ProgressBarDisplayMode.Percentage;
             // 
             // MainForm
             // 
@@ -399,11 +426,10 @@ namespace DAoCToolSuite.ChimpTool
             Name = "MainForm";
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ChimpTool v1.0.1";
+            Text = "ChimpTool v1.1.0";
             FormClosing += MainForm_Closing;
             Shown += AccountComboBoxOnShow;
             GridPanel.ResumeLayout(false);
-            GridPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)SearchGridView).EndInit();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
@@ -439,10 +465,11 @@ namespace DAoCToolSuite.ChimpTool
         private Button BackupButton;
         private Label label1;
         private TextBox TotalRPTextBox;
-        internal ProgressBar SearchProgressBar;
+        internal TextProgressBar SearchProgressBar;
         public ComboBox AccountComboBox;
         public ComboBox SearchComboBox;
         private Label LoadingTabelLabel;
+        private Button SortButton;
     }
 }
 

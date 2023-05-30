@@ -62,6 +62,47 @@ namespace SQLLibrary
                 _ = conn.Execute(writeQuery, character);
             }
         }
+        public static void AddCharacters(List<CharacterModel> characters, DateTime date, string accountName)
+        {
+            lock (thisLock)
+            {
+                string tableName = "Characters";
+                string writeQuery = $"Insert into {tableName} ({CharactersColumnNames}) values ({CharactersColumnValues})";
+                //string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\" And Name = \"{character.Name}\"";
+                //string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\"";
+                //string minDateIndexQuery = $"Select \"index\", min(Date) from {tableName} Where WebID = \"{character.WebID}\"";
+
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+                foreach (CharacterModel character in characters)
+                {
+                    string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\" And Name = \"{character.Name}\"";
+                    string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\"";
+                    string minDateIndexQuery = $"Select \"index\", min(Date) from {tableName} Where WebID = \"{character.WebID}\"";
+                    //Check if character name changed
+                    int exactCount = conn.QueryFirst<int>(exactCountQuery, new DynamicParameters());
+                    int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
+                    if (exactCount < 1 && count > 0)
+                    {
+                        //Update existing names before continueing
+                        string updateQuery = $"Update {tableName} Set Name = \"{character.Name}\" Where WebID = \"{character.WebID}\"";
+                        _ = conn.Execute(updateQuery, new DynamicParameters());
+                    }
+
+                    string maxSQLEnteriesPerCharacter = ConfigurationManager.AppSettings["MaxSQLEntriesPerCharacter"] ?? "2";
+                    int maxCount = int.TryParse(maxSQLEnteriesPerCharacter, out maxCount) ? maxCount - 1 : 1;
+                    while (maxCount > 0 && count > maxCount)
+                    {
+                        DateQuery minDateQuery = conn.QueryFirst<DateQuery>(minDateIndexQuery, new DynamicParameters());
+                        string deleteQuery = $"Delete From {tableName} Where \"index\" = {minDateQuery.Index}";
+                        _ = conn.Query(deleteQuery, new DynamicParameters());
+                        count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
+                    }
+                    character.Date = date.ToString("yyyy-MM-ddTHH:mm:ss");
+                    character.Account = accountName;
+                    _ = conn.Execute(writeQuery, character);
+                }
+            }
+        }
         public static void DeleteCharacter(string webID)
         {
             lock (thisLock)
@@ -203,6 +244,47 @@ namespace SQLLibrary
 
                 //Add new guild entry
                 _ = conn.Execute(writeQuery, guild);
+            }
+        }
+        public static void AddGuilds(List<GuildModel> guilds)
+        {
+            lock (thisLock)
+            {
+                string columnNames = "WebID,Name";
+                string values = "@WebID,@Name";
+                string tableName = "Guilds";
+                string writeQuery = $"Insert into {tableName} ({columnNames}) values ({values})";
+                //string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guilds.WebID}\" and Name = \"{guilds.Name}\"";
+                //string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guilds.WebID}\"";
+
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+                foreach (GuildModel guild in guilds)
+                {
+                    if (!guild.IsValid)
+                    {
+                        continue;
+                    }
+                    string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guild.WebID}\" and Name = \"{guild.Name}\"";
+                    string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guild.WebID}\"";
+                    //Check if Guild entry is already present.
+                    int exactCount = conn.QueryFirst<int>(exactCountQuery, new DynamicParameters());
+                    if (exactCount > 0)
+                    {
+                        return; //Already exists
+                    }
+
+                    //Check for guild name change
+                    int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
+                    if (count > 0)
+                    {
+                        string updateQuery = $"Update {tableName} SET Name = {guild.Name} Where WebID = {guild.WebID}";
+                        _ = conn.Query(updateQuery, new DynamicParameters());
+                        return; //Entry Updated
+                    }
+
+                    //Add new guild entry
+                    _ = conn.Execute(writeQuery, guilds);
+                }
             }
         }
         public static void RemoveGuild(string webID)
