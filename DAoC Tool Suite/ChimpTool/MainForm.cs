@@ -822,9 +822,14 @@ namespace DAoCToolSuite.ChimpTool
                     }
                     Logger.Debug($"Attempting to find {name} via Selenium Webdriver");
 
-
-                    chimp = CamelotHerald.GetChimp(name, ServerCluster.Ywain, 3);
-
+                    try
+                    {
+                        chimp = CamelotHerald.GetChimp(name, ServerCluster.Ywain, 3);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex);
+                    }
                 }
 
                 if (!chimp.IsValid())
