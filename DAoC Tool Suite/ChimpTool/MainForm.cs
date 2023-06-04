@@ -395,6 +395,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         private static void RestoreFromChimpRepository()
         {
+            Logger.Debug($"Restoring from backup file {BackupRepositoryFullPath}");
             WaitCursor.Push();
             if (!HasBackupChimpRepository())
             {
@@ -428,6 +429,7 @@ namespace DAoCToolSuite.ChimpTool
             {
                 try
                 {
+                    Logger.Debug($"Writting backup to {BackupRepositoryFullPath}");
                     File.WriteAllText(BackupRepositoryFullPath, json);
                 }
                 catch (System.Exception ex)

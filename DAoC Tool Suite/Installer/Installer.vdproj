@@ -251,7 +251,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DAoC Tool Suite"
         "ProductCode" = "8:{42CB9EB4-E34C-4115-8465-49B9BB64C662}"
-        "PackageCode" = "8:{870DB142-D34F-4C98-B08C-3952BFF56B6A}"
+        "PackageCode" = "8:{76621B12-216B-40F0-BD87-5AF6DE80B70A}"
         "UpgradeCode" = "8:{B64144B6-6C56-4A20-A52F-D1B1C16ECBEB}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -382,7 +382,7 @@
             "Target" = "8:_97A72D1CB9C94999B7E6CC9B0F5C602D"
             "Folder" = "8:_C8E4941F783F4B84A50B839E0932DBEF"
             "WorkingFolder" = "8:_84BAA862631442F9A02413BED68185BE"
-            "Icon" = "8:"
+            "Icon" = "8:_B4545DB58D524708B0FAE69DBF4A73AC"
             "Feature" = "8:"
             }
         }
@@ -842,7 +842,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_97A72D1CB9C94999B7E6CC9B0F5C602D"
             {
-            "SourcePath" = "8:..\\DAoC Tool Suite\\obj\\x86\\Release\\net6.0-windows10.0.17763.0\\apphost.exe"
+            "SourcePath" = "8:..\\DAoC Tool Suite\\obj\\x86\\Release\\net6.0-windows10.0.17763.0\\win-x86\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_84BAA862631442F9A02413BED68185BE"

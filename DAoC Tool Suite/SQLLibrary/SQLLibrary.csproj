@@ -11,7 +11,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="NLog.Config" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="DAoCTools.ico" />
+    <Content Include="NLog.Config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="NLog" Version="5.2.0" />
     <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.117" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />

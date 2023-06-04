@@ -466,7 +466,6 @@ namespace DAoCToolSuite.ChimpTool
         public ComboBox AccountComboBox;
         public ComboBox SearchComboBox;
         private Label LoadingTabelLabel;
-        private Button SortButton;
     }
 }
 

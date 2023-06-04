@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Reflection;
+using SQLLibrary.Logging;
 using Dapper;
 
 namespace SQLLibrary
@@ -15,6 +16,7 @@ namespace SQLLibrary
     }
     public class SqliteDataAccess
     {
+        private static Logger Logger { get; set; } = new();
         private static readonly object thisLock = new();
         private static readonly string CharactersColumnNames = "Date,Account,WebID,FirstName,Name,Realm,Class,Server,TotalRealmPoints,TotalSoloKills,TotalDeathBlows,TotalKills,TotalDeaths,Level,Race,BountyPoints,MasterLevel_Name,Masterlevel_Level,Guild_WebID,Alchemy,Armorcraft,Fletching,Siegecraft,Spellcrafting,Tailoring,Weaponcraft,Albion_SoloKills,Albion_DeathBlows,Albion_Kills,Albion_Deaths,Hibernia_SoloKills,Hibernia_DeathBlows,Hibernia_Kills,Hibernia_Deaths,Midgard_SoloKills,Midgard_DeathBlows,Midgard_Kills,Midgard_Deaths";
         private static string CharactersColumnValues => $"@{CharactersColumnNames.Replace(",", ",@")}";
@@ -155,9 +157,10 @@ namespace SQLLibrary
             {
 
                 string strConnectionString = LoadConnectionString();
-                string test = $"DataSource={System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CharacterDB.db"};Version=3;";
-                string test2 = "DataSource=.\\CharacterDB.db;Version=3;";
-                using IDbConnection conn = new SQLiteConnection(test2);
+                string dbPath = $"{System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CharacterDB.db"}";
+                string connectionString = $"DataSource={dbPath};Version=3;";
+                Logger.Debug($"Using connection string {connectionString}");
+                using IDbConnection conn = new SQLiteConnection(connectionString);
                 List<AccountModel> query = conn.Query<AccountModel>("Select * from Accounts", new DynamicParameters()).ToList();
                 return query;
             }

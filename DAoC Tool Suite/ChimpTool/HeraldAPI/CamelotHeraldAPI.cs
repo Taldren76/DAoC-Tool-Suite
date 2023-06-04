@@ -80,6 +80,10 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             }
 
             client.Dispose();
+
+            if (result is null)
+                return new();
+
             result.IsValid = true;
             return result;
         }
@@ -190,6 +194,10 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             }
 
             client.Dispose();
+
+            if (result is null)
+                return new();
+
             result.IsValid = true;
             return result;
         }

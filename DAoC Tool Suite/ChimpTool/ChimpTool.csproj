@@ -29,6 +29,7 @@
 		<None Remove="ChimpTools.Config" />
 		<None Remove="DAoCTools.xcf" />
 		<None Remove="DAoCToolsBW.ico" />
+		<None Remove="NLog.Config" />
 		<None Remove="Selenium\chromedriver.exe" />
 	</ItemGroup>
 	<ItemGroup>
@@ -49,6 +50,9 @@
 		<Content Include="DeleteIcon.png">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+		<Content Include="NLog.Config">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<Content Include="Selenium\chromedriver.exe">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
@@ -64,7 +68,7 @@
 		<PackageReference Include="CefSharp.OffScreen.NETCore" Version="113.1.40" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0-preview1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="NLog" Version="5.1.5" />
+		<PackageReference Include="NLog" Version="5.2.0" />
 		<PackageReference Include="Selenium.Support" Version="4.9.1" />
 		<PackageReference Include="Selenium.WebDriver" Version="4.9.1" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />
@@ -93,9 +97,6 @@
 	  <None Update="DeleteIcon.png">
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
-	  </None>
-	  <None Update="NLog.Config">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Properties\Settings.settings">
 	    <Generator>PublicSettingsSingleFileGenerator</Generator>

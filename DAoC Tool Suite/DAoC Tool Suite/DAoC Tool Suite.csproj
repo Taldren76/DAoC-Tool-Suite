@@ -41,7 +41,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="CharacterDB.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\CharacterTool.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -49,13 +49,13 @@
     <Content Include="Icons\CharacterTool.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icons\ChimpTool.ico">
+    <Content Include="Icons\DAoCTools.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\ChimpTool.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icons\DAoCTools.ico">
+    <Content Include="ChimpTool.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\DAoCTools.png">
@@ -75,7 +75,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="5.1.5" />
+    <PackageReference Include="NLog" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>
