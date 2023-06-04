@@ -1,21 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
-    <RootNamespace>DAoCToolSuite</RootNamespace>
-    <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
-    <UseWPF>True</UseWPF>
-    <StartupObject>DAoCToolSuite.Program</StartupObject>
-    <ApplicationIcon>Icons\DAoCTools.ico</ApplicationIcon>
-    <PlatformTarget>x86</PlatformTarget>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <PackageIcon>DAoCTools.png</PackageIcon>
-    <Platforms>AnyCPU;x86</Platforms>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+		<RootNamespace>DAoCToolSuite</RootNamespace>
+		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+		<UseWPF>True</UseWPF>
+		<StartupObject>DAoCToolSuite.Program</StartupObject>
+		<ApplicationIcon>Icons\DAoCTools.ico</ApplicationIcon>
+		<PlatformTarget>x86</PlatformTarget>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<PackageIcon>DAoCTools.png</PackageIcon>
+		<Platforms>x86</Platforms>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(PlatformTarget)' == 'x86'">
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x86</RuntimeIdentifier>
+		<SelfContained Condition="'$(SelfContained)' == ''">false</SelfContained>
+	</PropertyGroup>
 
   <ItemGroup>
     <None Remove="Icons\CharacterTool.ico" />
@@ -70,8 +75,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CefSharp.Common.NETCore" Version="113.1.40" />
-    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="113.1.40" />
     <PackageReference Include="NLog" Version="5.1.5" />
   </ItemGroup>
 

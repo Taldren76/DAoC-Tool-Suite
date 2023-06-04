@@ -144,7 +144,7 @@ namespace DAoCToolSuite.ChimpTool.Extensions
 
                 return characterModel;
             }
-            catch (Exception)
+            catch (System.Exception)
             {
                 return new CharacterModel();
             }

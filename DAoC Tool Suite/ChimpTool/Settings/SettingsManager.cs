@@ -202,7 +202,7 @@ namespace DAoCToolSuite.ChimpTool.Settings
                 string json = JsonConvert.SerializeObject(Settings);
                 File.WriteAllText(FilePath, json);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
             }
@@ -214,7 +214,7 @@ namespace DAoCToolSuite.ChimpTool.Settings
                 string json = File.ReadAllText(FilePath);
                 Settings = JsonConvert.DeserializeObject<Settings>(json) ?? new Settings();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
             }

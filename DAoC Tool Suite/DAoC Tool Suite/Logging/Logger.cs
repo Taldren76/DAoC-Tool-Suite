@@ -58,25 +58,15 @@ namespace DAoCToolSuite.Logging
                 {
                     return;
                 }
-                string path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\DAoCToolSuite.log";
+                //Path.GetDirectoryName(Application.ExecutablePath)
+                string path = $"{Path.GetDirectoryName(Application.ExecutablePath)}\\DAoCToolSuite.log"; //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
                 NLog.Config.LoggingConfiguration configuration = LogManager.Configuration;
                 FileTarget fileTarget = new()
                 {
                     Name = "file",
-                    FileName = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\DAoCToolSuite.log",
+                    FileName = $"{Path.GetDirectoryName(Application.ExecutablePath)}\\DAoCToolSuite.log",
                     DeleteOldFileOnStartup = true
                 };
-
-                //MethodCallTarget eventHandler = new()
-                //{ 
-                //    ClassName = typeof(DAoCToolSuite.ChimpTool.MainForm).AssemblyQualifiedName,
-                //    MethodName = "UpdateDataLinkColor"
-                //};
-                //eventHandler.Parameters.Add(new MethodCallParameter("${level}"));
-                //eventHandler.Parameters.Add(new MethodCallParameter("${message}"));
-
-                //configuration.AddRuleForAllLevels(fileTarget);
-                //configuration.AddRuleForAllLevels(eventHandler);
 
                 LogManager.ReconfigExistingLoggers();
 

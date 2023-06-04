@@ -10,17 +10,21 @@
 		<UseWPF>True</UseWPF>
 		<StartupObject></StartupObject>
 		<RootNamespace>DAoCToolSuite.ChimpTool</RootNamespace>
-		<ApplicationManifest>G:\Repos\DAoCToolSuite\DAoC Tool Suite\DAoC Tool Suite\app.manifest</ApplicationManifest>
-		<Platforms>AnyCPU;x86</Platforms>
+		<ApplicationManifest>G:\Repos\DAoCToolSuite\DAoC Tool Suite\CharacterTool\app.manifest</ApplicationManifest>
+		<Platforms>x86</Platforms>
 		<PackageIcon>ChimpTool.png</PackageIcon>
 		<ApplicationIcon>ChimpTool.ico</ApplicationIcon>
-		<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
-		<FileVersion>$(VersionPrefix)</FileVersion>
+		<AssemblyVersion>1.0.1.0</AssemblyVersion>
+		<FileVersion>1.0.1.0</FileVersion>
+		<Version>1.0.1.0</Version>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(PlatformTarget)' == 'x86'">
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x86</RuntimeIdentifier>
 		<SelfContained Condition="'$(SelfContained)' == ''">false</SelfContained>
 	</PropertyGroup>
+	<ItemGroup>
+	  <AdditionalFiles Remove="G:\Repos\DAoCToolSuite\DAoC Tool Suite\DAoC Tool Suite\app.manifest" />
+	</ItemGroup>
 	<ItemGroup>
 		<None Remove="ChimpTools.Config" />
 		<None Remove="DAoCTools.xcf" />
@@ -29,7 +33,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="ChimpTools.Config">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="ChimpTool.ico">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

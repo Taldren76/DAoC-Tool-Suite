@@ -76,7 +76,7 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                         : targetGrid.Columns[i].HeaderCell.Size.Width;
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Debug(ex);
             }

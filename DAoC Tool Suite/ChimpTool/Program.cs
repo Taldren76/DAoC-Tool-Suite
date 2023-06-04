@@ -19,7 +19,7 @@ namespace DAoCToolSuite.ChimpTool
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new MainForm());
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
             }

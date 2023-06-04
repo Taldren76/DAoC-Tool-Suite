@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using DAoCToolSuite.ChimpTool.Enums;
+using DAoCToolSuite.ChimpTool.Exception;
 using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.HeraldAPI;
 using DAoCToolSuite.ChimpTool.Json;
@@ -246,9 +247,10 @@ namespace DAoCToolSuite.ChimpTool
         public static DebugLevel CurrentDebugLevel { get; set; } = DebugLevel.Debug;
         public void LinkLabelLinkToAFile()
         {
+            var path = Path.GetDirectoryName(Application.ExecutablePath); //System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
             linkLabel1.BorderStyle = BorderStyle.None;
             linkLabel1.LinkBehavior = LinkBehavior.NeverUnderline;
-            _ = linkLabel1.Links.Add(0, linkLabel1.Text.ToString().Length, System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\DAoCTools.log");
+            _ = linkLabel1.Links.Add(0, linkLabel1.Text.ToString().Length, path + "\\DAoCTools.log");
         }
 
         public static void UpdateDataLinkColor(string level, string message)
@@ -351,7 +353,7 @@ namespace DAoCToolSuite.ChimpTool
                         Logger.Debug($"Successfully loaded {chimpRepository.AccountCount} accounts and {chimpRepository.CharacterCount} characters from disk.");
                     }
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     Logger.Error(e);
                 }
@@ -414,7 +416,7 @@ namespace DAoCToolSuite.ChimpTool
                     }
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
             }
@@ -428,7 +430,7 @@ namespace DAoCToolSuite.ChimpTool
                 {
                     File.WriteAllText(BackupRepositoryFullPath, json);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Logger.Error(ex);
                 }
@@ -443,7 +445,7 @@ namespace DAoCToolSuite.ChimpTool
                     string json = File.ReadAllText(BackupRepositoryFullPath);
                     return json;
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Logger.Error(ex);
                     return "{}";
@@ -457,7 +459,7 @@ namespace DAoCToolSuite.ChimpTool
                 string output = JsonConvert.SerializeObject(chimpRepository);
                 return output;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
                 return "{}";
@@ -470,7 +472,7 @@ namespace DAoCToolSuite.ChimpTool
                 ChimpRepository input = JsonConvert.DeserializeObject<ChimpRepository>(json) ?? new ChimpRepository();
                 return input;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
                 return new ChimpRepository();
@@ -782,67 +784,71 @@ namespace DAoCToolSuite.ChimpTool
                 return;
             }
 
-            List<ChimpJson> chimpRefreshResults = new();
-            Stopwatch stopWatch = Stopwatch.StartNew();
-            if (UseAPI)
+            try
             {
-                chimpRefreshResults = CamelotHeraldAPI.GetChimps(chimpsToBeRefreshed, SearchProgressBar);
-                if (UseSelenium && chimpRefreshResults.Where(x => !x.IsValid()).Any())
+                List<ChimpJson> chimpRefreshResults = new();
+                Stopwatch stopWatch = Stopwatch.StartNew();
+                if (UseAPI)
                 {
+                    chimpRefreshResults = CamelotHeraldAPI.GetChimps(chimpsToBeRefreshed, SearchProgressBar);
+                    if (UseSelenium && chimpRefreshResults.Where(x => !x.IsValid()).Any())
+                    {
 
-                    List<ChimpJson> goodChimps = chimpRefreshResults.Where(x => x.IsValid()).ToList();
-                    List<ChimpJson> badChimps = chimpRefreshResults.Where(x => !x.IsValid()).ToList();
-                    Logger.Debug($"There were {badChimps.Count} characters that could not be refreshed via the API. Attempting via CamelotHerald scrape.");
-                    chimpRefreshResults = CamelotHerald.GetChimps(badChimps, SearchProgressBar).Where(x => x.IsValid()).ToList();
-                    chimpRefreshResults.AddRange(goodChimps);
+                        List<ChimpJson> goodChimps = chimpRefreshResults.Where(x => x.IsValid()).ToList();
+                        List<ChimpJson> badChimps = chimpRefreshResults.Where(x => !x.IsValid()).ToList();
+                        Logger.Debug($"There were {badChimps.Count} characters that could not be refreshed via the API. Attempting via CamelotHerald scrape.");
+                        chimpRefreshResults = CamelotHerald.GetChimps(badChimps, SearchProgressBar).Where(x => x.IsValid()).ToList();
+                        chimpRefreshResults.AddRange(goodChimps);
+                    }
+
+                }
+                else if (UseSelenium)
+                {
+                    chimpRefreshResults = CamelotHerald.GetChimps(chimpsToBeRefreshed, SearchProgressBar).Where(x => x.IsValid()).ToList();
                 }
 
+                int refreshed = chimpRefreshResults.Count;
+                int failed = CharactersByAccountLastDateUpdated.Count - refreshed;
+                Logger.Debug($"Success:{refreshed} Failure:{failed} in {stopWatch.Elapsed:c})");
+
+                SearchProgressBar.Minimum = 0;
+                SearchProgressBar.Maximum = chimpRefreshResults.Count;
+                SearchProgressBar.Value = 0;
+                SearchProgressBar.CustomText = "Updating Database";
+                SearchProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
+                SearchProgressBar.Visible = true;
+                GridPanel.Refresh();
+
+                foreach (ChimpJson result in chimpRefreshResults)
+                {
+                    SearchProgressBar.Value++;
+                    SqliteDataAccess.AddCharacter(result.ConvertToCharacterModel(), date, AccountComboBox.Text);
+                    SqliteDataAccess.AddGuild(result.ConvertToGuildModel());
+                }
+                SearchProgressBar.Visible = false;
+                GridPanel.Refresh();
+
+                LoadCharacters();
+                CalculateRPTotals();
+
             }
-            else if (UseSelenium)
+            catch(MaintenanceException ex)
             {
-                chimpRefreshResults = CamelotHerald.GetChimps(chimpsToBeRefreshed, SearchProgressBar).Where(x => x.IsValid()).ToList();
+                Logger.Debug(ex);
             }
-
-            int refreshed = chimpRefreshResults.Count;
-            int failed = CharactersByAccountLastDateUpdated.Count - refreshed;
-            Logger.Debug($"Success:{refreshed} Failure:{failed} in {stopWatch.Elapsed:c})");
-
-            SearchProgressBar.Minimum = 0;
-            SearchProgressBar.Maximum = chimpRefreshResults.Count;
-            SearchProgressBar.Value = 0;
-            SearchProgressBar.CustomText = "Updating Database";
-            SearchProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
-            SearchProgressBar.Visible = true;
-            GridPanel.Refresh();
-
-            //List<CharacterModel>? charRefreshResults = chimpRefreshResults?.Select(x=>x.ConvertToCharacterModel()).ToList();        
-            //if (charRefreshResults is not null)
-            //{
-            //    SqliteDataAccess.AddCharacters(charRefreshResults, date, AccountComboBox.Text);
-            //    List<GuildModel>? guildModels = chimpRefreshResults?.Select(x => x.ConvertToGuildModel()).ToList();
-            //    if(guildModels is not null)
-            //    {
-            //        SqliteDataAccess.AddGuilds(guildModels);
-            //    }
-            //}
-
-            foreach (ChimpJson result in chimpRefreshResults)
+            catch(System.Exception ex)
             {
-                SearchProgressBar.Value++;
-                SqliteDataAccess.AddCharacter(result.ConvertToCharacterModel(), date, AccountComboBox.Text);
-                SqliteDataAccess.AddGuild(result.ConvertToGuildModel());
+                Logger.Error(ex);
             }
-            SearchProgressBar.Visible = false;
-            GridPanel.Refresh();
-
-            LoadCharacters();
-            CalculateRPTotals();
-            WaitCursor.Pop();
-            SearchProgressBar.Visible = false;
-            SearchProgressBar.CustomText = "";
-            SearchProgressBar.VisualMode = ProgressBarDisplayMode.Percentage;
-            SearchProgressBar.Refresh();
-            UpdateDebugLinkBackColor();
+            finally
+            {
+                WaitCursor.Pop();
+                SearchProgressBar.Visible = false;
+                SearchProgressBar.CustomText = "";
+                SearchProgressBar.VisualMode = ProgressBarDisplayMode.Percentage;
+                SearchProgressBar.Refresh();
+                UpdateDebugLinkBackColor();
+            }
         }
 
         private void RefreshAllButton_Click(object sender, EventArgs e)
@@ -900,7 +906,7 @@ namespace DAoCToolSuite.ChimpTool
                 UpdateDebugLinkBackColor();
                 WaitCursor.Pop();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
             }
@@ -911,51 +917,58 @@ namespace DAoCToolSuite.ChimpTool
         {
             WaitCursor.Push();
             Logger.Debug("Search button clicked.");
-            if (SearchComboBox.Text != "")
+            try
             {
-                WaitCursor.Push();
-                string name = SearchComboBox.Text;
-                ChimpJson chimp = new();
-                if (UseAPI)
+                if (SearchComboBox.Text != "")
                 {
-                    chimp = CamelotHeraldAPI.GetChimp(name, ServerCluster.Ywain);
-                }
-
-                if (!chimp.IsValid() && UseSelenium)
-                {
+                    WaitCursor.Push();
+                    string name = SearchComboBox.Text;
+                    ChimpJson chimp = new();
                     if (UseAPI)
                     {
-                        Logger.Debug($"Could not find a character named {name} via API.");
+                        chimp = CamelotHeraldAPI.GetChimp(name, ServerCluster.Ywain);
                     }
-                    Logger.Debug($"Attempting to find {name} via Selenium Webdriver");
 
-                    try
+                    if (!chimp.IsValid() && UseSelenium)
                     {
-                        chimp = CamelotHerald.GetChimp(name, ServerCluster.Ywain, 3);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex);
-                    }
-                }
+                        if (UseAPI)
+                        {
+                            Logger.Debug($"Could not find a character named {name} via API.");
+                        }
+                        Logger.Debug($"Attempting to find {name} via Selenium Webdriver");
 
-                if (!chimp.IsValid())
-                {
-                    _ = MessageBox.Show($"Could not find a character named \"{name}\"\non server cluster \"{ServerCluster.Ywain}\".", "Character Not Found", MessageBoxButtons.OK);
-                    Logger.Debug($"Could not find a character named {name} on server {ServerCluster.Ywain}.");
-                    Logger.Debug($"Returned result: {chimp}");
+                        try
+                        {
+                            chimp = CamelotHerald.GetChimp(name, ServerCluster.Ywain, 3);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Logger.Error(ex);
+                        }
+                    }
+
+                    if (!chimp.IsValid())
+                    {
+                        _ = MessageBox.Show($"Could not find a character named \"{name}\"\non server cluster \"{ServerCluster.Ywain}\".", "Character Not Found", MessageBoxButtons.OK);
+                        Logger.Debug($"Could not find a character named {name} on server {ServerCluster.Ywain}.");
+                        Logger.Debug($"Returned result: {chimp}");
+                    }
+                    else
+                    {
+                        SqliteDataAccess.AddCharacter(chimp.ConvertToCharacterModel(), DateTime.Now, AccountComboBox.Text);
+                        Logger.Debug($"Successfully added {chimp.Name} to the repository.");
+                        LoadCharacters();
+                        CalculateRPTotals();
+                    }
                 }
-                else
-                {
-                    SqliteDataAccess.AddCharacter(chimp.ConvertToCharacterModel(), DateTime.Now, AccountComboBox.Text);
-                    Logger.Debug($"Successfully added {chimp.Name} to the repository.");
-                    LoadCharacters();
-                    CalculateRPTotals();
-                }
+                SearchComboBox.Text = string.Empty;
+                UpdateDebugLinkBackColor();
+                WaitCursor.Pop();
             }
-            SearchComboBox.Text = string.Empty;
-            UpdateDebugLinkBackColor();
-            WaitCursor.Pop();
+            catch(MaintenanceException ex)
+            {
+                Logger.Debug(ex);
+            }
         }
 
         private void SearchButton_Click(object sender, EventArgs e)

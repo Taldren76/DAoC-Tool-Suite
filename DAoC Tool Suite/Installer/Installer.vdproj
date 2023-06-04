@@ -15,13 +15,37 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_3A785F486A9C40ED97D8FA5B6E2E561C"
+        "MsmKey" = "8:_0935437B290D4CEFA9F2575FC0FAB241"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_809765DF1817432FA5EBADE56B6EA18C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8D0A9B09D58F4F4783122C38066EE6D7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_97A72D1CB9C94999B7E6CC9B0F5C602D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_B4545DB58D524708B0FAE69DBF4A73AC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BF660B28753E44D7B67C58346784E5EF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -108,6 +132,14 @@
         {
             "LaunchCondition"
             {
+                "{A06ECF26-33A3-4562-8140-9B0E340D4F24}:_3909B9916A58434A878DAB29245385DA"
+                {
+                "Name" = "8:.NET Framework"
+                "Message" = "8:[VSDNETMSG]"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.7.2"
+                "AllowLaterVersions" = "11:FALSE"
+                "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=863262"
+                }
                 "{A06ECF26-33A3-4562-8140-9B0E340D4F24}:_8515D8FD87804F06B07094582675FC66"
                 {
                 "Name" = "8:.NET Core"
@@ -122,6 +154,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0935437B290D4CEFA9F2575FC0FAB241"
+            {
+            "SourcePath" = "8:..\\ChimpTool\\bin\\x86\\Release\\net6.0-windows10.0.17763.0\\win-x86\\SQLite.Interop.dll"
+            "TargetName" = "8:SQLite.Interop.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_84BAA862631442F9A02413BED68185BE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B4545DB58D524708B0FAE69DBF4A73AC"
             {
             "SourcePath" = "8:..\\DAoC Tool Suite\\Icons\\DAoCTools.ico"
@@ -161,7 +213,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_84BAA862631442F9A02413BED68185BE"
             {
-            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -198,16 +250,16 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DAoC Tool Suite"
-        "ProductCode" = "8:{1F20F94E-6748-4A88-9A70-A1E9017B83F9}"
-        "PackageCode" = "8:{B79B6673-5BBC-44E6-887E-2B528B489FAA}"
+        "ProductCode" = "8:{42CB9EB4-E34C-4115-8465-49B9BB64C662}"
+        "PackageCode" = "8:{870DB142-D34F-4C98-B08C-3952BFF56B6A}"
         "UpgradeCode" = "8:{B64144B6-6C56-4A20-A52F-D1B1C16ECBEB}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.1.0"
-        "Manufacturer" = "8:Taldren Inc"
+        "ProductVersion" = "8:0.2.0"
+        "Manufacturer" = "8:Taldren, Inc"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:DAoC Tool Suite"
@@ -220,7 +272,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:1"
+        "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -319,7 +371,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_1A204789379F4FB482762D4539C76D27"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_36971A2138FA4D21B962AEF9D9EA67D2"
             {
             "Name" = "8:DAoC Tool Suite"
             "Arguments" = "8:"
@@ -327,10 +379,10 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_3A785F486A9C40ED97D8FA5B6E2E561C"
+            "Target" = "8:_97A72D1CB9C94999B7E6CC9B0F5C602D"
             "Folder" = "8:_C8E4941F783F4B84A50B839E0932DBEF"
             "WorkingFolder" = "8:_84BAA862631442F9A02413BED68185BE"
-            "Icon" = "8:_B4545DB58D524708B0FAE69DBF4A73AC"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
         }
@@ -732,7 +784,63 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3A785F486A9C40ED97D8FA5B6E2E561C"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_809765DF1817432FA5EBADE56B6EA18C"
+            {
+            "SourcePath" = "8:..\\SQLLibrary\\obj\\x86\\Release\\net6.0\\SQLLibrary.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_84BAA862631442F9A02413BED68185BE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{81754B74-4AC5-49CD-9DE8-35BA4BD65EF2}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8D0A9B09D58F4F4783122C38066EE6D7"
+            {
+            "SourcePath" = "8:..\\ChimpTool\\obj\\x86\\Release\\net6.0-windows10.0.17763.0\\win-x86\\ChimpTool.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_84BAA862631442F9A02413BED68185BE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{3C57818B-BE2E-466E-991B-3EBC7B6D8C7B}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_97A72D1CB9C94999B7E6CC9B0F5C602D"
             {
             "SourcePath" = "8:..\\DAoC Tool Suite\\obj\\x86\\Release\\net6.0-windows10.0.17763.0\\apphost.exe"
             "TargetName" = "8:"
@@ -755,6 +863,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{8559E2C1-CC65-4307-BA85-BB78BBEC99F2}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BF660B28753E44D7B67C58346784E5EF"
+            {
+            "SourcePath" = "8:..\\CharacterTool\\obj\\x86\\Release\\net6.0-windows10.0.17763.0\\CharacterTool.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_84BAA862631442F9A02413BED68185BE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{986ACCBB-EE3A-4468-A9AE-71E7308BDFC6}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

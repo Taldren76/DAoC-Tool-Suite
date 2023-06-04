@@ -21,7 +21,8 @@ namespace DAoCToolSuite.ChimpTool.Selenium
         internal static ChromiumWebBrowser? Browser { get; set; }
         internal static ChromeDriverService? ChromeDrvService { get; set; }
         internal static bool IsInitialized { get; set; } = false;
-        internal static string AssemblyPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly()?.Location) ?? throw new NullReferenceException("The path to the assembly can not be determined and returned null");
+        internal static string? ExePath = Path.GetDirectoryName(Application.ExecutablePath); // System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        internal static string AssemblyPath => ExePath ?? throw new NullReferenceException("The path to the assembly can not be determined and returned null");
         public static void Initialize()
         {
             Stopwatch stopwatch = new();
@@ -101,7 +102,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 }
                 #endregion
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
             }
@@ -198,7 +199,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 Logger.Debug($"Navigation complete. Url={driver.Url}");
                 return driver.ScrapeCharacterInfo();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 return new ChimpJson(true);
@@ -250,7 +251,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                         ChimpJson result = driver.ScrapeCharacterInfo();
                         results.Add(result);
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
                         Logger.Error(ex);
                     }
@@ -312,7 +313,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                         Logger.Debug($"Result returned in {resultWatch.Elapsed:c}");
                         results.Add(result);
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
                         Logger.Error(ex);
                         Logger.Debug($"Exception after {resultWatch.Elapsed:c}");
@@ -531,7 +532,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 Logger.Debug($"Took {stopwatch.Elapsed:c} to scape data for {chimp.Name}");
                 return chimp;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
                 return new ChimpJson(true);

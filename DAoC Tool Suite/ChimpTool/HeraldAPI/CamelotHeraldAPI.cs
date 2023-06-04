@@ -1,17 +1,25 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Authentication;
 using DAoCToolSuite.ChimpTool.Json;
 using DAoCToolSuite.ChimpTool.Logging;
+using DAoCToolSuite.ChimpTool.Exception;
 using Newtonsoft.Json;
 using SQLLibrary.Enums;
+using System.Diagnostics.Eventing.Reader;
+using System.Runtime.Intrinsics.X86;
+using System.Windows.Documents;
 
 namespace DAoCToolSuite.ChimpTool.HeraldAPI
 {
     public static class CamelotHeraldAPI
     {
+        private static bool AttemptMaintenanceBypass { get; set; } = false;
         private static readonly Logger Logger = new();
         private const string searchBase = "https://api.camelotherald.com/character/search";
+        private const string searchBase2 = "http://api.camelotherald.com/characters/search";
         private const string infoBase = "https://api.camelotherald.com/character/info";
+        private const string infoBase2 = "http://api.camelotherald.com/character/info";
         public static CharacterInfoResult CharacterInfo(string webID)
         {
             if (webID == null)
@@ -48,7 +56,24 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                     Logger.Debug($"{(int)response.StatusCode} ({response.ReasonPhrase})");
                 }
             }
-            catch (Exception e)
+            catch(AggregateException ex)
+            {
+                if (!AttemptMaintenanceBypass && ex?.InnerException?.Message is not null && ex.InnerException.Message.Equals("The SSL connection could not be established, see inner exception."))
+                {
+                    DialogResult del = MessageBox.Show($"Herald is in Maintenance. Attempt bypass?", "Mainenance", MessageBoxButtons.YesNo);
+                    if (del == DialogResult.Yes)
+                    {
+                        AttemptMaintenanceBypass = true;
+                        return CharacterInfo2(webID);
+                    }
+                    throw new MaintenanceException("Herald is in maintenance", ex);
+                }
+                else if(AttemptMaintenanceBypass)
+                {
+                    return CharacterInfo2(webID);
+                }
+            }
+            catch (System.Exception e)
             {
                 Logger.Error(e);
                 return new();
@@ -58,6 +83,58 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             result.IsValid = true;
             return result;
         }
+
+        public static CharacterInfoResult CharacterInfo2(string webID)
+        {
+            if (webID == null)
+            {
+                return new CharacterInfoResult();
+            }
+
+            string urlParameters = $"";
+            HttpClient client = new()
+            {
+                BaseAddress = new Uri(infoBase2 + $"/{webID}")
+            };
+
+            client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+
+            CharacterInfoResult? result = new();
+            try
+            {
+                HttpResponseMessage response = client.GetAsync(urlParameters).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = response.Content.ReadAsStringAsync().Result;
+                    result = JsonConvert.DeserializeObject<CharacterInfoResult>(json);
+                    if (result is null)
+                    {
+                        return new();
+                    }
+
+                    result.IsValid = true;
+                }
+                else
+                {
+                    Logger.Debug($"{(int)response.StatusCode} ({response.ReasonPhrase})");
+                }
+            }
+            catch(MaintenanceException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception e)
+            {
+                Logger.Error(e);
+                return new();
+            }
+
+            client.Dispose();
+            result.IsValid = true;
+            return result;
+        }
+
         public static CharacterSearchResult CharacterSearch(string characterName, ServerCluster cluster)
         {
             string urlParameters = $"?name={characterName}&cluster={cluster}";
@@ -89,7 +166,24 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                     Logger.Debug($"{(int)response.StatusCode} ({response.ReasonPhrase})");
                 }
             }
-            catch (Exception e)
+            catch (AggregateException ex)
+            {
+                if (!AttemptMaintenanceBypass && ex?.InnerException?.Message is not null && ex.InnerException.Message.Equals("The SSL connection could not be established, see inner exception."))
+                {
+                    DialogResult del = MessageBox.Show($"Herald is in Maintenance. Attempt bypass?", "Mainenance", MessageBoxButtons.YesNo);
+                    if (del == DialogResult.Yes)
+                    {
+                        AttemptMaintenanceBypass = true;
+                        return CharacterSearch2(characterName,cluster);
+                    }
+                    throw new MaintenanceException("Herald is in maintenance", ex);
+                }
+                else if (AttemptMaintenanceBypass)
+                {
+                    return CharacterSearch2(characterName,cluster);
+                }
+            }
+            catch (System.Exception e)
             {
                 Logger.Error(e);
                 return new();
@@ -99,6 +193,53 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             result.IsValid = true;
             return result;
         }
+
+        public static CharacterSearchResult CharacterSearch2(string characterName, ServerCluster cluster)
+        {
+            string urlParameters = $"?name={characterName}&cluster={cluster}";
+            HttpClient client = new()
+            {
+                BaseAddress = new Uri(searchBase2)
+            };
+
+            client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+
+            CharacterSearchResult? result = new();
+            try
+            {
+                HttpResponseMessage response = client.GetAsync(urlParameters).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = response.Content.ReadAsStringAsync().Result;
+                    result = JsonConvert.DeserializeObject<CharacterSearchResult>(json);
+                    if (result?.Results is null || result.Results.Count == 0)
+                    {
+                        return new();
+                    }
+
+                    result.IsValid = true;
+                }
+                else
+                {
+                    Logger.Debug($"{(int)response.StatusCode} ({response.ReasonPhrase})");
+                }
+            }
+            catch(MaintenanceException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception e)
+            {
+                Logger.Error(e);
+                return new();
+            }
+
+            client.Dispose();
+            result.IsValid = true;
+            return result;
+        }
+
         public static ChimpJson GetChimp(string name, ServerCluster cluster)
         {
             CharacterSearchResult? searchResult = CharacterSearch(name, cluster);
@@ -112,7 +253,11 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                 string? webid = searchResult?.Results[0]?.CharacterWebId;
                 return webid is null ? new() : GetChimp(webid);
             }
-            catch (Exception e)
+            catch(MaintenanceException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception e)
             {
                 Logger.Error(e);
                 return new(true);
@@ -180,7 +325,11 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                 }
                 return new ChimpJson();
             }
-            catch (Exception e)
+            catch(MaintenanceException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception e)
             {
                 Logger.Error(e);
                 return new ChimpJson();
@@ -278,7 +427,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                     }
                     continue;
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     Logger.Error(e);
                     continue;
@@ -335,7 +484,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                 double test2 = test.Select(x => x.Key).Last() / 10.0;
                 return test2;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
                 return -1.0;
