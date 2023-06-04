@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Windows.Forms.VisualStyles;
 
 namespace DAoCToolSuite.CharacterTool.Files
 {
@@ -11,8 +10,7 @@ namespace DAoCToolSuite.CharacterTool.Files
         {
             get
             {
-                if (_IGNFiles is null)
-                    _IGNFiles = GetIgnFiles();
+                _IGNFiles ??= GetIgnFiles();
                 return _IGNFiles.ToList();
             }
         }
@@ -21,8 +19,7 @@ namespace DAoCToolSuite.CharacterTool.Files
         {
             get
             {
-                if (_INIFiles is null)
-                    _INIFiles = GetIniFiles();
+                _INIFiles ??= GetIniFiles();
                 return _INIFiles.ToList();
             }
         }
@@ -101,22 +98,16 @@ namespace DAoCToolSuite.CharacterTool.Files
             return files;
         }
 
-        internal string? FindIgnFileByCharacterName(string characterName,bool fullPath = false)
+        internal string? FindIgnFileByCharacterName(string characterName, bool fullPath = false)
         {
             string? fileName = IGNFiles.Where(x => x.Split('\\').Last().Split('-').First() == characterName).FirstOrDefault();
-            if(fullPath)
-                return fileName;
-            else
-                return fileName?.Split('\\')?.Last();
+            return fullPath ? fileName : (fileName?.Split('\\')?.Last());
         }
 
         internal string? FindIniFileByCharacterName(string characterName, bool fullPath = false)
         {
             string? fileName = INIFiles.Where(x => x.Split('\\').Last().Split('-').First() == characterName).FirstOrDefault();
-            if (fullPath)
-                return fileName;
-            else
-                return fileName?.Split('\\')?.Last();
+            return fullPath ? fileName : (fileName?.Split('\\')?.Last());
         }
 
         internal string? GetFileContents(string fileName)

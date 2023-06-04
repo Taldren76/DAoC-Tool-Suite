@@ -95,7 +95,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                     //this Initalize gets the first failure out of the way.
                     driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
                 }
-                catch(WebDriverException)
+                catch (WebDriverException)
                 {
                     //This is, unfortunetly, expected.
                 }
@@ -143,16 +143,18 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 Logger.Debug($"Navigation complete. Url={driver.Url}");
                 IWebElement? characterNameLink = null; // driver.GetIfExists(By.XPath("//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a"));
 
-                if(driver.GetIfExists(By.XPath("//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a"), secondsToTry*1000, 100) is null) //Delays until a result exists in the table;
-                    return new(true); 
+                if (driver.GetIfExists(By.XPath("//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a"), secondsToTry * 1000, 100) is null) //Delays until a result exists in the table;
+                {
+                    return new(true);
+                }
 
                 ReadOnlyCollection<IWebElement> playerSearchResultsTable = driver.FindElements(By.XPath("//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody//tr//td//a"));
                 foreach (IWebElement cell in playerSearchResultsTable)
                 {
-                    var cellText = cell?.Text?.Split(' ')?.FirstOrDefault()?.Trim().ToLower();
+                    string? cellText = cell?.Text?.Split(' ')?.FirstOrDefault()?.Trim().ToLower();
 
 
-                    if (cellText != null && cellText.Equals(playerName.ToLower())  )
+                    if (cellText != null && cellText.Equals(playerName.ToLower()))
                     {
                         characterNameLink = cell;
                         break;
@@ -160,8 +162,10 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 }
 
                 if (characterNameLink is null)
+                {
                     return new(true);
-               
+                }
+
                 characterNameLink?.Click();
 
 

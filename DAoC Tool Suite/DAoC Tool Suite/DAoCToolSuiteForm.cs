@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace DAoCToolSuite
+﻿namespace DAoCToolSuite
 {
     public partial class DAoCToolSuiteForm : Form
     {
@@ -23,30 +13,36 @@ namespace DAoCToolSuite
         private void chimpToolButton_Click(object sender, EventArgs e)
         {
             if (ChimpToolForm is null || ChimpToolForm.IsDisposed)
+            {
                 ChimpToolForm = new();
+            }
+
             ChimpToolForm.FormClosed += ChimpToolForm_FormClosed;
             ChimpToolForm.Show();
-            ChimpToolForm.Focus();
+            _ = ChimpToolForm.Focus();
 
         }
 
         private void ChimpToolForm_FormClosed(object? sender, FormClosedEventArgs e)
         {
-            this.Focus();
+            _ = Focus();
         }
 
         private void characterToolButton_Click(object sender, EventArgs e)
         {
             if (CharacterToolForm is null || CharacterToolForm.IsDisposed)
+            {
                 CharacterToolForm = new();
+            }
+
             CharacterToolForm.FormClosed += CharacterToolForm_FormClosed;
             CharacterToolForm.Show();
-            CharacterToolForm.Focus();
+            _ = CharacterToolForm.Focus();
         }
 
         private void CharacterToolForm_FormClosed(object? sender, FormClosedEventArgs e)
         {
-            this.Focus();
+            _ = Focus();
         }
 
         protected override void OnShown(EventArgs e)
@@ -61,12 +57,12 @@ namespace DAoCToolSuite
             long currentCount = DAoCToolSuite.Properties.Settings.Default.LoadCount;
             if (currentCount > 0)
             {
-                this.Location = DAoCToolSuite.Properties.Settings.Default.WindowLocation;
+                Location = DAoCToolSuite.Properties.Settings.Default.WindowLocation;
             }
             else
             {
                 //ScreenCentered by Default
-                DAoCToolSuite.Properties.Settings.Default.WindowLocation = this.Location;
+                DAoCToolSuite.Properties.Settings.Default.WindowLocation = Location;
             }
             if (currentCount != long.MaxValue)
             {
@@ -77,8 +73,7 @@ namespace DAoCToolSuite
 
         private void DAoCTestSuiteForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DAoCToolSuiteForm? form = sender as DAoCToolSuiteForm;
-            if (form is null)
+            if (sender is not DAoCToolSuiteForm form)
             {
                 return;
             }

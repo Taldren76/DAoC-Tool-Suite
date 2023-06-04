@@ -85,16 +85,10 @@
             get
             {
                 _ = DateTime.TryParse(Date, out DateTime temp);
-                return temp; 
+                return temp;
             }
         }
-        public DateOnly DateOnly
-        {
-            get
-            {
-                return DateOnly.FromDateTime(DateTime);
-            }
-        }
+        public DateOnly DateOnly => DateOnly.FromDateTime(DateTime);
 
         //
         // Helper Methods
@@ -153,8 +147,10 @@
             {
                 int realmRank = realmRanks?.Where(x => x.Value <= realmPoints)?.Select(x => x.Key)?.Last() ?? -1;
                 if (realmRank < 0)
+                {
                     Thread.Sleep(100);
-                
+                }
+
                 double decimalRealmRank = realmRank / 10.0;
 
                 return decimalRealmRank;
@@ -216,8 +212,8 @@
                     return int.MaxValue;
                 }
 
-                double currentRank = CalculateRealmRank(realmPoints)*10;
-                int nextRank = Convert.ToInt32(currentRank) +1 ;
+                double currentRank = CalculateRealmRank(realmPoints) * 10;
+                int nextRank = Convert.ToInt32(currentRank) + 1;
                 int nextRankRP = Convert.ToInt32(realmRanks[nextRank]);
                 int RPNeeded = nextRankRP - realmPoints;
                 return RPNeeded;

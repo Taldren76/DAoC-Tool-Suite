@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace DAoCToolSuite
+namespace DAoCToolSuite.ChimpTool
 {
     public static class NLogLogger
     {

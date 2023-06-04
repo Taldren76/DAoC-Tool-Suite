@@ -3,17 +3,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using DAoCToolSuite.ChimpTool.Enums;
+using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.HeraldAPI;
 using DAoCToolSuite.ChimpTool.Json;
+using DAoCToolSuite.ChimpTool.Logging;
 using DAoCToolSuite.ChimpTool.Selenium;
 using DAoCToolSuite.ChimpTool.Settings;
-using DAoCToolSuite.ChimpTool.Logging;
-using DAoCToolSuite;
 using Newtonsoft.Json;
 using SQLLibrary;
 using SQLLibrary.Enums;
-using DAoCToolSuite.ChimpTool.Extensions;
-using System.Runtime.CompilerServices;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -32,6 +30,7 @@ namespace DAoCToolSuite.ChimpTool
         private BindingSource BindingSource { get; set; } = new();
         #endregion
 
+        #region Logger
         private static Logger? _Logger = null;
         public static Logger Logger
         {
@@ -44,6 +43,9 @@ namespace DAoCToolSuite.ChimpTool
             }
             set => _Logger = value;
         }
+        #endregion
+
+        #region Settings
         private static SettingsManager? _settings = null;
         public static SettingsManager Settings
         {
@@ -56,7 +58,6 @@ namespace DAoCToolSuite.ChimpTool
             }
             set => _settings = value;
         }
-
         private static bool UseSelenium => Settings.UseSelenium;
         private static bool UseAPI => Settings.UseAPI;
         private static string LastAccount
@@ -69,6 +70,7 @@ namespace DAoCToolSuite.ChimpTool
             get => Settings.AlwaysOnTop;
             set => Settings.AlwaysOnTop = value;
         }
+        #endregion
 
         #region MainForm
         public MainForm()
@@ -127,15 +129,35 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void MainForm_Closing(object sender, EventArgs e)
         {
-            MainForm? form = sender as MainForm;
-            if (form is null)
+            if (sender is not MainForm form)
+            {
                 return;
+            }
+
             Properties.Settings.Default.WindowLocation = form.Location;
             Properties.Settings.Default.Save();
             Logger.Debug($"Shutting down.");
             CamelotHerald.Quit();
         }
-
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            long currentCount = ChimpTool.Properties.Settings.Default.LoadCount;
+            if (currentCount > 0)
+            {
+                Location = ChimpTool.Properties.Settings.Default.WindowLocation;
+            }
+            else
+            {
+                //ScreenCentered by Default
+                ChimpTool.Properties.Settings.Default.WindowLocation = Location;
+            }
+            if (currentCount != long.MaxValue)
+            {
+                ChimpTool.Properties.Settings.Default.LoadCount = currentCount + 1;
+            }
+            ChimpTool.Properties.Settings.Default.Save();
+        }
         private void OnTopCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (sender is not CheckBox checkbox)
@@ -387,7 +409,6 @@ namespace DAoCToolSuite.ChimpTool
                     SqliteDataAccess.AddAccount(account.Key);
                     foreach (ChimpJson chimp in account.Value)
                     {
-
                         SqliteDataAccess.AddCharacter(chimp.ConvertToCharacterModel(), DateTime.Now, account.Key);
                         SqliteDataAccess.AddGuild(chimp.ConvertToGuildModel());
                     }
@@ -497,6 +518,78 @@ namespace DAoCToolSuite.ChimpTool
         #endregion
 
         #region DataGridView
+        private void UpdateCharacterLists()
+        {
+            string account;
+            if (Characters.Count > 0)
+            {
+                account = AccountComboBox.Items.Count > 0 && AccountComboBox.Text != "SQLLibrary.AccountModel"
+                    ? AccountComboBox.Text.ToString()
+                    : "Default";
+                List<CharacterModel> charactersLastDateOnly = Characters.GroupBy(x => x.WebID)
+                                                                        .Select(x => x.OrderByDescending(y => y.DateTime))
+                                                                        .Select(x => x.First())
+                                                                        .OrderBy(x => x.Realm)
+                                                                        .ThenByDescending(x => x.TotalRealmPoints)
+                                                                        .ThenByDescending(x => x.Name)
+                                                                        .ToList();
+
+
+                List<CharacterModel> charactersByAccountLastDateUpdated = Characters.Where(x => x.Account == account)
+                                                                                    .GroupBy(x => x.WebID)
+                                                                                    .Select(x => x.OrderByDescending(y => y.DateTime))
+                                                                                    .Select(x => x.First())
+                                                                                    .OrderBy(x => x.Realm)
+                                                                                    .ThenByDescending(x => x.TotalRealmPoints)
+                                                                                    .ThenByDescending(x => x.Name)
+                                                                                    .ToList();
+
+
+                List<CharacterModel> charactersByAccountFirstDateUpdated = Characters.Where(x => x.Account == account)
+                                                                                     .GroupBy(x => x.WebID)
+                                                                                     .Select(x => x.OrderByDescending(y => y.DateTime))
+                                                                                     .Select(x => x.Last())
+                                                                                     .OrderBy(x => x.Realm)
+                                                                                     .ThenByDescending(x => x.TotalRealmPoints)
+                                                                                     .ThenByDescending(x => x.Name)
+                                                                                     .ToList();
+                foreach (CharacterModel character in charactersByAccountLastDateUpdated)
+                {
+                    if (character?.WebID is null)
+                    {
+                        continue;
+                    }
+
+                    string webID = character.WebID;
+                    int latestRP = charactersByAccountLastDateUpdated.Where(x => x.WebID == webID).Select(x => x.TotalRealmPoints ?? 0).First();
+                    int earliestRP = charactersByAccountFirstDateUpdated.Where(x => x.WebID == webID).Select(x => x.TotalRealmPoints ?? 0).First();
+                    character.RPLastUpdate = latestRP - earliestRP;
+                    //if (character.RPLastUpdate > 0)
+                    //    Thread.Sleep(1);
+                }
+                CharactersLastDateOnly = null;
+                CharactersLastDateOnly = charactersLastDateOnly;
+                CharactersByAccountLastDateUpdated = null;
+                CharactersByAccountLastDateUpdated = charactersByAccountLastDateUpdated;
+                CharactersByAccountFirstDateUpdated = null;
+                CharactersByAccountFirstDateUpdated = charactersByAccountFirstDateUpdated;
+
+
+                //DataView view = charactersByAccountLastDateUpdated.ToDataTable().DefaultView;
+                //view.Sort = "Name ASC, TotalRealmPoints DESC";
+                //BindingSource = view;
+
+            }
+            else
+            {
+                CharactersLastDateOnly = null;
+                CharactersLastDateOnly = new List<CharacterModel>();
+                CharactersByAccountLastDateUpdated = null;
+                CharactersByAccountLastDateUpdated = new List<CharacterModel>();
+                CharactersByAccountFirstDateUpdated = null;
+                CharactersByAccountFirstDateUpdated = new List<CharacterModel>();
+            }
+        }
         private void SearchGridView_CellToolTipTextNeeded(object sender, DataGridViewCellEventArgs e)
         {
             if (sender is not DataGridView dataGridView || CharactersByAccountLastDateUpdated is null)
@@ -848,7 +941,7 @@ namespace DAoCToolSuite.ChimpTool
 
                 if (!chimp.IsValid())
                 {
-                    DialogResult res = MessageBox.Show($"Could not find a character named \"{name}\"\non server cluster \"{ServerCluster.Ywain}\".", "Character Not Found", MessageBoxButtons.OK);
+                    _ = MessageBox.Show($"Could not find a character named \"{name}\"\non server cluster \"{ServerCluster.Ywain}\".", "Character Not Found", MessageBoxButtons.OK);
                     Logger.Debug($"Could not find a character named {name} on server {ServerCluster.Ywain}.");
                     Logger.Debug($"Returned result: {chimp}");
                 }
@@ -961,115 +1054,5 @@ namespace DAoCToolSuite.ChimpTool
             }
         }
         #endregion
-
-        private void UpdateCharacterLists()
-        {
-            string account;
-            if (Characters.Count > 0)
-            {
-                account = AccountComboBox.Items.Count > 0 && AccountComboBox.Text != "SQLLibrary.AccountModel"
-                    ? AccountComboBox.Text.ToString()
-                    : "Default";
-                List<CharacterModel> charactersLastDateOnly = Characters.GroupBy(x => x.WebID)
-                                                                        .Select(x => x.OrderByDescending(y => y.DateTime))
-                                                                        .Select(x => x.First())
-                                                                        .OrderBy(x => x.Realm)
-                                                                        .ThenByDescending(x => x.TotalRealmPoints)
-                                                                        .ThenByDescending(x => x.Name)
-                                                                        .ToList();
-
-
-                List<CharacterModel> charactersByAccountLastDateUpdated = Characters.Where(x => x.Account == account)
-                                                                                    .GroupBy(x => x.WebID)
-                                                                                    .Select(x => x.OrderByDescending(y => y.DateTime))
-                                                                                    .Select(x => x.First())
-                                                                                    .OrderBy(x => x.Realm)
-                                                                                    .ThenByDescending(x => x.TotalRealmPoints)
-                                                                                    .ThenByDescending(x => x.Name)
-                                                                                    .ToList();
-
-
-                List<CharacterModel> charactersByAccountFirstDateUpdated = Characters.Where(x => x.Account == account)
-                                                                                     .GroupBy(x => x.WebID)
-                                                                                     .Select(x => x.OrderByDescending(y => y.DateTime))
-                                                                                     .Select(x => x.Last())
-                                                                                     .OrderBy(x => x.Realm)
-                                                                                     .ThenByDescending(x => x.TotalRealmPoints)
-                                                                                     .ThenByDescending(x => x.Name)
-                                                                                     .ToList();
-                foreach (CharacterModel character in charactersByAccountLastDateUpdated)
-                {
-                    if (character?.WebID is null)
-                    {
-                        continue;
-                    }
-
-                    string webID = character.WebID;
-                    int latestRP = charactersByAccountLastDateUpdated.Where(x => x.WebID == webID).Select(x => x.TotalRealmPoints ?? 0).First();
-                    int earliestRP = charactersByAccountFirstDateUpdated.Where(x => x.WebID == webID).Select(x => x.TotalRealmPoints ?? 0).First();
-                    character.RPLastUpdate = latestRP - earliestRP;
-                    //if (character.RPLastUpdate > 0)
-                    //    Thread.Sleep(1);
-                }
-                CharactersLastDateOnly = null;
-                CharactersLastDateOnly = charactersLastDateOnly;
-                CharactersByAccountLastDateUpdated = null;
-                CharactersByAccountLastDateUpdated = charactersByAccountLastDateUpdated;
-                CharactersByAccountFirstDateUpdated = null;
-                CharactersByAccountFirstDateUpdated = charactersByAccountFirstDateUpdated;
-
-
-                //DataView view = charactersByAccountLastDateUpdated.ToDataTable().DefaultView;
-                //view.Sort = "Name ASC, TotalRealmPoints DESC";
-                //BindingSource = view;
-
-            }
-            else
-            {
-                CharactersLastDateOnly = null;
-                CharactersLastDateOnly = new List<CharacterModel>();
-                CharactersByAccountLastDateUpdated = null;
-                CharactersByAccountLastDateUpdated = new List<CharacterModel>();
-                CharactersByAccountFirstDateUpdated = null;
-                CharactersByAccountFirstDateUpdated = new List<CharacterModel>();
-            }
-        }
-        private void AccountComboBoxOnShow(object sender, EventArgs e)
-        {
-
-        }
-
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-
-        }
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            long currentCount = ChimpTool.Properties.Settings.Default.LoadCount;
-            if (currentCount > 0)
-            {
-                this.Location = ChimpTool.Properties.Settings.Default.WindowLocation;
-            }
-            else
-            {
-                //ScreenCentered by Default
-                ChimpTool.Properties.Settings.Default.WindowLocation = this.Location;
-            }
-            if (currentCount != long.MaxValue)
-            {
-                ChimpTool.Properties.Settings.Default.LoadCount = currentCount + 1;
-            }
-            ChimpTool.Properties.Settings.Default.Save();
-        }
-    }
-
-    public class MyTextBox : TextBox
-    {
-        public MyTextBox()
-        {
-
-        }
     }
 }

@@ -426,7 +426,6 @@ namespace DAoCToolSuite.ChimpTool
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ChimpTool v1.1.0";
             FormClosing += MainForm_Closing;
-            Shown += AccountComboBoxOnShow;
             GridPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)SearchGridView).EndInit();
             panel2.ResumeLayout(false);

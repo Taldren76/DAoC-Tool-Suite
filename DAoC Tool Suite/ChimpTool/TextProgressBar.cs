@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using System.ComponentModel;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -26,10 +23,7 @@ namespace DAoCToolSuite.ChimpTool
         [Category("Additional Options")]
         public Color TextColor
         {
-            get
-            {
-                return _textColourBrush.Color;
-            }
+            get => _textColourBrush.Color;
             set
             {
                 _textColourBrush.Dispose();
@@ -41,10 +35,7 @@ namespace DAoCToolSuite.ChimpTool
         [Category("Additional Options"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
         public Color ProgressColor
         {
-            get
-            {
-                return _progressColourBrush.Color;
-            }
+            get => _progressColourBrush.Color;
             set
             {
                 _progressColourBrush.Dispose();
@@ -56,10 +47,7 @@ namespace DAoCToolSuite.ChimpTool
         [Category("Additional Options"), Browsable(true)]
         public ProgressBarDisplayMode VisualMode
         {
-            get
-            {
-                return _visualMode;
-            }
+            get => _visualMode;
             set
             {
                 _visualMode = value;
@@ -72,10 +60,7 @@ namespace DAoCToolSuite.ChimpTool
         [Description("If it's empty, % will be shown"), Category("Additional Options"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
         public string CustomText
         {
-            get
-            {
-                return _text;
-            }
+            get => _text;
             set
             {
                 _text = value;
@@ -91,16 +76,16 @@ namespace DAoCToolSuite.ChimpTool
 
                 switch (VisualMode)
                 {
-                    case (ProgressBarDisplayMode.Percentage):
+                    case ProgressBarDisplayMode.Percentage:
                         text = _percentageStr;
                         break;
-                    case (ProgressBarDisplayMode.CurrProgress):
+                    case ProgressBarDisplayMode.CurrProgress:
                         text = _currProgressStr;
                         break;
-                    case (ProgressBarDisplayMode.TextAndCurrProgress):
+                    case ProgressBarDisplayMode.TextAndCurrProgress:
                         text = $"{CustomText}: {_currProgressStr}";
                         break;
-                    case (ProgressBarDisplayMode.TextAndPercentage):
+                    case ProgressBarDisplayMode.TextAndPercentage:
                         text = $"{CustomText}: {_percentageStr}";
                         break;
                 }
@@ -110,15 +95,9 @@ namespace DAoCToolSuite.ChimpTool
             set { }
         }
 
-        private string _percentageStr { get { return $"{Convert.ToInt32(((float)Value - Minimum) / ((float)Maximum - Minimum) * 100)} %"; } }
+        private string _percentageStr => $"{Convert.ToInt32(((float)Value - Minimum) / ((float)Maximum - Minimum) * 100)} %";
 
-        private string _currProgressStr
-        {
-            get
-            {
-                return $"{Value}/{Maximum}";
-            }
-        }
+        private string _currProgressStr => $"{Value}/{Maximum}";
 
         public TextProgressBar()
         {
@@ -150,7 +129,7 @@ namespace DAoCToolSuite.ChimpTool
 
             if (Value > 0)
             {
-                Rectangle clip = new Rectangle(rect.X, rect.Y, (int)Math.Round(((float)Value / Maximum) * rect.Width), rect.Height);
+                Rectangle clip = new(rect.X, rect.Y, (int)Math.Round((float)Value / Maximum * rect.Width), rect.Height);
 
                 g.FillRectangle(_progressColourBrush, clip);
             }
@@ -165,9 +144,9 @@ namespace DAoCToolSuite.ChimpTool
 
                 SizeF len = g.MeasureString(text, TextFont);
 
-                Point location = new Point(((Width / 2) - (int)len.Width / 2), ((Height / 2) - (int)len.Height / 2));
+                Point location = new((Width / 2) - ((int)len.Width / 2), (Height / 2) - ((int)len.Height / 2));
 
-                g.DrawString(text, TextFont, (Brush)_textColourBrush, location);
+                g.DrawString(text, TextFont, _textColourBrush, location);
             }
         }
 

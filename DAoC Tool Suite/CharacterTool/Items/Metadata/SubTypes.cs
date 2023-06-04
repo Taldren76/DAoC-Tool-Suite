@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAoCToolSuite.CharacterTool.Items.Metadata
+﻿namespace DAoCToolSuite.CharacterTool.Items.Metadata
 {
     public class SubTypes
     {
-        public Dictionary<int, List<SubType>> sub_types = new Dictionary<int, List<SubType>>();
+        public Dictionary<int, List<SubType>> sub_types = new();
         public SubTypes()
         {
             //Stats

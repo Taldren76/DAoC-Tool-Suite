@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using DAoCToolSuite.CharacterTool.Logging;
 using Newtonsoft.Json;
-using SQLLibrary.Enums;
 
 namespace DAoCToolSuite.CharacterTool.Settings
 {
@@ -29,6 +28,32 @@ namespace DAoCToolSuite.CharacterTool.Settings
                 lock (thisLock)
                 {
                     Settings.AlwaysOnTop = value;
+                    SaveSettings();
+                }
+            }
+        }
+
+        public string RealmClasses
+        {
+            get => Settings.RealmClasses ?? SettingsDefault.RealmClasses;
+            set
+            {
+                lock (thisLock)
+                {
+                    Settings.RealmClasses = value;
+                    SaveSettings();
+                }
+            }
+        }
+
+        public string Servers
+        {
+            get => Settings.Servers ?? SettingsDefault.Servers;
+            set
+            {
+                lock (thisLock)
+                {
+                    Settings.Servers = value;
                     SaveSettings();
                 }
             }
@@ -108,8 +133,8 @@ namespace DAoCToolSuite.CharacterTool.Settings
         {
             Initialize();
 
-            List<string> columns = new() { "Name", "Realm", "Class", "Server", "RealmRank", "TotalRealmPoints", "TotalSoloKills", "TotalDeathBlows", "TotalKills", "TotalDeaths", "IRS", "RPNextRank", "RPLastUpdate", "BountyPoints" };
-            List<string> headers = new() { "Name", "Realm", "Class", "Server", "Realm\nRank", "Realm\nPoints", "Solo\nKills", "Death\nBlows", "Kills", "Deaths", "IRS", "RP Next\nRank", "RP Last\nUpdate", "BountyPoints" };
+            List<string> columns = new() { "DateOnly", "FirstName", "Realm", "Class", "Description" };
+            List<string> headers = new() { "Date", "Name", "Realm", "Class", "Description" };
             string listC = string.Join(",", columns);
             string listH = string.Join(",", headers);
             _ = listC.Split(',').ToList();

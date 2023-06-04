@@ -77,7 +77,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                 {
                     string json = response.Content.ReadAsStringAsync().Result;
                     result = JsonConvert.DeserializeObject<CharacterSearchResult>(json);
-                    if (result?.Results is null || result.Results.Count ==0)
+                    if (result?.Results is null || result.Results.Count == 0)
                     {
                         return new();
                     }
@@ -143,7 +143,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                         Realm = new List<string>() { "Albion", "Midgard", "Hibernia", "NewJersey" }[realm],
 
                         MasterLevel_Level = result?.MasterLevel?.Level.ToString("N0") ?? "0",
-                        MasterLevel_Name = result?.MasterLevel?.Path??"",
+                        MasterLevel_Name = result?.MasterLevel?.Path ?? "",
 
                         BountyPoints = result?.RealmWarStats?.Current?.BountyPoints.ToString("N0") ?? "0",
 

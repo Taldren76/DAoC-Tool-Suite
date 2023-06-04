@@ -10,8 +10,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             get
             {
-                if (_IGNFiles is null)
-                    _IGNFiles = GetIgnFiles();
+                _IGNFiles ??= GetIgnFiles();
                 return _IGNFiles.ToList();
             }
         }
@@ -20,8 +19,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             get
             {
-                if (_INIFiles is null)
-                    _INIFiles = GetIniFiles();
+                _INIFiles ??= GetIniFiles();
                 return _INIFiles.ToList();
             }
         }

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 
 namespace DAoCToolSuite
-{ 
+{
     public class ParseDirectory
     {
         private string Folder { get; set; }

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using SQLLibrary.Enums;
 
 namespace DAoCToolSuite.CharacterTool.Settings
 {
@@ -15,6 +14,11 @@ namespace DAoCToolSuite.CharacterTool.Settings
         public HeaderNames? DisplayedDataGridViewHeaderNames { get; set; }
         [JsonProperty]
         public ColumnNames? DisplayedDatabaseColumnNames { get; set; }
+        [JsonProperty]
+        public string? RealmClasses { get; set; }
+        [JsonProperty]
+        public string? Servers { get; set; }
+
 
     }
 }

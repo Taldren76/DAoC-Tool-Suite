@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using DAoCToolSuite.ChimpTool.Json;
 using DAoCToolSuite.ChimpTool.Logging;
 using DAoCToolSuite.ChimpTool.Settings;
@@ -34,44 +29,51 @@ namespace DAoCToolSuite.ChimpTool.Extensions
             try
             {
                 if (targetGrid.DataSource is null)
-                    return;
-                BindingSource? source = targetGrid.DataSource as BindingSource;
-                DataTable? gridTable = (source?.DataSource as List<ChimpJson>)?.ToDataTable() as DataTable; //(DataTable)targetGrid.DataSource;
-                if (gridTable is null)
-                    return;
-                // Create a graphics object from the target grid. Used for measuring text size.
-                using (var gfx = targetGrid.CreateGraphics())
                 {
-                    if (gridTable?.Columns is null)
-                    {
-                        return;
-                    }
-                    int gridTableCount = gridTable.Columns.Count;
-                    // Iterate through the columns.
-                    for (int i = 0; i < gridTableCount; i++)
-                    {
-                        // Leverage Linq enumerator to rapidly collect all the rows into a string array, making sure to exclude null values.
-                        string?[] colStringCollection = gridTable?.AsEnumerable()?.Where(r => r.Field<object>(i) != null)?.Select(r => r.Field<object>(i)?.ToString())?.ToArray() ?? new string[] { };
-                        if (colStringCollection is null) continue;
-                        // Sort the string array by string lengths.
-                        colStringCollection = colStringCollection.OrderBy((x) => x.Length).ToArray();
-                        if (colStringCollection is null) continue;
-                        // Get the last and longest string in the array.
-                        string? longestColString = colStringCollection.Last();
-                        if (longestColString is null) continue;
-                        // Use the graphics object to measure the string size.
-                        var colWidth = gfx.MeasureString(longestColString, targetGrid.Font);
+                    return;
+                }
 
-                        // If the calculated width is larger than the column header width, set the new column width.
-                        if (colWidth.Width > targetGrid.Columns[i].HeaderCell.Size.Width)
-                        {
-                            targetGrid.Columns[i].Width = (int)colWidth.Width;
-                        }
-                        else // Otherwise, set the column width to the header width.
-                        {
-                            targetGrid.Columns[i].Width = targetGrid.Columns[i].HeaderCell.Size.Width;
-                        }
+                BindingSource? source = targetGrid.DataSource as BindingSource;
+                //(DataTable)targetGrid.DataSource;
+                if ((source?.DataSource as List<ChimpJson>)?.ToDataTable() is not DataTable gridTable)
+                {
+                    return;
+                }
+                // Create a graphics object from the target grid. Used for measuring text size.
+                using Graphics gfx = targetGrid.CreateGraphics();
+                if (gridTable?.Columns is null)
+                {
+                    return;
+                }
+                int gridTableCount = gridTable.Columns.Count;
+                // Iterate through the columns.
+                for (int i = 0; i < gridTableCount; i++)
+                {
+                    // Leverage Linq enumerator to rapidly collect all the rows into a string array, making sure to exclude null values.
+                    string?[] colStringCollection = gridTable?.AsEnumerable()?.Where(r => r.Field<object>(i) != null)?.Select(r => r.Field<object>(i)?.ToString())?.ToArray() ?? new string[] { };
+                    if (colStringCollection is null)
+                    {
+                        continue;
                     }
+                    // Sort the string array by string lengths.
+                    colStringCollection = colStringCollection.OrderBy((x) => x.Length).ToArray();
+                    if (colStringCollection is null)
+                    {
+                        continue;
+                    }
+                    // Get the last and longest string in the array.
+                    string? longestColString = colStringCollection.Last();
+                    if (longestColString is null)
+                    {
+                        continue;
+                    }
+                    // Use the graphics object to measure the string size.
+                    SizeF colWidth = gfx.MeasureString(longestColString, targetGrid.Font);
+
+                    // If the calculated width is larger than the column header width, set the new column width.
+                    targetGrid.Columns[i].Width = colWidth.Width > targetGrid.Columns[i].HeaderCell.Size.Width
+                        ? (int)colWidth.Width
+                        : targetGrid.Columns[i].HeaderCell.Size.Width;
                 }
             }
             catch (Exception ex)
@@ -107,7 +109,9 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                 for (int index = 0; index < columnCount; index++)
                 {
                     if (progressBar is not null)
+                    {
                         progressBar.Value++;
+                    }
 
                     DataGridViewColumn column = dataGridView.Columns[index];
                     if (!visibleColumns.Contains(column.Name))
@@ -138,7 +142,10 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                 for (int index = 0; index < rowCount; index++)
                 {
                     if (progressBar is not null)
+                    {
                         progressBar.Value++;
+                    }
+
                     DataGridViewRow? row = dataGridView.Rows[index];
                     string? realm = row?.Cells["Realm"]?.Value?.ToString();
                     if (row is null || realm is null)

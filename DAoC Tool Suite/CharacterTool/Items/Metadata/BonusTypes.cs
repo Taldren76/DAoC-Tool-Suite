@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-
-namespace DAoCToolSuite.CharacterTool.Items.Metadata
+﻿namespace DAoCToolSuite.CharacterTool.Items.Metadata
 {
     public class BonusTypes
     {
-        private SubTypes SubTypes = new SubTypes();
+        private readonly SubTypes SubTypes = new();
         public List<Bonus> bonus_types { get; private set; } = new List<Bonus>();
-        private void AddBonusType(int _id, string _name, double _utility, int subtypeindex=-1)
+        private void AddBonusType(int _id, string _name, double _utility, int subtypeindex = -1)
         {
 
             bonus_types.Add(new Bonus()
             {
                 id = _id,
                 name = _name,
-                sub_types = (subtypeindex == -1?null: SubTypes.sub_types[subtypeindex]), //Stats
+                sub_types = subtypeindex == -1 ? null : SubTypes.sub_types[subtypeindex], //Stats
                 utility = _utility
             });
         }
@@ -47,7 +40,7 @@ namespace DAoCToolSuite.CharacterTool.Items.Metadata
             AddBonusType(9, "Toa Magic Damag", 5);
 
             //Toa Style Damage
-            AddBonusType(10 ,"Toa Style Damage", 5);
+            AddBonusType(10, "Toa Style Damage", 5);
 
             //Toa Archery Range
             AddBonusType(11, "Toa Archery Range", 5);
@@ -123,7 +116,7 @@ namespace DAoCToolSuite.CharacterTool.Items.Metadata
             bonus_types[36].category = "catacombs";
 
             //Spell Power Cost Reduction (PvE)
-            AddBonusType(37, "Spell Power Cost Reduction (PvE)",2);
+            AddBonusType(37, "Spell Power Cost Reduction (PvE)", 2);
 
             //Concentration 38 0
             AddBonusType(38, "Concentration", 0);
@@ -138,7 +131,7 @@ namespace DAoCToolSuite.CharacterTool.Items.Metadata
             AddBonusType(41, "Mana Regeneration", 0);
 
             //Piece Ablative (PvE) 42 0
-            AddBonusType(42, "Piece Ablative (PvE)",0);
+            AddBonusType(42, "Piece Ablative (PvE)", 0);
 
             //Death Experience Loss Reduction 44 0
             AddBonusType(44, "Death Experience Loss Reduction", 0);
@@ -147,7 +140,7 @@ namespace DAoCToolSuite.CharacterTool.Items.Metadata
             AddBonusType(46, "Negative Effect Duration Reduction (PvE)", 0);
 
             //Style Cost Reduction (PvE) 47 0
-            AddBonusType(47, "Style Cost Reduction",0);
+            AddBonusType(47, "Style Cost Reduction", 0);
 
             //To Hit Bonus (PvE) 48 0
             AddBonusType(48, "To Hit Bonus (PvE)", 0);
@@ -205,7 +198,7 @@ namespace DAoCToolSuite.CharacterTool.Items.Metadata
 
             //69 
             AddBonusType(69, "Mythical Siege Damage Ablative", 0);
-            
+
             AddBonusType(71, "Mythical DPS", 0);
 
             AddBonusType(72, "Mythical Realm Points", 0);
@@ -214,7 +207,7 @@ namespace DAoCToolSuite.CharacterTool.Items.Metadata
 
             AddBonusType(74, "Mythical Resurrection Sickness Reduction", 0);
 
-            AddBonusType(75, "Mythical Stat and Cap Increase", 4 , 1);
+            AddBonusType(75, "Mythical Stat and Cap Increase", 4, 1);
 
             AddBonusType(76, "Mythical Health Regen", 0);
 

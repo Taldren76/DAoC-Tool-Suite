@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SQLLibrary
+﻿namespace SQLLibrary
 {
     public class SettingsBackUpModel
     {
@@ -27,12 +21,6 @@ namespace SQLLibrary
                 return temp;
             }
         }
-        public DateOnly DateOnly
-        {
-            get
-            {
-                return DateOnly.FromDateTime(DateTime);
-            }
-        }
+        public DateOnly DateOnly => DateOnly.FromDateTime(DateTime);
     }
 }

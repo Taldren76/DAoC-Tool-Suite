@@ -88,7 +88,7 @@ namespace DAoCToolSuite.ChimpTool.Json
 
         public ChimpJson(bool StubObject)
         {
-            Dictionary<int, double> realmRanks = new();
+            _ = new Dictionary<int, double>();
             Realms = new();
             Races = new();
             Classes = new();

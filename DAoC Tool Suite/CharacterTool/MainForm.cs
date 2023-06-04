@@ -1,31 +1,19 @@
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Xml.Linq;
 using DAoCToolSuite.CharacterTool.Files;
 using DAoCToolSuite.CharacterTool.Json;
 using DAoCToolSuite.CharacterTool.Logging;
 using DAoCToolSuite.CharacterTool.Settings;
-using IniParser.Model;
 using Newtonsoft.Json;
 using SQLLibrary;
-using SQLLibrary.Enums;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace DAoCToolSuite.CharacterTool
 {
     public partial class MainForm : Form
     {
         internal static Logger Logger = new();
-        internal string Folder { get; private set; }
+        internal string DAoCCharacterDataFolder { get; private set; }
         internal static SettingsManager Settings { get; set; } = new SettingsManager();
-        internal static string ServerConfigFullPath = $"{Environment.CurrentDirectory}\\ServerConfig.json";
-        internal static string RealmClassConfigFullPath = $"{Environment.CurrentDirectory}\\RealmClassConfig.json";
         internal static ParseDirectory? ParseDirectory { get; set; }
         private List<SettingsBackUpModel> Backups { get; set; } = new();
         private BindingSource BindingSource { get; set; } = new();
@@ -34,7 +22,7 @@ namespace DAoCToolSuite.CharacterTool
         {
             get
             {
-                _characterList ??= new ParseDirectory(Folder).Characters;
+                _characterList ??= new ParseDirectory(DAoCCharacterDataFolder).Characters;
                 return _characterList;
             }
             set => _characterList = value;
@@ -42,12 +30,9 @@ namespace DAoCToolSuite.CharacterTool
         private string[] CharacterNameList => CharacterList.Keys.ToArray();
 
         private readonly List<string?> ServerNames = new();
-        private static readonly ServerListINI? ServerList = JsonFileReader.Read<ServerListINI>(ServerConfigFullPath);
-        private static readonly RealmClassINI? RealmList = JsonFileReader.Read<RealmClassINI>(RealmClassConfigFullPath);
-
+        private static ServerListINI? ServerList { get; set; }
+        private static RealmClassINI? RealmList { get; set; }
         private static DataTable RestoreDataTable { get; set; } = new DataTable();
-
-
         private static string GetServerName(int serverIndex)
         {
             Server? result = ServerList?.Servers?.Server?.Where(x => x.Index == serverIndex).FirstOrDefault();
@@ -71,7 +56,7 @@ namespace DAoCToolSuite.CharacterTool
         }
         private void UpdateCharNameAutoComplete()
         {
-            CharacterList = new ParseDirectory(Folder).Characters;
+            CharacterList = new ParseDirectory(DAoCCharacterDataFolder).Characters;
             AutoCompleteStringCollection source = new();
             source.AddRange(CharacterNameList);
             //CopyFrom
@@ -87,6 +72,8 @@ namespace DAoCToolSuite.CharacterTool
 
         public MainForm()
         {
+            ServerList = DeserializeServerList(Settings.Servers);
+            RealmList = DeserializeRealmClass(Settings.RealmClasses);
             InitializeComponent();
             _ = BackUpRealmComboBox.Items.Add("Albion");
             _ = BackUpRealmComboBox.Items.Add("Hibernia");
@@ -96,89 +83,57 @@ namespace DAoCToolSuite.CharacterTool
             _ = RestoreRealmComboBox.Items.Add("Midgard");
             DAoCDirectoryTextBox.Text = DefaultLocation();
             ClearFilterButton.Enabled = false;
-            Folder = DAoCDirectoryTextBox.Text;
-            ParseDirectory = new ParseDirectory(Folder);
+            DAoCCharacterDataFolder = DAoCDirectoryTextBox.Text;
+            ParseDirectory = new ParseDirectory(DAoCCharacterDataFolder);
             restoreDataGridView.DataSource = BindingSource;
             UpdateCharNameAutoComplete();
-
-            //CharacterList = new ParseDirectory(Folder).Characters;
             List<string?> serverList = GetServerList() ?? throw new NullReferenceException("ServerList is null");
             ServerNames = serverList;
             LoadBackups();
-            //CreateDataTable();
-            //ReDrawTable();
+        }
+
+        private static ServerListINI DeserializeServerList(string json)
+        {
+            try
+            {
+                ServerListINI input = JsonConvert.DeserializeObject<ServerListINI>(json) ?? new ServerListINI();
+                return input;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return new ServerListINI();
+            }
+        }
+
+        private static RealmClassINI DeserializeRealmClass(string json)
+        {
+            try
+            {
+                RealmClassINI input = JsonConvert.DeserializeObject<RealmClassINI>(json) ?? new RealmClassINI();
+                return input;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return new RealmClassINI();
+            }
+
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MainForm? form = sender as MainForm;
-            if (form is null)
+            if (sender is not MainForm form)
+            {
                 return;
+            }
+
             Properties.Settings.Default.WindowLocation = form.Location;
             Properties.Settings.Default.Save();
             Logger.Debug($"Shutting down.");
         }
 
-        private void LoadBackups()
-        {
-            Backups = SqliteDataAccess.LoadSettingBackUps().OrderBy(x => x.Realm).ThenBy(x => x.Class).ThenBy(x => x.FirstName).ThenByDescending(x => x.DateTime).ToList();
-            AttachBackups();
-            FormatGridView();
-            FilterDataSource();
-        }
-
-        private void FormatGridView()
-        {
-            List<string> visibleColumns = new() { "DateOnly", "FirstName", "Realm", "Class", "Description" };
-            List<string> visibleColumnHeaderNames = new() { "Date", "Name", "Realm", "Class", "Description" };
-            int rowCount = restoreDataGridView.Rows.Count;
-            int columnCount = restoreDataGridView.Columns.Count;
-            int nonVisibleIndex = visibleColumns.Count;
-
-
-            //Sets the column names, order, and what data from the DB to display.
-            //Values pulled from the config file.
-
-            if (columnCount > 0)
-            {
-                for (int index = 0; index < columnCount; index++)
-                {
-                    DataGridViewColumn column = restoreDataGridView.Columns[index];
-                    if (!visibleColumns.Contains(column.Name))
-                    {
-                        column.Visible = false;
-                        column.DisplayIndex = nonVisibleIndex;
-                        nonVisibleIndex++;
-                    }
-                    else
-                    {
-                        column.DisplayIndex = visibleColumns.IndexOf(column.Name);
-                        column.HeaderText = visibleColumnHeaderNames[visibleColumns.IndexOf(column.Name)];
-                        column.ValueType = typeof(string);
-                        Logger.Debug($"{column.Name},{index},{column.DisplayIndex},{column.Visible}");
-                        column.AutoSizeMode = column.Name switch
-                        {
-                            "Description" => DataGridViewAutoSizeColumnMode.Fill,
-                            _ => DataGridViewAutoSizeColumnMode.AllCells,
-                        };
-                    }
-
-                }
-            }
-        }
-
-        private void AttachBackups()
-        {
-            BindingSource.DataSource = Backups ?? new();
-        }
-
-        private void restoreDataGridView_DataSourceChanged(object sender, EventArgs e)
-        {
-            DataGridView thisSearchGrid = (DataGridView)sender;
-            FormatGridView();
-        }
-
-        private void DAoCTabControl_SelectedIndexChange(Object sender, TabControlEventArgs e)
+        private void DAoCTabControl_SelectedIndexChange(object sender, TabControlEventArgs e)
         {
 
         }
@@ -189,20 +144,18 @@ namespace DAoCToolSuite.CharacterTool
 
         }
 
-
-
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             long currentCount = CharacterTool.Properties.Settings.Default.LoadCount;
             if (currentCount > 0)
             {
-                this.Location = CharacterTool.Properties.Settings.Default.WindowLocation;
+                Location = CharacterTool.Properties.Settings.Default.WindowLocation;
             }
             else
             {
                 //ScreenCentered by Default
-                CharacterTool.Properties.Settings.Default.WindowLocation = this.Location;
+                CharacterTool.Properties.Settings.Default.WindowLocation = Location;
             }
             if (currentCount != long.MaxValue)
             {
@@ -225,14 +178,14 @@ namespace DAoCToolSuite.CharacterTool
             CopyToTextBox.Clear();
             FromServerText.Clear();
             ExistingCharacterCheckBox.Checked = true;
-            Folder = DAoCDirectoryTextBox.Text;
+            DAoCCharacterDataFolder = DAoCDirectoryTextBox.Text;
             CopyFromComboBox.Items.Clear();
             CopyFromComboBox.ResetText();
             CopyToComboBox.Items.Clear();
             CopyToComboBox.ResetText();
             BackUpNameComboBox.Items.Clear();
             BackUpNameComboBox.ResetText();
-            CharacterList = new ParseDirectory(Folder).Characters;
+            CharacterList = new ParseDirectory(DAoCCharacterDataFolder).Characters;
             foreach (KeyValuePair<string, int> character in CharacterList)
             {
                 _ = CopyFromComboBox.Items.Add(character.Key);
@@ -363,8 +316,8 @@ namespace DAoCToolSuite.CharacterTool
         }
         private void DAoCDirectoryTextBox_TextChanged(object sender, EventArgs e)
         {
-            Folder = DAoCDirectoryTextBox.Text;
-            CharacterList = new ParseDirectory(Folder).Characters;
+            DAoCCharacterDataFolder = DAoCDirectoryTextBox.Text;
+            CharacterList = new ParseDirectory(DAoCCharacterDataFolder).Characters;
             CopyFromComboBox.Items.Clear();
             CopyToComboBox.Items.Clear();
             BackUpNameComboBox.Items.Clear();
@@ -412,7 +365,7 @@ namespace DAoCToolSuite.CharacterTool
             string directoryPath = DAoCDirectoryTextBox.Text;
             string? iniContents = ParseDirectory?.GetFileContents(directoryPath + $"\\{iniFileName}");
             string? ignContents = ParseDirectory?.GetFileContents(directoryPath + $"\\{ignFileName}");
-            SettingsBackUpModel settingsBackup = new SettingsBackUpModel()
+            SettingsBackUpModel settingsBackup = new()
             {
                 FirstName = BackUpNameComboBox.Text,
                 Realm = BackUpRealmComboBox.Text,
@@ -443,9 +396,11 @@ namespace DAoCToolSuite.CharacterTool
         }
         private void BackUpComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            System.Windows.Forms.ComboBox? comboBox = sender as System.Windows.Forms.ComboBox;
-            if (comboBox is null)
+            if (sender is not System.Windows.Forms.ComboBox comboBox)
+            {
                 return;
+            }
+
             string characterFirstName = comboBox.Text;
 
             //Populate automatically if already in database
@@ -548,7 +503,7 @@ namespace DAoCToolSuite.CharacterTool
             BackUpNameComboBox.Items.Clear();
             BackUpNameComboBox.ResetText();
             BackUpServerTextBox.Clear();
-            CharacterList = new ParseDirectory(Folder).Characters;
+            CharacterList = new ParseDirectory(DAoCCharacterDataFolder).Characters;
             foreach (KeyValuePair<string, int> character in CharacterList)
             {
                 _ = CopyFromComboBox.Items.Add(character.Key);
@@ -559,7 +514,78 @@ namespace DAoCToolSuite.CharacterTool
         #endregion
 
         #region Restore Tab
+        private void LoadBackups()
+        {
+            Backups = SqliteDataAccess.LoadSettingBackUps().OrderBy(x => x.Realm).ThenBy(x => x.Class).ThenBy(x => x.FirstName).ThenByDescending(x => x.DateTime).ToList();
+            AttachBackups();
+            FormatGridView();
+            FilterDataSource();
+        }
 
+        private void FormatGridView()
+        {
+            List<string> visibleColumns = new() { "DateOnly", "FirstName", "Realm", "Class", "Description" };
+            List<string> visibleColumnHeaderNames = new() { "Date", "Name", "Realm", "Class", "Description" };
+            _ = restoreDataGridView.Rows.Count;
+            int columnCount = restoreDataGridView.Columns.Count;
+            int nonVisibleIndex = visibleColumns.Count;
+
+
+            //Sets the column names, order, and what data from the DB to display.
+            //Values pulled from the config file.
+
+            if (columnCount > 0)
+            {
+                for (int index = 0; index < columnCount; index++)
+                {
+                    DataGridViewColumn column = restoreDataGridView.Columns[index];
+                    if (!visibleColumns.Contains(column.Name))
+                    {
+                        column.Visible = false;
+                        column.DisplayIndex = nonVisibleIndex;
+                        nonVisibleIndex++;
+                    }
+                    else
+                    {
+                        column.DisplayIndex = visibleColumns.IndexOf(column.Name);
+                        column.HeaderText = visibleColumnHeaderNames[visibleColumns.IndexOf(column.Name)];
+                        column.ValueType = typeof(string);
+                        Logger.Debug($"{column.Name},{index},{column.DisplayIndex},{column.Visible}");
+                        column.AutoSizeMode = column.Name switch
+                        {
+                            "Description" => DataGridViewAutoSizeColumnMode.Fill,
+                            _ => DataGridViewAutoSizeColumnMode.AllCells,
+                        };
+                    }
+
+                }
+            }
+        }
+
+        private void AttachBackups()
+        {
+            BindingSource.DataSource = Backups ?? new();
+        }
+
+        private void restoreDataGridView_DataSourceChanged(object sender, EventArgs e)
+        {
+            FormatGridView();
+        }
+        private void RestoreRealmLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private static bool IgnoreFilterComboChangeIndexChange { get; set; } = false;
+        private void RestoreNameFilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (IgnoreFilterComboChangeIndexChange)
+            {
+                return;
+            }
+
+            FilterDataSource();
+        }
         private void CopyCharacterIniData(CharacterINI fromCharacter, CharacterINI toCharacter)
         {
             if (AllSettingsCheckBox.Checked)
@@ -617,9 +643,9 @@ namespace DAoCToolSuite.CharacterTool
         private void FilterDataSource()
         {
             IgnoreFilterComboChangeIndexChange = true;
-            var _realm = RestoreRealmComboBox.Text;
-            var _class = RestoreClassComboBox.Text;
-            var _name = RestoreNameFilterComboBox.Text;
+            string? _realm = RestoreRealmComboBox.Text;
+            string? _class = RestoreClassComboBox.Text;
+            string? _name = RestoreNameFilterComboBox.Text;
 
             List<SettingsBackUpModel> filtered = Backups;
             if (!string.IsNullOrEmpty(_name))
@@ -648,12 +674,11 @@ namespace DAoCToolSuite.CharacterTool
                 }
             }
             if (_name is not null && RestoreNameFilterComboBox.Items.Contains(_name))
+            {
                 RestoreNameFilterComboBox.Text = _name;
+            }
 
-            if (RestoreNameFilterComboBox.Items.Count < 1)
-                RestoreNameFilterComboBox.Enabled = false;
-            else
-                RestoreNameFilterComboBox.Enabled = true;
+            RestoreNameFilterComboBox.Enabled = RestoreNameFilterComboBox.Items.Count >= 1;
             #endregion
 
             #region Realm Filter
@@ -668,12 +693,11 @@ namespace DAoCToolSuite.CharacterTool
                 }
             }
             if (_realm is not null && RestoreRealmComboBox.Items.Contains(_realm))
+            {
                 RestoreRealmComboBox.Text = _realm;
+            }
 
-            if (RestoreRealmComboBox.Items.Count < 1)
-                RestoreRealmComboBox.Enabled = false;
-            else
-                RestoreRealmComboBox.Enabled = true;
+            RestoreRealmComboBox.Enabled = RestoreRealmComboBox.Items.Count >= 1;
             #endregion
 
             #region Class Filter
@@ -688,32 +712,34 @@ namespace DAoCToolSuite.CharacterTool
                 }
             }
             if (_class is not null && RestoreClassComboBox.Items.Contains(_class))
+            {
                 RestoreClassComboBox.Text = _class;
+            }
 
-            if (RestoreClassComboBox.Items.Count < 1)
-                RestoreClassComboBox.Enabled = false;
-            else
-                RestoreClassComboBox.Enabled = true;
+            RestoreClassComboBox.Enabled = RestoreClassComboBox.Items.Count >= 1;
             #endregion
 
             IgnoreFilterComboChangeIndexChange = false;
 
-            if (!string.IsNullOrEmpty(RestoreRealmComboBox.Text) || !string.IsNullOrEmpty(RestoreClassComboBox.Text) || !string.IsNullOrEmpty(RestoreNameFilterComboBox.Text))
-                ClearFilterButton.Enabled = true;
-            else
-                ClearFilterButton.Enabled = false;
+            ClearFilterButton.Enabled = !string.IsNullOrEmpty(RestoreRealmComboBox.Text) || !string.IsNullOrEmpty(RestoreClassComboBox.Text) || !string.IsNullOrEmpty(RestoreNameFilterComboBox.Text);
         }
 
         private void RestoreRealmComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (IgnoreFilterComboChangeIndexChange)
+            {
                 return;
+            }
+
             FilterDataSource();
         }
         private void RestoreClassComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (IgnoreFilterComboChangeIndexChange)
+            {
                 return;
+            }
+
             FilterDataSource();
         }
         private void ClearFilterButton_Click(object sender, EventArgs e)
@@ -757,7 +783,7 @@ namespace DAoCToolSuite.CharacterTool
                 string? dbIndexStr = row?.Cells["index"]?.Value?.ToString();
                 if (dbIndexStr is not null)
                 {
-                    int dbIndex = Int32.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
+                    int dbIndex = int.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
                     if (dbIndex > -1)
                     {
                         SettingsBackUpModel settingsBackup = SqliteDataAccess.LoadSettingByIndex(dbIndex);
@@ -766,7 +792,8 @@ namespace DAoCToolSuite.CharacterTool
                         {
                             File.WriteAllText($"{settingsBackup.Path}\\{settingsBackup.IGNFileName}", settingsBackup.IGNData);
                         }
-                        DialogResult res = MessageBox.Show($"Restored character files for {settingsBackup.FirstName}\n{settingsBackup.Description}", "Restore Character Settings", MessageBoxButtons.OK);
+
+                        _ = MessageBox.Show($"Restored character files for {settingsBackup.FirstName}\n{settingsBackup.Description}", "Restore Character Settings", MessageBoxButtons.OK);
                     }
                 }
 
@@ -783,7 +810,7 @@ namespace DAoCToolSuite.CharacterTool
                 string? dbIndexStr = row?.Cells["index"]?.Value?.ToString();
                 if (dbIndexStr is not null)
                 {
-                    int dbIndex = Int32.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
+                    int dbIndex = int.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
                     if (dbIndex > -1)
                     {
                         SettingsBackUpModel settingsBackup = SqliteDataAccess.LoadSettingByIndex(dbIndex);
@@ -801,29 +828,13 @@ namespace DAoCToolSuite.CharacterTool
         }
         #endregion
 
-        #region RecordRepository
+        #region SQLite DB (Restore and Backup)
         private static readonly object jsonLock = new();
-
-        #endregion
-
-        private void RestoreRealmLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private static bool IgnoreFilterComboChangeIndexChange { get; set; } = false;
-        private void RestoreNameFilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (IgnoreFilterComboChangeIndexChange)
-                return;
-            FilterDataSource();
-        }
-
         private string SerializeBackups()
         {
             try
             {
-                SettingsBackupJson toWrite = new SettingsBackupJson() { Backups = Backups };
+                SettingsBackupJson toWrite = new() { Backups = Backups };
                 string output = JsonConvert.SerializeObject(toWrite);
                 return output;
             }
@@ -852,7 +863,6 @@ namespace DAoCToolSuite.CharacterTool
             string json = SerializeBackups();
             WriteDBBackup(json);
         }
-
 
         private static bool HasDBBackupJson()
         {
@@ -932,7 +942,10 @@ namespace DAoCToolSuite.CharacterTool
 
                 SettingsBackupJson settingsBackupJson = LoadDBBackupJson();
                 if (settingsBackupJson?.Backups is null)
+                {
                     return;
+                }
+
                 foreach (SettingsBackUpModel settingsBackup in settingsBackupJson.Backups)
                 {
                     SqliteDataAccess.AddSettingBackup(settingsBackup, settingsBackup.DateTime);
@@ -958,5 +971,6 @@ namespace DAoCToolSuite.CharacterTool
                 Logger.Debug($"No DB Backup Json found at {Settings.JsonBackupFileFullPath}");
             }
         }
+        #endregion
     }
 }
