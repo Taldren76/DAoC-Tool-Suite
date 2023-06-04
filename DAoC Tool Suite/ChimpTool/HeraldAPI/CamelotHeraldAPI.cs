@@ -60,7 +60,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             {
                 if (!AttemptMaintenanceBypass && ex?.InnerException?.Message is not null && ex.InnerException.Message.Equals("The SSL connection could not be established, see inner exception."))
                 {
-                    DialogResult del = MessageBox.Show($"Herald is in Maintenance. Attempt bypass?", "Mainenance", MessageBoxButtons.YesNo);
+                    DialogResult del = MessageBox.Show($"Herald is in Maintenance. Attempt bypass?\nNote: Doing this may upset Broadsword.", "Maintenance", MessageBoxButtons.YesNo);
                     if (del == DialogResult.Yes)
                     {
                         AttemptMaintenanceBypass = true;
@@ -170,7 +170,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             {
                 if (!AttemptMaintenanceBypass && ex?.InnerException?.Message is not null && ex.InnerException.Message.Equals("The SSL connection could not be established, see inner exception."))
                 {
-                    DialogResult del = MessageBox.Show($"Herald is in Maintenance. Attempt bypass?", "Mainenance", MessageBoxButtons.YesNo);
+                    DialogResult del = MessageBox.Show($"Herald is in Maintenance. Attempt bypass?\nNote: Doing this may upset Broadsword.", "Maintenance", MessageBoxButtons.YesNo);
                     if (del == DialogResult.Yes)
                     {
                         AttemptMaintenanceBypass = true;
