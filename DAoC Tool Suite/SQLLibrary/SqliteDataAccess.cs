@@ -1,7 +1,9 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Net;
 using System.Reflection;
 using Dapper;
 
@@ -16,7 +18,7 @@ namespace SQLLibrary
     public class SqliteDataAccess
     {
         private static object thisLock = new();
-        private static readonly string CharactersColumnNames = "Date,Account,WebID,Name,Realm,Class,Server,TotalRealmPoints,TotalSoloKills,TotalDeathBlows,TotalKills,TotalDeaths,Level,Race,BountyPoints,MasterLevel_Name,Masterlevel_Level,Guild_WebID,Alchemy,Armorcraft,Fletching,Siegecraft,Spellcrafting,Tailoring,Weaponcraft,Albion_SoloKills,Albion_DeathBlows,Albion_Kills,Albion_Deaths,Hibernia_SoloKills,Hibernia_DeathBlows,Hibernia_Kills,Hibernia_Deaths,Midgard_SoloKills,Midgard_DeathBlows,Midgard_Kills,Midgard_Deaths";
+        private static readonly string CharactersColumnNames = "Date,Account,WebID,FirstName,Name,Realm,Class,Server,TotalRealmPoints,TotalSoloKills,TotalDeathBlows,TotalKills,TotalDeaths,Level,Race,BountyPoints,MasterLevel_Name,Masterlevel_Level,Guild_WebID,Alchemy,Armorcraft,Fletching,Siegecraft,Spellcrafting,Tailoring,Weaponcraft,Albion_SoloKills,Albion_DeathBlows,Albion_Kills,Albion_Deaths,Hibernia_SoloKills,Hibernia_DeathBlows,Hibernia_Kills,Hibernia_Deaths,Midgard_SoloKills,Midgard_DeathBlows,Midgard_Kills,Midgard_Deaths";
         private static string CharactersColumnValues => $"@{CharactersColumnNames.Replace(",", ",@")}";
 
         #region CharacterModel
@@ -26,6 +28,20 @@ namespace SQLLibrary
             string characterLoadQuery = $"Select {CharactersColumnNames} from Characters";
             List<CharacterModel> characters = conn.Query<CharacterModel>(characterLoadQuery, new DynamicParameters()).ToList();
             return characters;
+        }
+        public static CharacterModel? LoadCharacterByFirstName(string characterName)
+        {
+            using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+            string characterLoadQuery = $"Select {CharactersColumnNames} from Characters Where \"FirstName\" = \"{characterName}\"";
+            List<CharacterModel> characters = conn.Query<CharacterModel>(characterLoadQuery, new DynamicParameters()).ToList();
+            return characters?.OrderByDescending(y => y.DateTime)?.FirstOrDefault();
+        }
+        public static CharacterModel? LoadCharacterByWebID(string webID)
+        {
+            using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+            string characterLoadQuery = $"Select {CharactersColumnNames} from Characters Where \"WebID\" = \"{webID}\"";
+            List<CharacterModel> characters = conn.Query<CharacterModel>(characterLoadQuery, new DynamicParameters()).ToList();
+            return characters?.OrderByDescending(y => y.DateTime)?.FirstOrDefault();
         }
         public static void AddCharacter(CharacterModel character, DateTime date, string accountName)
         {
@@ -103,6 +119,7 @@ namespace SQLLibrary
                 }
             }
         }
+
         public static void DeleteCharacter(string webID)
         {
             lock (thisLock)
@@ -306,6 +323,66 @@ namespace SQLLibrary
         }
         #endregion
 
+        #region SettingsBackUpModel
+        public static List<SettingsBackUpModel> LoadSettingBackUps()
+        {
+            using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+            List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>("Select * from SettingsBackup", new DynamicParameters()).ToList();
+            return query;
+        }
+        public static List<SettingsBackUpModel> LoadSettingBackUps(string characterFirstName)
+        {
+            using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+            List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>($"Select * from SettingsBackup Where \"FirstName\" = \"{characterFirstName}\"", new DynamicParameters()).ToList();
+            return query;
+        }
+        public static SettingsBackUpModel LoadSettingByIndex(int index)
+        {
+            using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+            List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>($"Select * from SettingsBackup Where \"index\" = {index}", new DynamicParameters()).ToList();
+            return query.First();
+        }
+        public static void AddSettingBackup(SettingsBackUpModel settingsBackUpModel, DateTime date)
+        {
+            lock (thisLock)
+            {
+                string tableName = "SettingsBackup";
+                string settingsBackupColumnNames = "Date,FirstName,Realm,Class,Description,Path,INIFileName,INIData,IGNFileName,IGNData";
+                string settingsBackupColumnValues = $"@{settingsBackupColumnNames.Replace(",", ",@")}";
+                string writeQuery = $"Insert into {tableName} ({settingsBackupColumnNames}) values ({settingsBackupColumnValues})";
+                settingsBackUpModel.Date = date.ToString("yyyy-MM-ddTHH:mm:ss");
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+                _ = conn.Execute(writeQuery, settingsBackUpModel);
+            }
+        }
+        public static void DeleteSettingBackupByFirstName(string firstName)
+        {
+            lock (thisLock)
+            {
+                string tableName = "SettingsBackup";
+                string deleteAccountQuery = $"Delete From {tableName} Where FirstName = \"{firstName}\"";
+                string countQuery = $"Select Count(FirstName) from {tableName} Where FirstName = \"{firstName}\"";
+
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+                int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
+                if (count > 0)
+                {
+                    _ = conn.Query(deleteAccountQuery, new DynamicParameters());
+                }
+            }
+        }
+        public static void DeleteSettingBackupByIndex(int index)
+        {
+            lock (thisLock)
+            {
+                string tableName = "SettingsBackup";
+                string deleteAccountQuery = $"Delete From {tableName} Where \"index\" = {index}";
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+                _ = conn.Query(deleteAccountQuery, new DynamicParameters());
+            }
+        }
+        #endregion
+
         private static string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString ?? "DataSource =.\\CharacterDB.db; Version = 3;";
@@ -319,6 +396,24 @@ namespace SQLLibrary
             {
                 string reindexQuery = $"Reindex {tableName}";
                 _ = conn.Query(reindexQuery, new DynamicParameters());
+            }
+        }
+
+        public static void ResetSettingsBackup()
+        {
+            lock (thisLock)
+            {
+                List<string> tables = new() { "SettingsBackup" };
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+                foreach (string tableName in tables)
+                {
+                    string deleteQuery = $"Delete from {tableName}";
+                    string resetSequence = $"Update sqlite_sequence SET seq = 0 WHERE name = \"{tableName}\"";
+                    string reindexQuery = $"Reindex {tableName}";
+                    _ = conn.Query(deleteQuery, new DynamicParameters());
+                    _ = conn.Query(resetSequence, new DynamicParameters());
+                    _ = conn.Query(reindexQuery, new DynamicParameters());
+                }
             }
         }
 

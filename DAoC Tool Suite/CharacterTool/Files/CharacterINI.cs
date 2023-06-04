@@ -6,7 +6,7 @@ using IniParser;
 using IniParser.Model;
 using Newtonsoft.Json;
 
-namespace DAoCToolSuite.CharacterTool
+namespace DAoCToolSuite.CharacterTool.Files
 {
     [JsonSourceGenerationOptions(WriteIndented = true)]
     [JsonSerializable(typeof(CharacterINI))]
@@ -45,6 +45,11 @@ namespace DAoCToolSuite.CharacterTool
         {
             get => DATA["ToolTips"];
             set => DATA["ToolTips"] = value;
+        }
+        internal Dictionary<string, string> Camera
+        {
+            get => DATA["Camera"];
+            set => DATA["Camera"] = value;
         }
 
         public CharacterINI(string filepath)

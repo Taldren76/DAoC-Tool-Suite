@@ -8,6 +8,7 @@
         public string? Account { get; set; } = "Default";
 
         public string? WebID { get; set; } = "";
+        public string? FirstName => Name?.Split(" ")?.FirstOrDefault();
 
         public string? Name { get; set; } = "";
 
@@ -85,6 +86,13 @@
             {
                 _ = DateTime.TryParse(Date, out DateTime temp);
                 return temp; 
+            }
+        }
+        public DateOnly DateOnly
+        {
+            get
+            {
+                return DateOnly.FromDateTime(DateTime);
             }
         }
 

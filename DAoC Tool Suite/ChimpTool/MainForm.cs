@@ -98,11 +98,6 @@ namespace DAoCToolSuite.ChimpTool
             WaitCursor.PopAll();
         }
 
-        private void SearchGridView_CellValueNeeded(object sender, EventArgs e)
-        {
-            //this won't work w/o VirtualMode = true and RowCount = int being set.
-        }
-
         private void SearchGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
 
@@ -606,6 +601,16 @@ namespace DAoCToolSuite.ChimpTool
             UpdateCharacterLists();
             DataGridView thisSearchGrid = (DataGridView)sender;
             thisSearchGrid.FormatTable();
+            if (thisSearchGrid.Rows.Count > 0)
+            {
+                RefreshButton.Enabled = true;
+                RefreshAllButton.Enabled = true;
+            }
+            else
+            {
+                RefreshButton.Enabled = false;
+                RefreshAllButton.Enabled = false;
+            }
 
         }
         #endregion
@@ -631,7 +636,16 @@ namespace DAoCToolSuite.ChimpTool
         private void AttachCharacters()
         {
             BindingSource.DataSource = CharactersByAccountLastDateUpdated?.ToChimpJsonList() ?? new();
-
+            if (BindingSource.Count > 0)
+            {
+                RefreshButton.Enabled = true;
+                RefreshAllButton.Enabled = true;
+            }
+            else
+            {
+                RefreshButton.Enabled = false;
+                RefreshAllButton.Enabled = false;
+            }
             //SearchGridView.DataSource = null;
             //SearchGridView.DataSource = CharactersByAccountLastDateUpdated_Json;
         }
@@ -1048,13 +1062,6 @@ namespace DAoCToolSuite.ChimpTool
                 ChimpTool.Properties.Settings.Default.LoadCount = currentCount + 1;
             }
             ChimpTool.Properties.Settings.Default.Save();
-        }
-
-        private void SortButton_Click(object sender, EventArgs e)
-        {
-            BindingSource.DataSource = CharactersByAccountLastDateUpdated?.ToChimpJsonList() ?? new(); //.ToChimpJsonList()?
-            BindingSource.Filter = $"Account = '{AccountComboBox.Text}'";
-            SearchGridView.FormatTable(SearchProgressBar);
         }
     }
 

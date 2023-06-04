@@ -1,4 +1,6 @@
-﻿namespace DAoCToolSuite.CharacterTool
+﻿using System.Windows.Forms;
+
+namespace DAoCToolSuite.CharacterTool
 {
     partial class MainForm
     {
@@ -28,6 +30,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             DAoCDirectoryPanel = new Panel();
             DAoCDirectoryButton = new Button();
@@ -79,10 +85,15 @@
             BackUpNameComboBox = new ComboBox();
             BackUpCharRefreshButton = new Button();
             restoreCharacterTab = new TabPage();
-            ClearFilterButton = new Button();
-            RestoreDeleteRecordButton = new Button();
-            RestoreButton = new Button();
+            RestoreDBButton = new Button();
+            BackupDBButton = new Button();
+            RestoreNameFilterComboBox = new ComboBox();
+            RestoreNameFilterLabel = new Label();
+            panel3 = new Panel();
             restoreDataGridView = new DataGridView();
+            ClearFilterButton = new Button();
+            RestoreDeleteSettingsButton = new Button();
+            RestoreRestoreSettingsButton = new Button();
             RestoreClassLabel = new Label();
             RestoreClassComboBox = new ComboBox();
             RestoreRealmLabel = new Label();
@@ -100,6 +111,7 @@
             ExistingCharacterPanel.SuspendLayout();
             backUpCharacterTab.SuspendLayout();
             restoreCharacterTab.SuspendLayout();
+            panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)restoreDataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -143,6 +155,7 @@
             // 
             // TabPanel
             // 
+            TabPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             TabPanel.Controls.Add(DAoCTabControl);
             TabPanel.Location = new Point(12, 74);
             TabPanel.Name = "TabPanel";
@@ -151,6 +164,7 @@
             // 
             // DAoCTabControl
             // 
+            DAoCTabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             DAoCTabControl.Controls.Add(copySettingsTab);
             DAoCTabControl.Controls.Add(backUpCharacterTab);
             DAoCTabControl.Controls.Add(restoreCharacterTab);
@@ -159,6 +173,7 @@
             DAoCTabControl.SelectedIndex = 0;
             DAoCTabControl.Size = new Size(770, 358);
             DAoCTabControl.TabIndex = 0;
+            DAoCTabControl.Selected += DAoCTabControl_SelectedIndexChange;
             // 
             // copySettingsTab
             // 
@@ -198,10 +213,10 @@
             CustomSettingsCheckListBox.Enabled = false;
             CustomSettingsCheckListBox.ForeColor = SystemColors.WindowText;
             CustomSettingsCheckListBox.FormattingEnabled = true;
-            CustomSettingsCheckListBox.Items.AddRange(new object[] { "Chat (Colors)", "Panels (UI)", "QuickBinds", "NameOptions", "ToolTips", "Macros" });
+            CustomSettingsCheckListBox.Items.AddRange(new object[] { "Chat (Colors)", "Panels (UI)", "Camera", "QuickBinds", "Macros", "NameOptions", "ToolTips" });
             CustomSettingsCheckListBox.Location = new Point(12, 3);
             CustomSettingsCheckListBox.Name = "CustomSettingsCheckListBox";
-            CustomSettingsCheckListBox.Size = new Size(118, 112);
+            CustomSettingsCheckListBox.Size = new Size(118, 130);
             CustomSettingsCheckListBox.TabIndex = 11;
             // 
             // CustomSettingsCheckBox
@@ -609,10 +624,14 @@
             // 
             // restoreCharacterTab
             // 
+            restoreCharacterTab.Controls.Add(RestoreDBButton);
+            restoreCharacterTab.Controls.Add(BackupDBButton);
+            restoreCharacterTab.Controls.Add(RestoreNameFilterComboBox);
+            restoreCharacterTab.Controls.Add(RestoreNameFilterLabel);
+            restoreCharacterTab.Controls.Add(panel3);
             restoreCharacterTab.Controls.Add(ClearFilterButton);
-            restoreCharacterTab.Controls.Add(RestoreDeleteRecordButton);
-            restoreCharacterTab.Controls.Add(RestoreButton);
-            restoreCharacterTab.Controls.Add(restoreDataGridView);
+            restoreCharacterTab.Controls.Add(RestoreDeleteSettingsButton);
+            restoreCharacterTab.Controls.Add(RestoreRestoreSettingsButton);
             restoreCharacterTab.Controls.Add(RestoreClassLabel);
             restoreCharacterTab.Controls.Add(RestoreClassComboBox);
             restoreCharacterTab.Controls.Add(RestoreRealmLabel);
@@ -625,9 +644,110 @@
             restoreCharacterTab.Text = "Character Restore";
             restoreCharacterTab.UseVisualStyleBackColor = true;
             // 
+            // RestoreDBButton
+            // 
+            RestoreDBButton.Location = new Point(87, 300);
+            RestoreDBButton.Name = "RestoreDBButton";
+            RestoreDBButton.Size = new Size(75, 23);
+            RestoreDBButton.TabIndex = 31;
+            RestoreDBButton.Text = "Restore DB";
+            RestoreDBButton.UseVisualStyleBackColor = true;
+            RestoreDBButton.Click += RestoreDBButton_Click;
+            // 
+            // BackupDBButton
+            // 
+            BackupDBButton.Location = new Point(6, 300);
+            BackupDBButton.Name = "BackupDBButton";
+            BackupDBButton.Size = new Size(75, 23);
+            BackupDBButton.TabIndex = 30;
+            BackupDBButton.Text = "Backup DB";
+            BackupDBButton.UseVisualStyleBackColor = true;
+            BackupDBButton.Click += BackupDBButton_Click;
+            // 
+            // RestoreNameFilterComboBox
+            // 
+            RestoreNameFilterComboBox.FormattingEnabled = true;
+            RestoreNameFilterComboBox.Location = new Point(50, 6);
+            RestoreNameFilterComboBox.Name = "RestoreNameFilterComboBox";
+            RestoreNameFilterComboBox.Size = new Size(150, 23);
+            RestoreNameFilterComboBox.TabIndex = 29;
+            RestoreNameFilterComboBox.SelectedIndexChanged += RestoreNameFilterComboBox_SelectedIndexChanged;
+            // 
+            // RestoreNameFilterLabel
+            // 
+            RestoreNameFilterLabel.AutoSize = true;
+            RestoreNameFilterLabel.Location = new Point(5, 10);
+            RestoreNameFilterLabel.Name = "RestoreNameFilterLabel";
+            RestoreNameFilterLabel.Size = new Size(39, 15);
+            RestoreNameFilterLabel.TabIndex = 28;
+            RestoreNameFilterLabel.Text = "Name";
+            // 
+            // panel3
+            // 
+            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel3.Controls.Add(restoreDataGridView);
+            panel3.Location = new Point(0, 35);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(762, 259);
+            panel3.TabIndex = 27;
+            // 
+            // restoreDataGridView
+            // 
+            restoreDataGridView.AllowUserToAddRows = false;
+            restoreDataGridView.AllowUserToDeleteRows = false;
+            restoreDataGridView.AllowUserToResizeColumns = false;
+            restoreDataGridView.AllowUserToResizeRows = false;
+            restoreDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            restoreDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            restoreDataGridView.BackgroundColor = SystemColors.Control;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            restoreDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            restoreDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.NullValue = "null";
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            restoreDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            restoreDataGridView.Dock = DockStyle.Fill;
+            restoreDataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            restoreDataGridView.Location = new Point(0, 0);
+            restoreDataGridView.Margin = new Padding(4, 3, 4, 3);
+            restoreDataGridView.MultiSelect = false;
+            restoreDataGridView.Name = "restoreDataGridView";
+            restoreDataGridView.ReadOnly = true;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            restoreDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            restoreDataGridView.RowHeadersVisible = false;
+            dataGridViewCellStyle4.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            restoreDataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            restoreDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            restoreDataGridView.ShowCellErrors = false;
+            restoreDataGridView.ShowCellToolTips = false;
+            restoreDataGridView.ShowEditingIcon = false;
+            restoreDataGridView.ShowRowErrors = false;
+            restoreDataGridView.Size = new Size(762, 259);
+            restoreDataGridView.TabIndex = 23;
+            restoreDataGridView.DataSourceChanged += restoreDataGridView_DataSourceChanged;
+            // 
             // ClearFilterButton
             // 
-            ClearFilterButton.Location = new Point(418, 12);
+            ClearFilterButton.Location = new Point(667, 6);
             ClearFilterButton.Name = "ClearFilterButton";
             ClearFilterButton.Size = new Size(87, 23);
             ClearFilterButton.TabIndex = 26;
@@ -635,45 +755,30 @@
             ClearFilterButton.UseVisualStyleBackColor = true;
             ClearFilterButton.Click += ClearFilterButton_Click;
             // 
-            // RestoreDeleteRecordButton
+            // RestoreDeleteSettingsButton
             // 
-            RestoreDeleteRecordButton.Location = new Point(526, 12);
-            RestoreDeleteRecordButton.Name = "RestoreDeleteRecordButton";
-            RestoreDeleteRecordButton.Size = new Size(75, 23);
-            RestoreDeleteRecordButton.TabIndex = 25;
-            RestoreDeleteRecordButton.Text = "Delete";
-            RestoreDeleteRecordButton.UseVisualStyleBackColor = true;
-            RestoreDeleteRecordButton.Click += RestoreDeleteRecordButton_Click;
+            RestoreDeleteSettingsButton.Location = new Point(498, 300);
+            RestoreDeleteSettingsButton.Name = "RestoreDeleteSettingsButton";
+            RestoreDeleteSettingsButton.Size = new Size(125, 23);
+            RestoreDeleteSettingsButton.TabIndex = 25;
+            RestoreDeleteSettingsButton.Text = "Delete Settings";
+            RestoreDeleteSettingsButton.UseVisualStyleBackColor = true;
+            RestoreDeleteSettingsButton.Click += RestoreDeleteRecordButton_Click;
             // 
-            // RestoreButton
+            // RestoreRestoreSettingsButton
             // 
-            RestoreButton.Location = new Point(622, 12);
-            RestoreButton.Name = "RestoreButton";
-            RestoreButton.Size = new Size(132, 23);
-            RestoreButton.TabIndex = 24;
-            RestoreButton.Text = "Restore";
-            RestoreButton.UseVisualStyleBackColor = true;
-            RestoreButton.Click += RestoreButton_Click;
-            // 
-            // restoreDataGridView
-            // 
-            restoreDataGridView.AllowUserToAddRows = false;
-            restoreDataGridView.AllowUserToDeleteRows = false;
-            restoreDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            restoreDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
-            restoreDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            restoreDataGridView.Location = new Point(6, 52);
-            restoreDataGridView.Name = "restoreDataGridView";
-            restoreDataGridView.ReadOnly = true;
-            restoreDataGridView.RowTemplate.Height = 25;
-            restoreDataGridView.Size = new Size(748, 272);
-            restoreDataGridView.TabIndex = 23;
-            restoreDataGridView.CellContentClick += DataGridView1_CellContentClick;
+            RestoreRestoreSettingsButton.Location = new Point(629, 300);
+            RestoreRestoreSettingsButton.Name = "RestoreRestoreSettingsButton";
+            RestoreRestoreSettingsButton.Size = new Size(125, 23);
+            RestoreRestoreSettingsButton.TabIndex = 24;
+            RestoreRestoreSettingsButton.Text = "Restore Settings";
+            RestoreRestoreSettingsButton.UseVisualStyleBackColor = true;
+            RestoreRestoreSettingsButton.Click += RestoreButton_Click;
             // 
             // RestoreClassLabel
             // 
             RestoreClassLabel.AutoSize = true;
-            RestoreClassLabel.Location = new Point(234, 16);
+            RestoreClassLabel.Location = new Point(420, 10);
             RestoreClassLabel.Name = "RestoreClassLabel";
             RestoreClassLabel.Size = new Size(37, 15);
             RestoreClassLabel.TabIndex = 22;
@@ -682,27 +787,28 @@
             // RestoreClassComboBox
             // 
             RestoreClassComboBox.FormattingEnabled = true;
-            RestoreClassComboBox.Location = new Point(277, 12);
+            RestoreClassComboBox.Location = new Point(457, 6);
             RestoreClassComboBox.Name = "RestoreClassComboBox";
-            RestoreClassComboBox.Size = new Size(135, 23);
+            RestoreClassComboBox.Size = new Size(150, 23);
             RestoreClassComboBox.TabIndex = 21;
             RestoreClassComboBox.SelectedIndexChanged += RestoreClassComboBox_SelectedIndexChanged;
             // 
             // RestoreRealmLabel
             // 
             RestoreRealmLabel.AutoSize = true;
-            RestoreRealmLabel.Location = new Point(6, 15);
+            RestoreRealmLabel.Location = new Point(215, 10);
             RestoreRealmLabel.Name = "RestoreRealmLabel";
             RestoreRealmLabel.Size = new Size(43, 15);
             RestoreRealmLabel.TabIndex = 20;
             RestoreRealmLabel.Text = "Realm:";
+            RestoreRealmLabel.Click += RestoreRealmLabel_Click;
             // 
             // RestoreRealmComboBox
             // 
             RestoreRealmComboBox.FormattingEnabled = true;
-            RestoreRealmComboBox.Location = new Point(81, 12);
+            RestoreRealmComboBox.Location = new Point(264, 6);
             RestoreRealmComboBox.Name = "RestoreRealmComboBox";
-            RestoreRealmComboBox.Size = new Size(147, 23);
+            RestoreRealmComboBox.Size = new Size(150, 23);
             RestoreRealmComboBox.TabIndex = 19;
             RestoreRealmComboBox.SelectedIndexChanged += RestoreRealmComboBox_SelectedIndexChanged;
             // 
@@ -738,6 +844,7 @@
             backUpCharacterTab.PerformLayout();
             restoreCharacterTab.ResumeLayout(false);
             restoreCharacterTab.PerformLayout();
+            panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)restoreDataGridView).EndInit();
             ResumeLayout(false);
         }
@@ -796,12 +903,17 @@
         private Button BackUpCharRefreshButton;
         private TabPage restoreCharacterTab;
         private Button ClearFilterButton;
-        private Button RestoreDeleteRecordButton;
-        private Button RestoreButton;
+        private Button RestoreDeleteSettingsButton;
+        private Button RestoreRestoreSettingsButton;
         private DataGridView restoreDataGridView;
         private Label RestoreClassLabel;
         private ComboBox RestoreClassComboBox;
         private Label RestoreRealmLabel;
         private ComboBox RestoreRealmComboBox;
+        private Panel panel3;
+        private ComboBox RestoreNameFilterComboBox;
+        private Label RestoreNameFilterLabel;
+        private Button RestoreDBButton;
+        private Button BackupDBButton;
     }
 }

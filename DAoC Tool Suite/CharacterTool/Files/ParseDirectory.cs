@@ -1,10 +1,31 @@
 ﻿using System.IO;
+using System.Windows.Forms.VisualStyles;
 
-namespace DAoCToolSuite.CharacterTool
-{ 
+namespace DAoCToolSuite.CharacterTool.Files
+{
     public class ParseDirectory
     {
         private string Folder { get; set; }
+        private string[]? _IGNFiles = null;
+        public List<string> IGNFiles
+        {
+            get
+            {
+                if (_IGNFiles is null)
+                    _IGNFiles = GetIgnFiles();
+                return _IGNFiles.ToList();
+            }
+        }
+        private string[]? _INIFiles = null;
+        public List<string> INIFiles
+        {
+            get
+            {
+                if (_INIFiles is null)
+                    _INIFiles = GetIniFiles();
+                return _INIFiles.ToList();
+            }
+        }
         public Dictionary<string, int> Characters { get; private set; } = new Dictionary<string, int>();
 
         public ParseDirectory(string path)
@@ -25,6 +46,13 @@ namespace DAoCToolSuite.CharacterTool
             string[] files = GetFiles();
             string[] iniFiles = files.Where(x => x.Contains(".ini")).ToArray();
             return iniFiles;
+        }
+
+        private string[] GetIgnFiles()
+        {
+            string[] files = GetFiles();
+            string[] ignFiles = files.Where(x => x.Contains(".ign")).ToArray();
+            return ignFiles;
         }
 
         public void PopulateCharacterList()
@@ -67,10 +95,37 @@ namespace DAoCToolSuite.CharacterTool
             }
         }
 
-        private string[] FindFiles(string searchString)
+        internal string[] FindFiles(string searchString)
         {
             string[] files = Directory.GetFiles(Folder, searchString, SearchOption.TopDirectoryOnly);
             return files;
+        }
+
+        internal string? FindIgnFileByCharacterName(string characterName,bool fullPath = false)
+        {
+            string? fileName = IGNFiles.Where(x => x.Split('\\').Last().Split('-').First() == characterName).FirstOrDefault();
+            if(fullPath)
+                return fileName;
+            else
+                return fileName?.Split('\\')?.Last();
+        }
+
+        internal string? FindIniFileByCharacterName(string characterName, bool fullPath = false)
+        {
+            string? fileName = INIFiles.Where(x => x.Split('\\').Last().Split('-').First() == characterName).FirstOrDefault();
+            if (fullPath)
+                return fileName;
+            else
+                return fileName?.Split('\\')?.Last();
+        }
+
+        internal string? GetFileContents(string fileName)
+        {
+            try
+            {
+                return File.ReadAllText(fileName);
+            }
+            catch { return null; }
         }
 
     }

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text.Json;
 
-namespace DAoCToolSuite.CharacterTool
+namespace DAoCToolSuite.CharacterTool.Json
 {
     public static class JsonFileReader
     {

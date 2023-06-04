@@ -1,7 +1,8 @@
 ﻿using System.Text.Json.Serialization;
+using DAoCToolSuite.CharacterTool.Files;
 using Newtonsoft.Json;
 
-namespace DAoCToolSuite.CharacterTool
+namespace DAoCToolSuite.CharacterTool.Json
 {
     [JsonSourceGenerationOptions(WriteIndented = true)]
     [JsonSerializable(typeof(CharacterRecord))]

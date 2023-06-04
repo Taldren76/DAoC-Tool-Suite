@@ -32,8 +32,8 @@ namespace DAoCToolSuite.ChimpTool
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             GridPanel = new Panel();
             LoadingTabelLabel = new Label();
@@ -53,7 +53,7 @@ namespace DAoCToolSuite.ChimpTool
             linkLabel1 = new LinkLabel();
             RefreshButton = new Button();
             MidgardTotalsTextBox = new TextBox();
-            SearchRefreshAll = new Button();
+            RefreshAllButton = new Button();
             panel5 = new Panel();
             OnTopCheckBox = new CheckBox();
             RestoreButton = new Button();
@@ -102,24 +102,24 @@ namespace DAoCToolSuite.ChimpTool
             SearchGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             SearchGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             SearchGridView.BackgroundColor = SystemColors.Control;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            SearchGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            SearchGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             SearchGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.NullValue = "null";
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            SearchGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.NullValue = "null";
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            SearchGridView.DefaultCellStyle = dataGridViewCellStyle4;
             SearchGridView.Dock = DockStyle.Fill;
             SearchGridView.Location = new Point(0, 0);
             SearchGridView.Margin = new Padding(4, 3, 4, 3);
@@ -133,9 +133,7 @@ namespace DAoCToolSuite.ChimpTool
             SearchGridView.TabIndex = 15;
             SearchGridView.Visible = false;
             SearchGridView.DataSourceChanged += SearchGridView_DataSourceChanged;
-            SearchGridView.CellFormatting += SearchGridView_CellFormatting;
             SearchGridView.CellToolTipTextNeeded += SearchGridView_CellToolTipTextNeeded;
-            SearchGridView.CellValueNeeded += SearchGridView_CellValueNeeded;
             // 
             // panel2
             // 
@@ -261,7 +259,7 @@ namespace DAoCToolSuite.ChimpTool
             panel4.Controls.Add(linkLabel1);
             panel4.Controls.Add(RefreshButton);
             panel4.Controls.Add(MidgardTotalsTextBox);
-            panel4.Controls.Add(SearchRefreshAll);
+            panel4.Controls.Add(RefreshAllButton);
             panel4.Location = new Point(1013, 0);
             panel4.Margin = new Padding(4, 3, 4, 3);
             panel4.Name = "panel4";
@@ -306,17 +304,17 @@ namespace DAoCToolSuite.ChimpTool
             MidgardTotalsTextBox.TabIndex = 18;
             MidgardTotalsTextBox.TextAlign = HorizontalAlignment.Center;
             // 
-            // SearchRefreshAll
+            // RefreshAllButton
             // 
-            SearchRefreshAll.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            SearchRefreshAll.Location = new Point(303, 6);
-            SearchRefreshAll.Margin = new Padding(4, 3, 4, 3);
-            SearchRefreshAll.Name = "SearchRefreshAll";
-            SearchRefreshAll.Size = new Size(88, 29);
-            SearchRefreshAll.TabIndex = 9;
-            SearchRefreshAll.Text = "Refresh All";
-            SearchRefreshAll.UseVisualStyleBackColor = true;
-            SearchRefreshAll.Click += RefreshAllButton_Click;
+            RefreshAllButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            RefreshAllButton.Location = new Point(303, 6);
+            RefreshAllButton.Margin = new Padding(4, 3, 4, 3);
+            RefreshAllButton.Name = "RefreshAllButton";
+            RefreshAllButton.Size = new Size(88, 29);
+            RefreshAllButton.TabIndex = 9;
+            RefreshAllButton.Text = "Refresh All";
+            RefreshAllButton.UseVisualStyleBackColor = true;
+            RefreshAllButton.Click += RefreshAllButton_Click;
             // 
             // panel5
             // 
@@ -458,7 +456,7 @@ namespace DAoCToolSuite.ChimpTool
         private LinkLabel linkLabel1;
         private Button RefreshButton;
         private TextBox MidgardTotalsTextBox;
-        private Button SearchRefreshAll;
+        private Button RefreshAllButton;
         private Panel panel5;
         private CheckBox OnTopCheckBox;
         private Button RestoreButton;

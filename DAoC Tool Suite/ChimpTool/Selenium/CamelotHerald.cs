@@ -95,7 +95,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                     //this Initalize gets the first failure out of the way.
                     driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
                 }
-                catch
+                catch(WebDriverException)
                 {
                     //This is, unfortunetly, expected.
                 }
@@ -115,7 +115,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             Logger.Debug($"Disposing CEFSharp Browser");
             Browser?.Dispose();
             DateTime endTime = DateTime.Now.AddSeconds(30);
-            while (!(Browser?.IsDisposed ?? true) && DateTime.Now < endTime)
+            while (DateTime.Now < endTime && !(Browser?.IsDisposed ?? true) && ChromeDrvService != null)
             {
                 Thread.Sleep(100);
             }
@@ -127,8 +127,6 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             {
                 Initialize();
             }
-
-            //TODO:Pull Table
 
             ChromeOptions options = new();
             options.AddArgument("--remote-debugging-port=9222");
@@ -273,6 +271,8 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             progressBar.Value = 0;
             progressBar.Maximum = chimps.Count;
             progressBar.Minimum = 0;
+            progressBar.CustomText = "Retrieving Character Data";
+            progressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
             progressBar.Refresh();
 
             List<ChimpJson> results = new();

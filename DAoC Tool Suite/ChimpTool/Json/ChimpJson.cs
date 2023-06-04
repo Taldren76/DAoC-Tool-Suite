@@ -155,6 +155,8 @@ namespace DAoCToolSuite.ChimpTool.Json
                 "Berserker","Bonedancer","Healer","Hunter","Runemaster","Savage","Shadowblade","Shaman","Skald","Spiritmaster","Thane","Valkyrie","Warlock","Warrior"
             };
 
+
+
             Servers = new List<string>()
             {
                 "Ywain1","Ywain2","Ywain3","Ywain4","Ywain5","Ywain6","Ywain7","Ywain8","Ywain9","Ywain10",

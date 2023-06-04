@@ -1,10 +1,30 @@
 ﻿using System.IO;
 
 namespace DAoCToolSuite.ChimpTool
-{ 
+{
     public class ParseDirectory
     {
         private string Folder { get; set; }
+        private string[]? _IGNFiles = null;
+        public List<string> IGNFiles
+        {
+            get
+            {
+                if (_IGNFiles is null)
+                    _IGNFiles = GetIgnFiles();
+                return _IGNFiles.ToList();
+            }
+        }
+        private string[]? _INIFiles = null;
+        public List<string> INIFiles
+        {
+            get
+            {
+                if (_INIFiles is null)
+                    _INIFiles = GetIniFiles();
+                return _INIFiles.ToList();
+            }
+        }
         public Dictionary<string, int> Characters { get; private set; } = new Dictionary<string, int>();
 
         public ParseDirectory(string path)
@@ -25,6 +45,13 @@ namespace DAoCToolSuite.ChimpTool
             string[] files = GetFiles();
             string[] iniFiles = files.Where(x => x.Contains(".ini")).ToArray();
             return iniFiles;
+        }
+
+        private string[] GetIgnFiles()
+        {
+            string[] files = GetFiles();
+            string[] ignFiles = files.Where(x => x.Contains(".ign")).ToArray();
+            return ignFiles;
         }
 
         public void PopulateCharacterList()
@@ -71,6 +98,18 @@ namespace DAoCToolSuite.ChimpTool
         {
             string[] files = Directory.GetFiles(Folder, searchString, SearchOption.TopDirectoryOnly);
             return files;
+        }
+
+        private string? FindIgnFileByCharacterName(string characterName)
+        {
+            string? fileName = IGNFiles.Where(x => x.Split('-').First() == characterName).FirstOrDefault();
+            return fileName;
+        }
+
+        private string? FindIniFileByCharacterName(string characterName)
+        {
+            string? fileName = INIFiles.Where(x => x.Split("-").First() == characterName).FirstOrDefault();
+            return fileName;
         }
 
     }

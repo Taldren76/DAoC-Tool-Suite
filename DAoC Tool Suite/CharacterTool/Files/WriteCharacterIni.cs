@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace DAoCToolSuite.CharacterTool
+namespace DAoCToolSuite.CharacterTool.Files
 {
     internal static class WriteCharacterIni
     {
