@@ -1,14 +1,10 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Authentication;
+using DAoCToolSuite.ChimpTool.Exception;
 using DAoCToolSuite.ChimpTool.Json;
 using DAoCToolSuite.ChimpTool.Logging;
-using DAoCToolSuite.ChimpTool.Exception;
 using Newtonsoft.Json;
 using SQLLibrary.Enums;
-using System.Diagnostics.Eventing.Reader;
-using System.Runtime.Intrinsics.X86;
-using System.Windows.Documents;
 
 namespace DAoCToolSuite.ChimpTool.HeraldAPI
 {
@@ -17,9 +13,8 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
         private static bool AttemptMaintenanceBypass { get; set; } = false;
         private static readonly Logger Logger = new();
         private const string searchBase = "https://api.camelotherald.com/character/search";
-        private const string searchBase2 = "http://api.camelotherald.com/characters/search";
         private const string infoBase = "https://api.camelotherald.com/character/info";
-        private const string infoBase2 = "http://api.camelotherald.com/character/info";
+        private const string infoBaseWorkAround = "http://api.camelotherald.com/character/info";
         public static CharacterInfoResult CharacterInfo(string webID)
         {
             if (webID == null)
@@ -56,21 +51,21 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                     Logger.Debug($"{(int)response.StatusCode} ({response.ReasonPhrase})");
                 }
             }
-            catch(AggregateException ex)
+            catch (AggregateException ex)
             {
                 if (!AttemptMaintenanceBypass && ex?.InnerException?.Message is not null && ex.InnerException.Message.Equals("The SSL connection could not be established, see inner exception."))
                 {
-                    DialogResult del = MessageBox.Show($"Herald is in Maintenance. Attempt bypass?\nNote: Doing this may upset Broadsword.", "Maintenance", MessageBoxButtons.YesNo);
+                    DialogResult del = MessageBox.Show($"Herald is in Maintenance. Attempt API workaround?\n\nChoosing 'No' will disable API usage and reattempt via Selenium.", "Maintenance", MessageBoxButtons.YesNo);
                     if (del == DialogResult.Yes)
                     {
                         AttemptMaintenanceBypass = true;
-                        return CharacterInfo2(webID);
+                        return CharacterInfoWorkAround(webID);
                     }
-                    throw new MaintenanceException("Herald is in maintenance", ex);
+                    throw new MaintenanceException("Herald is in Maintenance.", ex);
                 }
-                else if(AttemptMaintenanceBypass)
+                else if (AttemptMaintenanceBypass)
                 {
-                    return CharacterInfo2(webID);
+                    return CharacterInfoWorkAround(webID);
                 }
             }
             catch (System.Exception e)
@@ -82,13 +77,15 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             client.Dispose();
 
             if (result is null)
+            {
                 return new();
+            }
 
             result.IsValid = true;
             return result;
         }
 
-        public static CharacterInfoResult CharacterInfo2(string webID)
+        public static CharacterInfoResult CharacterInfoWorkAround(string webID)
         {
             if (webID == null)
             {
@@ -98,7 +95,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             string urlParameters = $"";
             HttpClient client = new()
             {
-                BaseAddress = new Uri(infoBase2 + $"/{webID}")
+                BaseAddress = new Uri(infoBaseWorkAround + $"/{webID}")
             };
 
             client.DefaultRequestHeaders.Accept.Add(
@@ -124,7 +121,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                     Logger.Debug($"{(int)response.StatusCode} ({response.ReasonPhrase})");
                 }
             }
-            catch(MaintenanceException ex)
+            catch (MaintenanceException ex)
             {
                 throw ex;
             }
@@ -170,23 +167,6 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                     Logger.Debug($"{(int)response.StatusCode} ({response.ReasonPhrase})");
                 }
             }
-            catch (AggregateException ex)
-            {
-                if (!AttemptMaintenanceBypass && ex?.InnerException?.Message is not null && ex.InnerException.Message.Equals("The SSL connection could not be established, see inner exception."))
-                {
-                    DialogResult del = MessageBox.Show($"Herald is in Maintenance. Attempt bypass?\nNote: Doing this may upset Broadsword.", "Maintenance", MessageBoxButtons.YesNo);
-                    if (del == DialogResult.Yes)
-                    {
-                        AttemptMaintenanceBypass = true;
-                        return CharacterSearch2(characterName,cluster);
-                    }
-                    throw new MaintenanceException("Herald is in maintenance", ex);
-                }
-                else if (AttemptMaintenanceBypass)
-                {
-                    return CharacterSearch2(characterName,cluster);
-                }
-            }
             catch (System.Exception e)
             {
                 Logger.Error(e);
@@ -196,54 +176,10 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             client.Dispose();
 
             if (result is null)
-                return new();
-
-            result.IsValid = true;
-            return result;
-        }
-
-        public static CharacterSearchResult CharacterSearch2(string characterName, ServerCluster cluster)
-        {
-            string urlParameters = $"?name={characterName}&cluster={cluster}";
-            HttpClient client = new()
             {
-                BaseAddress = new Uri(searchBase2)
-            };
-
-            client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-
-            CharacterSearchResult? result = new();
-            try
-            {
-                HttpResponseMessage response = client.GetAsync(urlParameters).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    string json = response.Content.ReadAsStringAsync().Result;
-                    result = JsonConvert.DeserializeObject<CharacterSearchResult>(json);
-                    if (result?.Results is null || result.Results.Count == 0)
-                    {
-                        return new();
-                    }
-
-                    result.IsValid = true;
-                }
-                else
-                {
-                    Logger.Debug($"{(int)response.StatusCode} ({response.ReasonPhrase})");
-                }
-            }
-            catch(MaintenanceException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception e)
-            {
-                Logger.Error(e);
                 return new();
             }
 
-            client.Dispose();
             result.IsValid = true;
             return result;
         }
@@ -261,7 +197,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                 string? webid = searchResult?.Results[0]?.CharacterWebId;
                 return webid is null ? new() : GetChimp(webid);
             }
-            catch(MaintenanceException ex)
+            catch (MaintenanceException ex)
             {
                 throw ex;
             }
@@ -333,7 +269,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                 }
                 return new ChimpJson();
             }
-            catch(MaintenanceException ex)
+            catch (MaintenanceException ex)
             {
                 throw ex;
             }

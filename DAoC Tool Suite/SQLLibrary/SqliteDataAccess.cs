@@ -3,8 +3,8 @@ using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Reflection;
-using SQLLibrary.Logging;
 using Dapper;
+using SQLLibrary.Logging;
 
 namespace SQLLibrary
 {
@@ -155,12 +155,7 @@ namespace SQLLibrary
         {
             try
             {
-
-                string strConnectionString = LoadConnectionString();
-                string dbPath = $"{System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CharacterDB.db"}";
-                string connectionString = $"DataSource={dbPath};Version=3;";
-                Logger.Debug($"Using connection string {connectionString}");
-                using IDbConnection conn = new SQLiteConnection(connectionString);
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 List<AccountModel> query = conn.Query<AccountModel>("Select * from Accounts", new DynamicParameters()).ToList();
                 return query;
             }
@@ -386,7 +381,8 @@ namespace SQLLibrary
 
         private static string LoadConnectionString(string id = "Default")
         {
-            return ConfigurationManager.ConnectionStrings[id].ConnectionString ?? "DataSource =.\\CharacterDB.db; Version = 3;";
+            Logger.Debug($"Using connection string {ConfigurationManager.ConnectionStrings[id].ConnectionString}");
+            return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
 
         public static void ReIndexTables()

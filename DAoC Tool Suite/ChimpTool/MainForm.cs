@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using DAoCToolSuite.ChimpTool.Enums;
 using DAoCToolSuite.ChimpTool.Exception;
 using DAoCToolSuite.ChimpTool.Extensions;
@@ -59,8 +58,8 @@ namespace DAoCToolSuite.ChimpTool
             }
             set => _settings = value;
         }
-        private static bool UseSelenium => Settings.UseSelenium;
-        private static bool UseAPI => Settings.UseAPI;
+        private static bool UseSelenium { get; set; } = Settings.UseSelenium;
+        private static bool UseAPI { get; set; } = Settings.UseAPI;
         private static string LastAccount
         {
             get => Settings.LastAccount;
@@ -247,7 +246,7 @@ namespace DAoCToolSuite.ChimpTool
         public static DebugLevel CurrentDebugLevel { get; set; } = DebugLevel.Debug;
         public void LinkLabelLinkToAFile()
         {
-            var path = Path.GetDirectoryName(Application.ExecutablePath); //System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+            string? path = Path.GetDirectoryName(Application.ExecutablePath); //System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
             linkLabel1.BorderStyle = BorderStyle.None;
             linkLabel1.LinkBehavior = LinkBehavior.NeverUnderline;
             _ = linkLabel1.Links.Add(0, linkLabel1.Text.ToString().Length, path + "\\DAoCTools.log");
@@ -802,7 +801,6 @@ namespace DAoCToolSuite.ChimpTool
                         chimpRefreshResults = CamelotHerald.GetChimps(badChimps, SearchProgressBar).Where(x => x.IsValid()).ToList();
                         chimpRefreshResults.AddRange(goodChimps);
                     }
-
                 }
                 else if (UseSelenium)
                 {
@@ -834,11 +832,12 @@ namespace DAoCToolSuite.ChimpTool
                 CalculateRPTotals();
 
             }
-            catch(MaintenanceException ex)
+            catch (MaintenanceException)
             {
-                Logger.Debug(ex);
+                UseAPI = false;
+                RefreshChimps(chimpsToBeRefreshed, date);
             }
-            catch(System.Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.Error(ex);
             }
@@ -967,9 +966,10 @@ namespace DAoCToolSuite.ChimpTool
                 UpdateDebugLinkBackColor();
                 WaitCursor.Pop();
             }
-            catch(MaintenanceException ex)
+            catch (MaintenanceException)
             {
-                Logger.Debug(ex);
+                UseAPI = false;
+                AddNewCharacter();
             }
         }
 

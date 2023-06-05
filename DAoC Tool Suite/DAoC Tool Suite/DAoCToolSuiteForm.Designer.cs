@@ -126,7 +126,7 @@ namespace DAoCToolSuite
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DAoCToolSuiteForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "DAoC Tool Suite v0.2.0";
+            Text = "DAoC Tool Suite v0.3.0";
             FormClosing += DAoCTestSuiteForm_FormClosing;
             ResumeLayout(false);
         }

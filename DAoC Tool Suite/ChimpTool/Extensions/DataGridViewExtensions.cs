@@ -56,7 +56,7 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                         continue;
                     }
                     // Sort the string array by string lengths.
-                    colStringCollection = colStringCollection.OrderBy((x) => x?.Length??0).ToArray();
+                    colStringCollection = colStringCollection.OrderBy((x) => x?.Length ?? 0).ToArray();
                     if (colStringCollection is null)
                     {
                         continue;

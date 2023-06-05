@@ -8,3 +8,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~P:ChimpTool.MainForm.CharactersByAccountFirstDateUpdated")]
 [assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~P:ChimpTool.Json.ChimpJson.RealmRanks")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:ChimpTool.ParseDirectory.FindFiles(System.String)~System.String[]")]
+[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~P:DAoCToolSuite.ChimpTool.MainForm.CharactersByAccountFirstDateUpdated")]

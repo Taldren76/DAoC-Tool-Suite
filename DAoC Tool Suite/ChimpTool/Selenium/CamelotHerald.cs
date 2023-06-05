@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using CefSharp;
 using CefSharp.OffScreen;
@@ -19,20 +18,20 @@ namespace DAoCToolSuite.ChimpTool.Selenium
     {
         private static readonly Logger Logger = new();
         internal static ChromiumWebBrowser? Browser { get; set; }
-        internal static ChromeDriverService? ChromeDrvService { get; set; }
         internal static bool IsInitialized { get; set; } = false;
-        internal static string? ExePath = Path.GetDirectoryName(Application.ExecutablePath); // System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        internal static string? ExePath = Path.GetDirectoryName(Application.ExecutablePath);
         internal static string AssemblyPath => ExePath ?? throw new NullReferenceException("The path to the assembly can not be determined and returned null");
         public static void Initialize()
         {
             Stopwatch stopwatch = new();
             try
             {
-                #region Cef
+                #region Cef Settings
                 if (!IsInitialized)
                 {
                     CefSettings settings = new()
                     {
+
                         RemoteDebuggingPort = 9222,
                         UserDataPath = AssemblyPath + "\\Temp",
                         WindowlessRenderingEnabled = true
@@ -64,43 +63,6 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 }
                 stopwatch.Restart();
                 #endregion
-                #region ChromeDriverService
-                if (ChromeDrvService == null || !ChromeDrvService.IsRunning)
-                {
-                    Logger.Debug($"Driver path has been set to {AssemblyPath + "\\Selenium"}");
-                    ChromeDrvService = ChromeDriverService.CreateDefaultService(AssemblyPath + "\\Selenium");
-                    ChromeDrvService.HideCommandPromptWindow = true;
-                    endTime = DateTime.Now.AddSeconds(30);
-                    stopwatch.Restart();
-                    ChromeDrvService.Start();
-                    while (!ChromeDrvService.IsRunning && endTime > DateTime.Now)
-                    {
-                        Thread.Sleep(100);
-                    }
-                    Logger.Debug($"ChromeDriverService.IsRunning = {ChromeDrvService?.IsRunning.ToString() ?? "null"} after {stopwatch.Elapsed:c}");
-                }
-                stopwatch.Restart();
-                #endregion
-                #region IWebDriver
-                try
-                {
-
-                    ChromeOptions options = new();
-                    //options.DebuggerAddress = "localhost:9222";
-                    options.AddArgument("--remote-debugging-port=9222");
-                    options.AddArgument("--disable-gpu");
-                    options.AddArgument("--headless");
-                    options.AddArgument("--no-sandbox");
-                    using ChromeDriver driver = new(ChromeDrvService, options);
-                    //this ALWAYS fails on the first attempt and I have NO IDEA why.
-                    //this Initalize gets the first failure out of the way.
-                    driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-                }
-                catch (WebDriverException)
-                {
-                    //This is, unfortunetly, expected.
-                }
-                #endregion
             }
             catch (System.Exception ex)
             {
@@ -109,14 +71,10 @@ namespace DAoCToolSuite.ChimpTool.Selenium
         }
         public static void Quit()
         {
-            //ChromeDriverService
-            Logger.Debug($"Disposing ChromeDrvService");
-            ChromeDrvService?.Dispose();
-            //Browser
             Logger.Debug($"Disposing CEFSharp Browser");
             Browser?.Dispose();
             DateTime endTime = DateTime.Now.AddSeconds(30);
-            while (DateTime.Now < endTime && !(Browser?.IsDisposed ?? true) && ChromeDrvService != null)
+            while (DateTime.Now < endTime && !(Browser?.IsDisposed ?? true))
             {
                 Thread.Sleep(100);
             }
@@ -124,21 +82,30 @@ namespace DAoCToolSuite.ChimpTool.Selenium
         }
         internal static ChimpJson GetChimp(string playerName, ServerCluster cluster, int secondsToTry = 3)
         {
-            if (!IsInitialized || Browser == null || Browser.IsBrowserInitialized || ChromeDrvService == null || !ChromeDrvService.IsRunning)
+            if (!IsInitialized || Browser == null || !Browser.IsBrowserInitialized)
             {
                 Initialize();
             }
 
-            ChromeOptions options = new();
-            options.AddArgument("--remote-debugging-port=9222");
-            options.AddArgument("--disable-gpu");
+            ChromeOptions options = new()
+            {
+                DebuggerAddress = "127.0.0.1:9222",
+                AcceptInsecureCertificates = true
+            };
+            //options.AddArgument("--remote-debugging-port=9222");
+            //options.AddArgument("--ignore-certificate-errors");
             options.AddArgument("--headless");
+            options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
             Logger.Debug($"Initializing selenium chromedriver to search for {playerName} on {cluster}");
-            using ChromeDriver driver = new(ChromeDrvService, options);
+
+            using ChromeDriverService chromeDrvService = ChromeDriverService.CreateDefaultService(AssemblyPath + "\\Selenium");
+            chromeDrvService.HideCommandPromptWindow = true;
+            using ChromeDriver driver = new(chromeDrvService, options);
             try
             {
                 string url = $"https://search.camelotherald.com/#/search/c/{cluster}/{playerName}";
+
                 Logger.Debug($"Navigating to {url}");
                 driver.Navigate().GoToUrl(new Uri(url));
                 Logger.Debug($"Navigation complete. Url={driver.Url}");
@@ -146,6 +113,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
 
                 if (driver.GetIfExists(By.XPath("//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a"), secondsToTry * 1000, 100) is null) //Delays until a result exists in the table;
                 {
+                    Logger.Debug($"Could not find {"//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a"} in\n{driver.PageSource}");
                     return new(true);
                 }
 
@@ -180,17 +148,24 @@ namespace DAoCToolSuite.ChimpTool.Selenium
         }
         internal static ChimpJson GetChimp(ChimpJson player)
         {
-            if (!IsInitialized || Browser == null || Browser.IsBrowserInitialized || ChromeDrvService == null || !ChromeDrvService.IsRunning)
+            if (!IsInitialized || Browser == null || !Browser.IsBrowserInitialized)
             {
                 Initialize();
             }
 
-            ChromeOptions options = new();
-            options.AddArgument("--remote-debugging-port=9222");
-            options.AddArgument("--disable-gpu");
+            ChromeOptions options = new()
+            {
+                DebuggerAddress = "127.0.0.1:9222",
+                AcceptInsecureCertificates = true
+            };
+            //options.AddArgument("--remote-debugging-port=9222");
+            //options.AddArgument("--ignore-certificate-errors");
             options.AddArgument("--headless");
+            options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
-            using ChromeDriver driver = new(ChromeDrvService, options);
+            using ChromeDriverService chromeDrvService = ChromeDriverService.CreateDefaultService(AssemblyPath + "\\Selenium");
+            chromeDrvService.HideCommandPromptWindow = true;
+            using ChromeDriver driver = new(chromeDrvService, options);
             try
             {
                 string url = $"https://search.camelotherald.com/#/character/{player.WebID}";
@@ -207,7 +182,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
         }
         internal static List<ChimpJson> GetChimps(List<string> playerNames, ServerCluster cluster, TextProgressBar progressBar, int secondsToTry = 5)
         {
-            if (!IsInitialized || Browser == null || Browser.IsBrowserInitialized || ChromeDrvService == null || !ChromeDrvService.IsRunning)
+            if (!IsInitialized || Browser == null || !Browser.IsBrowserInitialized)
             {
                 Initialize();
             }
@@ -221,12 +196,19 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             progressBar.Refresh();
 
             List<ChimpJson> results = new();
-            ChromeOptions options = new();
-            options.AddArgument("--remote-debugging-port=9222");
-            options.AddArgument("--disable-gpu");
+            ChromeOptions options = new()
+            {
+                DebuggerAddress = "127.0.0.1:9222",
+                AcceptInsecureCertificates = true
+            };
+            //options.AddArgument("--remote-debugging-port=9222");
+            //options.AddArgument("--ignore-certificate-errors");
             options.AddArgument("--headless");
+            options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
-            using (ChromeDriver driver = new(ChromeDrvService, options))
+            using ChromeDriverService chromeDrvService = ChromeDriverService.CreateDefaultService(AssemblyPath + "\\Selenium");
+            chromeDrvService.HideCommandPromptWindow = true;
+            using (ChromeDriver driver = new(chromeDrvService, options))
             {
                 foreach (string playerName in playerNames)
                 {
@@ -267,7 +249,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
 
         internal static List<ChimpJson> GetChimps(List<ChimpJson> chimps, TextProgressBar progressBar)
         {
-            if (!IsInitialized || Browser == null || Browser.IsBrowserInitialized || ChromeDrvService == null || !ChromeDrvService.IsRunning)
+            if (!IsInitialized || Browser == null || !Browser.IsBrowserInitialized)
             {
                 Initialize();
             }
@@ -281,12 +263,19 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             progressBar.Refresh();
 
             List<ChimpJson> results = new();
-            ChromeOptions options = new();
-            options.AddArgument("--remote-debugging-port=9222");
-            options.AddArgument("--disable-gpu");
+            ChromeOptions options = new()
+            {
+                DebuggerAddress = "127.0.0.1:9222",
+                AcceptInsecureCertificates = true
+            };
+            //options.AddArgument("--remote-debugging-port=9222");
+            //options.AddArgument("--ignore-certificate-errors");
             options.AddArgument("--headless");
+            options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
-            using (ChromeDriver driver = new(ChromeDrvService, options))
+            using ChromeDriverService chromeDrvService = ChromeDriverService.CreateDefaultService(AssemblyPath + "\\Selenium");
+            chromeDrvService.HideCommandPromptWindow = true;
+            using (ChromeDriver driver = new(chromeDrvService, options))
             {
                 Stopwatch resultWatch = new();
                 foreach (ChimpJson chimp in chimps)

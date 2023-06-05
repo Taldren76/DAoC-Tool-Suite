@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Reflection;
 using NLog;
 using NLog.Targets;
 
@@ -58,7 +57,7 @@ namespace DAoCToolSuite.ChimpTool.Logging
                 {
                     return;
                 }
-                var exePath = Path.GetDirectoryName(Application.ExecutablePath); //System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                string? exePath = Path.GetDirectoryName(Application.ExecutablePath); //System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
                 string path = $"{exePath}\\DAoCToolSuite.log";
                 NLog.Config.LoggingConfiguration configuration = LogManager.Configuration;
                 FileTarget fileTarget = new()

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using NLog;
 using NLog.Targets;
 
@@ -58,7 +57,7 @@ namespace SQLLibrary.Logging
                 {
                     return;
                 }
-                var exePath = Path.GetDirectoryName(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)); //System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                string? exePath = Path.GetDirectoryName(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)); //System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
                 string path = $"{exePath}\\DAoCToolSuite.log";
                 NLog.Config.LoggingConfiguration configuration = LogManager.Configuration;
                 FileTarget fileTarget = new()
