@@ -15,8 +15,8 @@
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<PackageIcon>DAoCTools.png</PackageIcon>
 		<Platforms>x86</Platforms>
-		<AssemblyVersion>0.3.0.0</AssemblyVersion>
-		<FileVersion>0.3.0.0</FileVersion>
+		<AssemblyVersion>0.4.0.0</AssemblyVersion>
+		<FileVersion>0.4.0.0</FileVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(PlatformTarget)' == 'x86'">
@@ -31,7 +31,6 @@
     <None Remove="Icons\ChimpTool.png" />
     <None Remove="Icons\LogParser.ico" />
     <None Remove="Icons\LogParser.png" />
-    <None Remove="NLog.Config" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,9 +56,6 @@
     <Content Include="Icons\ChimpTool.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ChimpTool.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Icons\DAoCTools.png">
       <PackagePath>\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -71,13 +67,6 @@
     <Content Include="Icons\LogParser.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="NLog.Config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NLog" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>

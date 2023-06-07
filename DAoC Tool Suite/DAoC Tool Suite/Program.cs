@@ -1,3 +1,5 @@
+using Logger;
+
 namespace DAoCToolSuite
 {
     public static class Program
@@ -5,13 +7,22 @@ namespace DAoCToolSuite
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
+        /// 
+        internal static LogManager Logger => LogManager.Instance;
         [STAThread]
         public static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new DAoCToolSuiteForm());
+
+            try
+            {
+                // To customize application configuration such as set high DPI settings or default font,
+                // see https://aka.ms/applicationconfiguration.
+                ApplicationConfiguration.Initialize();
+                Application.Run(new DAoCToolSuiteForm());
+            }
+            catch (Exception ex) { 
+                Logger.Error(ex);
+            }
         }
     }
 }

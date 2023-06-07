@@ -28,33 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panel1 = new Panel();
-            textBox1 = new TextBox();
-            panel1.SuspendLayout();
+            LogViewerPanel = new Panel();
+            LogViewerTextBox = new TextBox();
+            LogViewerPanel.SuspendLayout();
             SuspendLayout();
             // 
-            // panel1
+            // LogViewerPanel
             // 
-            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel1.Controls.Add(textBox1);
-            panel1.Location = new Point(12, 12);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(1400, 417);
-            panel1.TabIndex = 0;
-            panel1.Paint += panel1_Paint;
+            LogViewerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            LogViewerPanel.Controls.Add(LogViewerTextBox);
+            LogViewerPanel.Location = new Point(12, 12);
+            LogViewerPanel.Name = "LogViewerPanel";
+            LogViewerPanel.Size = new Size(1400, 417);
+            LogViewerPanel.TabIndex = 0;
             // 
-            // textBox1
+            // LogViewerTextBox
             // 
-            textBox1.Dock = DockStyle.Fill;
-            textBox1.Font = new Font("Verdana", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-            textBox1.Location = new Point(0, 0);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.ScrollBars = ScrollBars.Vertical;
-            textBox1.Size = new Size(1400, 417);
-            textBox1.TabIndex = 0;
-            textBox1.WordWrap = false;
-            textBox1.TextChanged += textBox1_TextChanged;
+            LogViewerTextBox.Dock = DockStyle.Fill;
+            LogViewerTextBox.Font = new Font("Verdana", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            LogViewerTextBox.Location = new Point(0, 0);
+            LogViewerTextBox.Multiline = true;
+            LogViewerTextBox.Name = "LogViewerTextBox";
+            LogViewerTextBox.ScrollBars = ScrollBars.Vertical;
+            LogViewerTextBox.Size = new Size(1400, 417);
+            LogViewerTextBox.TabIndex = 0;
+            LogViewerTextBox.WordWrap = false;
             // 
             // LogViewer
             // 
@@ -63,19 +61,19 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(1424, 441);
-            Controls.Add(panel1);
+            Controls.Add(LogViewerPanel);
             FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Name = "LogViewer";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.Manual;
             Text = "Log Viewer";
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
+            LogViewerPanel.ResumeLayout(false);
+            LogViewerPanel.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Panel panel1;
-        public TextBox textBox1;
+        private Panel LogViewerPanel;
+        public TextBox LogViewerTextBox;
     }
 }

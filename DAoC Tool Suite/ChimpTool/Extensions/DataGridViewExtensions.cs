@@ -1,13 +1,13 @@
 ﻿using System.Data;
 using DAoCToolSuite.ChimpTool.Json;
-using DAoCToolSuite.ChimpTool.Logging;
+using Logger;
 using DAoCToolSuite.ChimpTool.Settings;
 
 namespace DAoCToolSuite.ChimpTool.Extensions
 {
     public static class DataGridViewExtensions
     {
-        private static Logger Logger { get; set; } = new Logger();
+        internal static LogManager Logger => LogManager.Instance;
 
         public static SettingsManager? _settings = null;
         public static SettingsManager Settings
@@ -125,7 +125,7 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                         column.DisplayIndex = visibleColumns.IndexOf(column.Name);
                         column.HeaderText = visibleColumnHeaderNames[visibleColumns.IndexOf(column.Name)];
                         column.ValueType = typeof(string);
-                        Logger.Debug($"{column.Name},{index},{column.DisplayIndex},{column.Visible}");
+                        //Logger.Debug($"{column.Name},{index},{column.DisplayIndex},{column.Visible}");
                         column.AutoSizeMode = column.Name switch
                         {
                             "MasterLevel_Name" => DataGridViewAutoSizeColumnMode.Fill,

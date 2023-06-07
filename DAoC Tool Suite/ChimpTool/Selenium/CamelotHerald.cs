@@ -2,21 +2,23 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using CefSharp;
 using CefSharp.OffScreen;
 using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.Json;
-using DAoCToolSuite.ChimpTool.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SQLLibrary.Enums;
+using Logger;
 
 namespace DAoCToolSuite.ChimpTool.Selenium
 {
     internal static class CamelotHerald
     {
-        private static readonly Logger Logger = new();
+        
+        internal static Logger.LogManager Logger => LogManager.Instance;
         internal static ChromiumWebBrowser? Browser { get; set; }
         internal static bool IsInitialized { get; set; } = false;
         internal static string? ExePath = Path.GetDirectoryName(Application.ExecutablePath);
@@ -71,14 +73,13 @@ namespace DAoCToolSuite.ChimpTool.Selenium
         }
         public static void Quit()
         {
-            Logger.Debug($"Disposing CEFSharp Browser");
-            Browser?.Dispose();
-            DateTime endTime = DateTime.Now.AddSeconds(30);
-            while (DateTime.Now < endTime && !(Browser?.IsDisposed ?? true))
+            try
             {
-                Thread.Sleep(100);
+                Logger.Debug($"Disposing CEFSharp Browser");
+                Browser?.Dispose();
+                Browser = null;
             }
-            Logger.Debug($"Done");
+            catch { }
         }
         internal static ChimpJson GetChimp(string playerName, ServerCluster cluster, int secondsToTry = 3)
         {

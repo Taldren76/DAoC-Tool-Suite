@@ -48,7 +48,7 @@ namespace DAoCToolSuite
             chimpToolButton.Size = new Size(140, 140);
             chimpToolButton.TabIndex = 0;
             chimpToolButton.UseVisualStyleBackColor = true;
-            chimpToolButton.Click += chimpToolButton_Click;
+            chimpToolButton.Click += ChimpToolButton_Click;
             // 
             // characterToolButton
             // 
@@ -124,9 +124,11 @@ namespace DAoCToolSuite
             Controls.Add(characterToolButton);
             Controls.Add(chimpToolButton);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximumSize = new Size(476, 220);
+            MinimumSize = new Size(476, 220);
             Name = "DAoCToolSuiteForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "DAoC Tool Suite v0.3.0";
+            Text = "DAoC Tool Suite v0.4.0";
             FormClosing += DAoCTestSuiteForm_FormClosing;
             ResumeLayout(false);
         }

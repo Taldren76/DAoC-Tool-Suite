@@ -39,34 +39,34 @@ namespace DAoCToolSuite.ChimpTool
             LoadingTabelLabel = new Label();
             SearchGridView = new DataGridView();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            panel2 = new Panel();
+            CharacterSearchPanel = new Panel();
             SearchComboBox = new ComboBox();
             RemoveButton = new Button();
             AlbionTotalsTextBox = new TextBox();
             SearchButton = new Button();
-            panel3 = new Panel();
+            AccountPanel = new Panel();
             DeleteAccountButton = new Button();
             AddAccountButton = new Button();
             AccountComboBox = new ComboBox();
             HiberniaTotalsTextBox = new TextBox();
-            panel4 = new Panel();
+            RefreshPanel = new Panel();
             linkLabel1 = new LinkLabel();
             RefreshButton = new Button();
             MidgardTotalsTextBox = new TextBox();
             RefreshAllButton = new Button();
-            panel5 = new Panel();
+            FooterPanel = new Panel();
             OnTopCheckBox = new CheckBox();
             RestoreButton = new Button();
             BackupButton = new Button();
-            label1 = new Label();
+            TotalRPLabel = new Label();
             TotalRPTextBox = new TextBox();
             SearchProgressBar = new TextProgressBar();
             GridPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SearchGridView).BeginInit();
-            panel2.SuspendLayout();
-            panel3.SuspendLayout();
-            panel4.SuspendLayout();
-            panel5.SuspendLayout();
+            CharacterSearchPanel.SuspendLayout();
+            AccountPanel.SuspendLayout();
+            RefreshPanel.SuspendLayout();
+            FooterPanel.SuspendLayout();
             SuspendLayout();
             // 
             // GridPanel
@@ -135,17 +135,17 @@ namespace DAoCToolSuite.ChimpTool
             SearchGridView.DataSourceChanged += SearchGridView_DataSourceChanged;
             SearchGridView.CellToolTipTextNeeded += SearchGridView_CellToolTipTextNeeded;
             // 
-            // panel2
+            // CharacterSearchPanel
             // 
-            panel2.Controls.Add(SearchComboBox);
-            panel2.Controls.Add(RemoveButton);
-            panel2.Controls.Add(AlbionTotalsTextBox);
-            panel2.Controls.Add(SearchButton);
-            panel2.Location = new Point(14, 0);
-            panel2.Margin = new Padding(4, 3, 4, 3);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(397, 72);
-            panel2.TabIndex = 20;
+            CharacterSearchPanel.Controls.Add(SearchComboBox);
+            CharacterSearchPanel.Controls.Add(RemoveButton);
+            CharacterSearchPanel.Controls.Add(AlbionTotalsTextBox);
+            CharacterSearchPanel.Controls.Add(SearchButton);
+            CharacterSearchPanel.Location = new Point(14, 0);
+            CharacterSearchPanel.Margin = new Padding(4, 3, 4, 3);
+            CharacterSearchPanel.Name = "CharacterSearchPanel";
+            CharacterSearchPanel.Size = new Size(397, 72);
+            CharacterSearchPanel.TabIndex = 20;
             // 
             // SearchComboBox
             // 
@@ -194,18 +194,18 @@ namespace DAoCToolSuite.ChimpTool
             SearchButton.UseVisualStyleBackColor = true;
             SearchButton.Click += SearchButton_Click;
             // 
-            // panel3
+            // AccountPanel
             // 
-            panel3.Anchor = AnchorStyles.Top;
-            panel3.Controls.Add(DeleteAccountButton);
-            panel3.Controls.Add(AddAccountButton);
-            panel3.Controls.Add(AccountComboBox);
-            panel3.Controls.Add(HiberniaTotalsTextBox);
-            panel3.Location = new Point(523, 0);
-            panel3.Margin = new Padding(4, 3, 4, 3);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(397, 72);
-            panel3.TabIndex = 21;
+            AccountPanel.Anchor = AnchorStyles.Top;
+            AccountPanel.Controls.Add(DeleteAccountButton);
+            AccountPanel.Controls.Add(AddAccountButton);
+            AccountPanel.Controls.Add(AccountComboBox);
+            AccountPanel.Controls.Add(HiberniaTotalsTextBox);
+            AccountPanel.Location = new Point(523, 0);
+            AccountPanel.Margin = new Padding(4, 3, 4, 3);
+            AccountPanel.Name = "AccountPanel";
+            AccountPanel.Size = new Size(397, 72);
+            AccountPanel.TabIndex = 21;
             // 
             // DeleteAccountButton
             // 
@@ -253,18 +253,18 @@ namespace DAoCToolSuite.ChimpTool
             HiberniaTotalsTextBox.TabIndex = 17;
             HiberniaTotalsTextBox.TextAlign = HorizontalAlignment.Center;
             // 
-            // panel4
+            // RefreshPanel
             // 
-            panel4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel4.Controls.Add(linkLabel1);
-            panel4.Controls.Add(RefreshButton);
-            panel4.Controls.Add(MidgardTotalsTextBox);
-            panel4.Controls.Add(RefreshAllButton);
-            panel4.Location = new Point(1013, 0);
-            panel4.Margin = new Padding(4, 3, 4, 3);
-            panel4.Name = "panel4";
-            panel4.Size = new Size(397, 72);
-            panel4.TabIndex = 22;
+            RefreshPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            RefreshPanel.Controls.Add(linkLabel1);
+            RefreshPanel.Controls.Add(RefreshButton);
+            RefreshPanel.Controls.Add(MidgardTotalsTextBox);
+            RefreshPanel.Controls.Add(RefreshAllButton);
+            RefreshPanel.Location = new Point(1013, 0);
+            RefreshPanel.Margin = new Padding(4, 3, 4, 3);
+            RefreshPanel.Name = "RefreshPanel";
+            RefreshPanel.Size = new Size(397, 72);
+            RefreshPanel.TabIndex = 22;
             // 
             // linkLabel1
             // 
@@ -316,20 +316,20 @@ namespace DAoCToolSuite.ChimpTool
             RefreshAllButton.UseVisualStyleBackColor = true;
             RefreshAllButton.Click += RefreshAllButton_Click;
             // 
-            // panel5
+            // FooterPanel
             // 
-            panel5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel5.Controls.Add(OnTopCheckBox);
-            panel5.Controls.Add(RestoreButton);
-            panel5.Controls.Add(BackupButton);
-            panel5.Controls.Add(label1);
-            panel5.Controls.Add(TotalRPTextBox);
-            panel5.Controls.Add(SearchProgressBar);
-            panel5.Location = new Point(0, 722);
-            panel5.Margin = new Padding(4, 3, 4, 3);
-            panel5.Name = "panel5";
-            panel5.Size = new Size(1424, 37);
-            panel5.TabIndex = 23;
+            FooterPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            FooterPanel.Controls.Add(OnTopCheckBox);
+            FooterPanel.Controls.Add(RestoreButton);
+            FooterPanel.Controls.Add(BackupButton);
+            FooterPanel.Controls.Add(TotalRPLabel);
+            FooterPanel.Controls.Add(TotalRPTextBox);
+            FooterPanel.Controls.Add(SearchProgressBar);
+            FooterPanel.Location = new Point(0, 722);
+            FooterPanel.Margin = new Padding(4, 3, 4, 3);
+            FooterPanel.Name = "FooterPanel";
+            FooterPanel.Size = new Size(1424, 37);
+            FooterPanel.TabIndex = 23;
             // 
             // OnTopCheckBox
             // 
@@ -369,17 +369,17 @@ namespace DAoCToolSuite.ChimpTool
             BackupButton.UseVisualStyleBackColor = true;
             BackupButton.Click += BackupButton_Click;
             // 
-            // label1
+            // TotalRPLabel
             // 
-            label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            label1.AutoSize = true;
-            label1.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(16, 9);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(62, 14);
-            label1.TabIndex = 24;
-            label1.Text = "RP Total:";
+            TotalRPLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            TotalRPLabel.AutoSize = true;
+            TotalRPLabel.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            TotalRPLabel.Location = new Point(16, 9);
+            TotalRPLabel.Margin = new Padding(4, 0, 4, 0);
+            TotalRPLabel.Name = "TotalRPLabel";
+            TotalRPLabel.Size = new Size(62, 14);
+            TotalRPLabel.TabIndex = 24;
+            TotalRPLabel.Text = "RP Total:";
             // 
             // TotalRPTextBox
             // 
@@ -414,28 +414,28 @@ namespace DAoCToolSuite.ChimpTool
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1424, 761);
-            Controls.Add(panel5);
-            Controls.Add(panel4);
-            Controls.Add(panel3);
-            Controls.Add(panel2);
+            Controls.Add(FooterPanel);
+            Controls.Add(RefreshPanel);
+            Controls.Add(AccountPanel);
+            Controls.Add(CharacterSearchPanel);
             Controls.Add(GridPanel);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             Name = "MainForm";
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ChimpTool v1.2.0";
+            Text = "ChimpTool v1.3.0";
             FormClosing += MainForm_Closing;
             GridPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)SearchGridView).EndInit();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
-            panel3.ResumeLayout(false);
-            panel3.PerformLayout();
-            panel4.ResumeLayout(false);
-            panel4.PerformLayout();
-            panel5.ResumeLayout(false);
-            panel5.PerformLayout();
+            CharacterSearchPanel.ResumeLayout(false);
+            CharacterSearchPanel.PerformLayout();
+            AccountPanel.ResumeLayout(false);
+            AccountPanel.PerformLayout();
+            RefreshPanel.ResumeLayout(false);
+            RefreshPanel.PerformLayout();
+            FooterPanel.ResumeLayout(false);
+            FooterPanel.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -443,24 +443,24 @@ namespace DAoCToolSuite.ChimpTool
         private Panel GridPanel;
         private DataGridView SearchGridView;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private Panel panel2;
+        private Panel CharacterSearchPanel;
         private Button RemoveButton;
         private TextBox AlbionTotalsTextBox;
         private Button SearchButton;
-        private Panel panel3;
+        private Panel AccountPanel;
         private Button DeleteAccountButton;
         private Button AddAccountButton;
         private TextBox HiberniaTotalsTextBox;
-        private Panel panel4;
+        private Panel RefreshPanel;
         private LinkLabel linkLabel1;
         private Button RefreshButton;
         private TextBox MidgardTotalsTextBox;
         private Button RefreshAllButton;
-        private Panel panel5;
+        private Panel FooterPanel;
         private CheckBox OnTopCheckBox;
         private Button RestoreButton;
         private Button BackupButton;
-        private Label label1;
+        private Label TotalRPLabel;
         private TextBox TotalRPTextBox;
         internal TextProgressBar SearchProgressBar;
         public ComboBox AccountComboBox;

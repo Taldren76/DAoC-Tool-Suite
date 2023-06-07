@@ -1,8 +1,8 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using DAoCToolSuite.ChimpTool.Exception;
+using DAoCToolSuite.ChimpTool.Exceptions;
 using DAoCToolSuite.ChimpTool.Json;
-using DAoCToolSuite.ChimpTool.Logging;
+using Logger;
 using Newtonsoft.Json;
 using SQLLibrary.Enums;
 
@@ -11,7 +11,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
     public static class CamelotHeraldAPI
     {
         private static bool AttemptMaintenanceBypass { get; set; } = false;
-        private static readonly Logger Logger = new();
+        private static LogManager Logger => LogManager.Instance;
         private const string searchBase = "https://api.camelotherald.com/character/search";
         private const string infoBase = "https://api.camelotherald.com/character/info";
         private const string infoBaseWorkAround = "http://api.camelotherald.com/character/info";

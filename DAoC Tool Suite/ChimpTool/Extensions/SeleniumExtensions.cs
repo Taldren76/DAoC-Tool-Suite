@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using DAoCToolSuite.ChimpTool.Logging;
+using Logger;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
@@ -7,7 +7,7 @@ namespace DAoCToolSuite.ChimpTool.Extensions
 {
     internal static class SeleniumExtensions
     {
-        private static readonly Logger Logger = new();
+        private static LogManager Logger => LogManager.Instance;
         internal static IWebElement? GetIfExists(this IWebDriver driver, By strategy, int timeout = 3000, int frequency = 100)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();

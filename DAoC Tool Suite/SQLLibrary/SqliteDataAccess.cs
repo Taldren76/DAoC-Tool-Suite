@@ -4,7 +4,7 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.Reflection;
 using Dapper;
-using SQLLibrary.Logging;
+using Logger;
 
 namespace SQLLibrary
 {
@@ -16,7 +16,7 @@ namespace SQLLibrary
     }
     public class SqliteDataAccess
     {
-        private static Logger Logger { get; set; } = new();
+        private static LogManager Logger => LogManager.Instance;
         private static readonly object thisLock = new();
         private static readonly string CharactersColumnNames = "Date,Account,WebID,FirstName,Name,Realm,Class,Server,TotalRealmPoints,TotalSoloKills,TotalDeathBlows,TotalKills,TotalDeaths,Level,Race,BountyPoints,MasterLevel_Name,Masterlevel_Level,Guild_WebID,Alchemy,Armorcraft,Fletching,Siegecraft,Spellcrafting,Tailoring,Weaponcraft,Albion_SoloKills,Albion_DeathBlows,Albion_Kills,Albion_Deaths,Hibernia_SoloKills,Hibernia_DeathBlows,Hibernia_Kills,Hibernia_Deaths,Midgard_SoloKills,Midgard_DeathBlows,Midgard_Kills,Midgard_Deaths";
         private static string CharactersColumnValues => $"@{CharactersColumnNames.Replace(",", ",@")}";
@@ -64,9 +64,10 @@ namespace SQLLibrary
                     _ = conn.Execute(updateQuery, new DynamicParameters());
                 }
 
-                string maxSQLEnteriesPerCharacter = ConfigurationManager.AppSettings["MaxSQLEntriesPerCharacter"] ?? "2";
-                int maxCount = int.TryParse(maxSQLEnteriesPerCharacter, out maxCount) ? maxCount - 1 : 1;
-                while (maxCount > 0 && count > maxCount)
+                int maxSQLEnteriesPerCharacter = Properties.Settings.Default.MaxSQLEntriesPerCharacter; //ConfigurationManager.AppSettings["MaxSQLEntriesPerCharacter"] ?? "2";
+                //int maxCount = int.TryParse(maxSQLEnteriesPerCharacter, out maxCount) ? maxCount - 1 : 1;
+                DateTime endTime = DateTime.Now.AddSeconds(10);
+                while (endTime>DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter)
                 {
                     DateQuery minDateQuery = conn.QueryFirst<DateQuery>(minDateIndexQuery, new DynamicParameters());
                     string deleteQuery = $"Delete From {tableName} Where \"index\" = {minDateQuery.Index}";
@@ -104,9 +105,10 @@ namespace SQLLibrary
                         _ = conn.Execute(updateQuery, new DynamicParameters());
                     }
 
-                    string maxSQLEnteriesPerCharacter = ConfigurationManager.AppSettings["MaxSQLEntriesPerCharacter"] ?? "2";
-                    int maxCount = int.TryParse(maxSQLEnteriesPerCharacter, out maxCount) ? maxCount - 1 : 1;
-                    while (maxCount > 0 && count > maxCount)
+                    int maxSQLEnteriesPerCharacter = Properties.Settings.Default.MaxSQLEntriesPerCharacter; //ConfigurationManager.AppSettings["MaxSQLEntriesPerCharacter"] ?? "2";
+                    //int maxCount = int.TryParse(maxSQLEnteriesPerCharacter, out maxCount) ? maxCount - 1 : 1;
+                    DateTime endTime = DateTime.Now.AddSeconds(10);
+                    while (endTime > DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter)
                     {
                         DateQuery minDateQuery = conn.QueryFirst<DateQuery>(minDateIndexQuery, new DynamicParameters());
                         string deleteQuery = $"Delete From {tableName} Where \"index\" = {minDateQuery.Index}";
@@ -379,10 +381,25 @@ namespace SQLLibrary
         }
         #endregion
 
+        private static bool ConnectionStringLoaded = false;
         private static string LoadConnectionString(string id = "Default")
         {
-            Logger.Debug($"Using connection string {ConfigurationManager.ConnectionStrings[id].ConnectionString}");
-            return ConfigurationManager.ConnectionStrings[id].ConnectionString;
+            string connectionString;
+            switch(id)
+            {
+                case "Default":
+                    connectionString = Properties.Settings.Default.ConnectionString;
+                    break;
+                default:
+                    connectionString = Properties.Settings.Default.Properties[id].ToString() ?? Properties.Settings.Default.ConnectionString;
+                    break;
+            }         
+            if(!ConnectionStringLoaded)
+            {
+                Logger.Debug($"Using connection string {id}:{connectionString}");
+                ConnectionStringLoaded = true;
+            }
+            return connectionString;//ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
 
         public static void ReIndexTables()

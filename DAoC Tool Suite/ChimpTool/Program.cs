@@ -1,11 +1,12 @@
-﻿using DAoCToolSuite.ChimpTool.Logging;
+﻿using System.Windows.Forms;
+using Logger;
 using DAoCToolSuite.ChimpTool.Selenium;
 
 namespace DAoCToolSuite.ChimpTool
 {
     internal static class Program
     {
-        private static readonly Logger Logger = new();
+        private static LogManager Logger => LogManager.Instance;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

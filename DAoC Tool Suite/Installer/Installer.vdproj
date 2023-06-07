@@ -15,7 +15,19 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_726F3D3106FF4EAEB6A045FA75C156E2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_97A72D1CB9C94999B7E6CC9B0F5C602D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AD4F4080B067432FB05A000259F7583A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -112,7 +124,7 @@
                 {
                 "Name" = "8:.NET Core"
                 "Message" = "8:[VSDNETCOREMSG]"
-                "FrameworkVersion" = "8:.NET 6.0"
+                "FrameworkVersion" = "8:.NET 6.0  "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:https://dotnet.microsoft.com/download/dotnet-core/[NetCoreVerMajorDotMinor]"
                 "IsNETCore" = "11:TRUE"
@@ -123,6 +135,46 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_726F3D3106FF4EAEB6A045FA75C156E2"
+            {
+            "SourcePath" = "8:..\\DAoC Tool Suite\\Icons\\CharacterTool.ico"
+            "TargetName" = "8:CharacterTool.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_84BAA862631442F9A02413BED68185BE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AD4F4080B067432FB05A000259F7583A"
+            {
+            "SourcePath" = "8:..\\DAoC Tool Suite\\Icons\\ChimpTool.ico"
+            "TargetName" = "8:ChimpTool.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_84BAA862631442F9A02413BED68185BE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B4545DB58D524708B0FAE69DBF4A73AC"
             {
             "SourcePath" = "8:..\\DAoC Tool Suite\\Icons\\DAoCTools.ico"
@@ -199,15 +251,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DAoC Tool Suite"
-        "ProductCode" = "8:{AA4C49A3-78AA-46E0-A9AF-DBBF7824EFF1}"
-        "PackageCode" = "8:{C6858677-3911-45C2-AA58-66F712C7240A}"
+        "ProductCode" = "8:{E2676436-86C4-461E-8E26-0664B7BDA855}"
+        "PackageCode" = "8:{8E38ED80-0E2B-42D5-9634-BDA78EAE26BE}"
         "UpgradeCode" = "8:{B64144B6-6C56-4A20-A52F-D1B1C16ECBEB}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.3.0"
+        "ProductVersion" = "8:0.4.0"
         "Manufacturer" = "8:Taldren, Inc"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -331,7 +383,7 @@
             "Target" = "8:_97A72D1CB9C94999B7E6CC9B0F5C602D"
             "Folder" = "8:_2E75B6FB54E64AA5BF8AF4EC73376FCE"
             "WorkingFolder" = "8:_84BAA862631442F9A02413BED68185BE"
-            "Icon" = "8:"
+            "Icon" = "8:_B4545DB58D524708B0FAE69DBF4A73AC"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_36971A2138FA4D21B962AEF9D9EA67D2"

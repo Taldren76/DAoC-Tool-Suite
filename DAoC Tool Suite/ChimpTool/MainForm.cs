@@ -2,13 +2,13 @@
 using System.Diagnostics;
 using System.IO;
 using DAoCToolSuite.ChimpTool.Enums;
-using DAoCToolSuite.ChimpTool.Exception;
+using DAoCToolSuite.ChimpTool.Exceptions;
 using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.HeraldAPI;
 using DAoCToolSuite.ChimpTool.Json;
-using DAoCToolSuite.ChimpTool.Logging;
 using DAoCToolSuite.ChimpTool.Selenium;
 using DAoCToolSuite.ChimpTool.Settings;
+using Logger;
 using Newtonsoft.Json;
 using SQLLibrary;
 using SQLLibrary.Enums;
@@ -21,6 +21,7 @@ namespace DAoCToolSuite.ChimpTool
         private static readonly System.Windows.Forms.ToolTip MouseOverTooltip = new();
         private static List<AccountModel> Accounts { get; set; } = new List<AccountModel>();
         private static List<GuildModel> Guilds { get; set; } = new List<GuildModel>();
+        private static LogViewer? LogViewer { get; set; } = null;
 
         #region DataGridView Data
         private static List<CharacterModel> Characters { get; set; } = new List<CharacterModel>();
@@ -31,18 +32,7 @@ namespace DAoCToolSuite.ChimpTool
         #endregion
 
         #region Logger
-        private static Logger? _Logger = null;
-        public static Logger Logger
-        {
-            get
-            {
-                _Logger ??= new Logger();
-
-                return _Logger;
-
-            }
-            set => _Logger = value;
-        }
+        private static Logger.LogManager Logger => LogManager.Instance;
         #endregion
 
         #region Settings
@@ -87,7 +77,10 @@ namespace DAoCToolSuite.ChimpTool
             RestoreButton.Enabled = HasBackupChimpRepository();
             SearchButton.Enabled = UseSelenium || UseAPI;
             SearchComboBox.Enabled = UseSelenium || UseAPI;
-            Shown += new System.EventHandler(MainForm_Shown!);
+            this.Shown -= new System.EventHandler(MainForm_Shown!);
+            this.Shown += new System.EventHandler(MainForm_Shown!);
+            this.FormClosing -= new FormClosingEventHandler(MainForm_FormClosing);
+            this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
@@ -98,6 +91,11 @@ namespace DAoCToolSuite.ChimpTool
             LoadCharacters();
             CalculateRPTotals();
             WaitCursor.PopAll();
+        }
+
+        private void MainForm_FormClosing(object? sender, FormClosingEventArgs e)
+        {
+            LogViewer?.Close();
         }
 
         private void SearchGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -133,7 +131,6 @@ namespace DAoCToolSuite.ChimpTool
             {
                 return;
             }
-
             Properties.Settings.Default.WindowLocation = form.Location;
             Properties.Settings.Default.Save();
             Logger.Debug($"Shutting down.");
@@ -246,10 +243,9 @@ namespace DAoCToolSuite.ChimpTool
         public static DebugLevel CurrentDebugLevel { get; set; } = DebugLevel.Debug;
         public void LinkLabelLinkToAFile()
         {
-            string? path = Path.GetDirectoryName(Application.ExecutablePath); //System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
             linkLabel1.BorderStyle = BorderStyle.None;
             linkLabel1.LinkBehavior = LinkBehavior.NeverUnderline;
-            _ = linkLabel1.Links.Add(0, linkLabel1.Text.ToString().Length, path + "\\DAoCTools.log");
+            _ = linkLabel1.Links.Add(0, linkLabel1.Text.ToString().Length, Logger.PATH);
         }
 
         public static void UpdateDataLinkColor(string level, string message)
@@ -282,39 +278,48 @@ namespace DAoCToolSuite.ChimpTool
             Debug.WriteLine($"NLog | {level} | {message}");
         }
 
+        private static object thisLock = new object();
         private void DebugLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-
-            LinkLabel lnk = (LinkLabel)sender;
-            if (e.Link?.LinkData?.ToString() == null)
+            try
             {
-                return;
+                LinkLabel lnk = (LinkLabel)sender;
+                if (lnk is null || lnk.IsDisposed)
+                    return;
+                if (e.Link?.LinkData?.ToString() == null)
+                {
+                    return;
+                }
+                //_ = new LinkLabel();
+                string path = e.Link.LinkData.ToString()!;
+                lnk.Links[lnk.Links.IndexOf(e.Link)].Visited = true;
+                string contents = string.Empty;
+
+                lock (thisLock)
+                {
+                    FileAttributes attributes = File.GetAttributes(path);
+                    using (FileStream fs = new(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        using StreamReader sr = new(fs);
+                        contents = sr.ReadToEnd();
+                    }
+                    File.SetAttributes(path, attributes);
+                }
+
+                if (LogViewer is null || LogViewer.IsDisposed)
+                {
+                    LogViewer = new();
+                }
+                LogViewer.LogViewerTextBox.Text = contents;
+                LogViewer.Location = this.Location;
+                LogViewer.Show();
+                LogViewer.LogViewerTextBox.SelectionStart = LogViewer.LogViewerTextBox.TextLength;
+                LogViewer.LogViewerTextBox.ScrollToCaret();
             }
-            //_ = new LinkLabel();
-            string path = e.Link.LinkData.ToString()!;
-            lnk.Links[lnk.Links.IndexOf(e.Link)].Visited = true;
-
-            //
-            //File.SetAttributes(path, attributes | FileAttributes.ReadOnly);
-            //_ = System.Diagnostics.Process.Start(path);
-            //File.SetAttributes(path, attributes);
-
-            FileAttributes attributes = File.GetAttributes(path);
-            string contents = string.Empty;
-            using (FileStream fs = new(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            catch (System.Exception ex)
             {
-                using StreamReader sr = new(fs);
-                contents = sr.ReadToEnd();
+                Logger.Error(ex);
             }
-            File.SetAttributes(path, attributes);
-
-            LogViewer logViewer = new();
-
-            logViewer.textBox1.Text = contents;
-            logViewer.textBox1.Refresh();
-            logViewer.Show();
-            logViewer.textBox1.SelectionStart = logViewer.textBox1.TextLength;
-            logViewer.textBox1.ScrollToCaret();
         }
 
         private void UpdateDebugLinkBackColor()

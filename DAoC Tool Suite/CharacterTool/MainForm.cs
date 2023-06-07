@@ -2,16 +2,16 @@ using System.Data;
 using System.IO;
 using DAoCToolSuite.CharacterTool.Files;
 using DAoCToolSuite.CharacterTool.Json;
-using DAoCToolSuite.CharacterTool.Logging;
 using DAoCToolSuite.CharacterTool.Settings;
 using Newtonsoft.Json;
 using SQLLibrary;
+using Logger;
 
 namespace DAoCToolSuite.CharacterTool
 {
     public partial class MainForm : Form
-    {
-        internal static Logger Logger = new();
+    { 
+        internal static LogManager Logger => LogManager.Instance;
         internal string DAoCCharacterDataFolder { get; private set; }
         internal static SettingsManager Settings { get; set; } = new SettingsManager();
         internal static ParseDirectory? ParseDirectory { get; set; }
@@ -72,6 +72,8 @@ namespace DAoCToolSuite.CharacterTool
 
         public MainForm()
         {
+
+            Logger.Debug("CharacterTool Form Starting");
             ServerList = DeserializeServerList(Settings.Servers);
             RealmList = DeserializeRealmClass(Settings.RealmClasses);
             InitializeComponent();
@@ -141,7 +143,7 @@ namespace DAoCToolSuite.CharacterTool
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
-
+            Logger.Debug("CharacterTool Form Displayed.");
         }
 
         protected override void OnLoad(EventArgs e)
@@ -516,10 +518,19 @@ namespace DAoCToolSuite.CharacterTool
         #region Restore Tab
         private void LoadBackups()
         {
-            Backups = SqliteDataAccess.LoadSettingBackUps().OrderBy(x => x.Realm).ThenBy(x => x.Class).ThenBy(x => x.FirstName).ThenByDescending(x => x.DateTime).ToList();
-            AttachBackups();
-            FormatGridView();
-            FilterDataSource();
+            try
+            {
+                Logger.Debug("Loading Setting Backups");
+                Backups = SqliteDataAccess.LoadSettingBackUps().OrderBy(x => x.Realm).ThenBy(x => x.Class).ThenBy(x => x.FirstName).ThenByDescending(x => x.DateTime).ToList();
+                AttachBackups();
+                FormatGridView();
+                FilterDataSource();
+                Logger.Debug("Setting Backups Loaded");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
         private void FormatGridView()

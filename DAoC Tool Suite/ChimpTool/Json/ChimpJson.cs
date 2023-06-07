@@ -1,11 +1,11 @@
-﻿using DAoCToolSuite.ChimpTool.Logging;
+﻿using Logger;
 using Newtonsoft.Json;
 
 namespace DAoCToolSuite.ChimpTool.Json
 {
     public class ChimpJson
     {
-        private static readonly Logger Logger = new();
+        private static LogManager Logger => LogManager.Instance;
 
         #region JsonProperties
         [JsonProperty]

@@ -1,46 +1,81 @@
-﻿namespace DAoCToolSuite
+﻿using System.Runtime.CompilerServices;
+using Logger;
+using Windows.UI.WebUI;
+
+namespace DAoCToolSuite
 {
     public partial class DAoCToolSuiteForm : Form
     {
-        private static DAoCToolSuite.ChimpTool.MainForm ChimpToolForm { get; set; } = new();
-        private static DAoCToolSuite.CharacterTool.MainForm CharacterToolForm { get; set; } = new();
+        internal static LogManager Logger => LogManager.Instance;
+        private static ChimpTool.MainForm? ChimpToolForm { get; set; } = null;
+        private static CharacterTool.MainForm? CharacterToolForm { get; set; } = null;
 
         public DAoCToolSuiteForm()
         {
             InitializeComponent();
         }
 
-        private void chimpToolButton_Click(object sender, EventArgs e)
+        private void ChimpToolButton_Click(object sender, EventArgs e)
         {
-            if (ChimpToolForm is null || ChimpToolForm.IsDisposed)
+            try
             {
-                ChimpToolForm = new();
+                if (ChimpToolForm is null || ChimpToolForm.IsDisposed)
+                {
+                    ChimpToolForm = new();
+                }
+                ChimpToolForm.FormClosing -= ChimpToolForm_FormClosing;
+                ChimpToolForm.FormClosing += ChimpToolForm_FormClosing;
+                ChimpToolForm.Show();
+                Logger.Debug("ChimpToolForm MainForm Shown");
+                _ = ChimpToolForm.Focus();
+                Logger.Debug("ChimpToolForm MainForm Focused");
             }
-
-            ChimpToolForm.FormClosed += ChimpToolForm_FormClosed;
-            ChimpToolForm.Show();
-            _ = ChimpToolForm.Focus();
-
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
-        private void ChimpToolForm_FormClosed(object? sender, FormClosedEventArgs e)
+        private void ActivateThis()
         {
-            _ = Focus();
+            if (!this.IsDisposed)
+                this.Activate();
+        }
+
+        private void ChimpToolForm_FormClosing(object? sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                this.ActivateThis(); //Focus();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
         private void characterToolButton_Click(object sender, EventArgs e)
         {
-            if (CharacterToolForm is null || CharacterToolForm.IsDisposed)
+            try
             {
-                CharacterToolForm = new();
+                if (CharacterToolForm is null || CharacterToolForm.IsDisposed)
+                {
+                    CharacterToolForm = new();
+                }
+                CharacterToolForm.FormClosing -= CharacterToolForm_FormClosing;
+                CharacterToolForm.FormClosing += CharacterToolForm_FormClosing;
+                CharacterToolForm.Show();
+                Logger.Debug("CharacterTool MainForm Shown");
+                _ = CharacterToolForm.Focus();
+                Logger.Debug("CharacterTool MainForm Focused");
             }
-
-            CharacterToolForm.FormClosed += CharacterToolForm_FormClosed;
-            CharacterToolForm.Show();
-            _ = CharacterToolForm.Focus();
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
         }
 
-        private void CharacterToolForm_FormClosed(object? sender, FormClosedEventArgs e)
+        private void CharacterToolForm_FormClosing(object? sender, FormClosingEventArgs e)
         {
             _ = Focus();
         }
@@ -71,7 +106,7 @@
             DAoCToolSuite.Properties.Settings.Default.Save();
         }
 
-        private void DAoCTestSuiteForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void DAoCTestSuiteForm_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (sender is not DAoCToolSuiteForm form)
             {

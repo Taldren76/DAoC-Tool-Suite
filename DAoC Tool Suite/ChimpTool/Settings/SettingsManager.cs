@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using DAoCToolSuite.ChimpTool.Logging;
+using Logger;
 using Newtonsoft.Json;
 using SQLLibrary.Enums;
 
@@ -23,7 +23,7 @@ namespace DAoCToolSuite.ChimpTool.Settings
             DisplayedDataGridViewHeaderNames = SettingsDefault.DisplayedDataGridViewHeaderNames
         };
 
-        private readonly Logger Logger = new();
+        private static LogManager Logger => LogManager.Instance;
         private Settings Settings { get; set; } = new Settings();
         public bool AlwaysOnTop
         {

@@ -1,4 +1,4 @@
-﻿namespace DAoCToolSuite.ChimpTool.Exception
+﻿namespace DAoCToolSuite.ChimpTool.Exceptions
 {
     [Serializable]
     public class MaintenanceException : System.Exception

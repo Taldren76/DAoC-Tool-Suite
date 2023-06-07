@@ -8,11 +8,11 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
-    <FileVersion>0.5.0.0</FileVersion>
-    <AssemblyVersion>0.5.0.0</AssemblyVersion>
+    <FileVersion>0.6.0.0</FileVersion>
+    <AssemblyVersion>0.6.0.0</AssemblyVersion>
     <UseWPF>True</UseWPF>
-    <StartupObject></StartupObject>
-    <ApplicationIcon>CharacterTool.ico</ApplicationIcon>
+    <StartupObject>DAoCToolSuite.CharacterTool.Program</StartupObject>
+    <ApplicationIcon>Icons\CharacterTool.ico</ApplicationIcon>
     <PlatformTarget>x86</PlatformTarget>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageIcon>CharacterTool.png</PackageIcon>
@@ -25,35 +25,69 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="App.config" />
+    <None Remove="CharacterDB.db" />
     <None Remove="CharacterTool.Config" />
-    <None Remove="NLog.Config" />
+    <None Remove="Icons\CharacterTool.ico" />
+    <None Remove="Icons\ChimpTool.ico" />
+    <None Remove="Icons\ChimpTool.png" />
+    <None Remove="Icons\DAoCTools.ico" />
+    <None Remove="Icons\DAoCTools.png" />
+    <None Remove="Icons\DAoCToolsBW.ico" />
+    <None Remove="Icons\LogParser.ico" />
+    <None Remove="Icons\LogParser.png" />
     <None Remove="RealmClassConfig.json" />
     <None Remove="ServerConfig.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="App.config">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CharacterDB.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="CharacterTool.Config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="NLog.Config">
+    <Content Include="Icons\CharacterTool.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\DAoC Tool Suite\Icons\CharacterTool.png">
+    <Content Include="Icons\CharacterTool.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\ChimpTool.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\ChimpTool.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\DAoCTools.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\DAoCTools.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
-    </None>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\DAoCToolsBW.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\LogParser.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\LogParser.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NLog" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Logger\Logger.csproj" />
     <ProjectReference Include="..\SQLLibrary\SQLLibrary.csproj" />
   </ItemGroup>
 
@@ -66,6 +100,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Icons\CharacterTool.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
