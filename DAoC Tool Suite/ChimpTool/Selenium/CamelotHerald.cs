@@ -2,22 +2,21 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using CefSharp;
 using CefSharp.OffScreen;
 using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.Json;
+using Logger;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SQLLibrary.Enums;
-using Logger;
 
 namespace DAoCToolSuite.ChimpTool.Selenium
 {
     internal static class CamelotHerald
     {
-        
+
         internal static Logger.LogManager Logger => LogManager.Instance;
         internal static ChromiumWebBrowser? Browser { get; set; }
         internal static bool IsInitialized { get; set; } = false;
@@ -98,6 +97,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             options.AddArgument("--headless");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-breakpad");
             Logger.Debug($"Initializing selenium chromedriver to search for {playerName} on {cluster}");
 
             using ChromeDriverService chromeDrvService = ChromeDriverService.CreateDefaultService(AssemblyPath + "\\Selenium");
@@ -164,6 +164,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             options.AddArgument("--headless");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-breakpad");
             using ChromeDriverService chromeDrvService = ChromeDriverService.CreateDefaultService(AssemblyPath + "\\Selenium");
             chromeDrvService.HideCommandPromptWindow = true;
             using ChromeDriver driver = new(chromeDrvService, options);
@@ -207,6 +208,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             options.AddArgument("--headless");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-breakpad");
             using ChromeDriverService chromeDrvService = ChromeDriverService.CreateDefaultService(AssemblyPath + "\\Selenium");
             chromeDrvService.HideCommandPromptWindow = true;
             using (ChromeDriver driver = new(chromeDrvService, options))
@@ -274,6 +276,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             options.AddArgument("--headless");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-breakpad");
             using ChromeDriverService chromeDrvService = ChromeDriverService.CreateDefaultService(AssemblyPath + "\\Selenium");
             chromeDrvService.HideCommandPromptWindow = true;
             using (ChromeDriver driver = new(chromeDrvService, options))

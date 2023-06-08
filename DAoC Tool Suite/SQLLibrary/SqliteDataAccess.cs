@@ -1,10 +1,7 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
-using System.Reflection;
 using Dapper;
-using Logger;
 
 namespace SQLLibrary
 {
@@ -14,12 +11,17 @@ namespace SQLLibrary
         public DateTime DateMax { get; set; }
 
     }
+
     public class SqliteDataAccess
     {
-        private static LogManager Logger => LogManager.Instance;
         private static readonly object thisLock = new();
         private static readonly string CharactersColumnNames = "Date,Account,WebID,FirstName,Name,Realm,Class,Server,TotalRealmPoints,TotalSoloKills,TotalDeathBlows,TotalKills,TotalDeaths,Level,Race,BountyPoints,MasterLevel_Name,Masterlevel_Level,Guild_WebID,Alchemy,Armorcraft,Fletching,Siegecraft,Spellcrafting,Tailoring,Weaponcraft,Albion_SoloKills,Albion_DeathBlows,Albion_Kills,Albion_Deaths,Hibernia_SoloKills,Hibernia_DeathBlows,Hibernia_Kills,Hibernia_Deaths,Midgard_SoloKills,Midgard_DeathBlows,Midgard_Kills,Midgard_Deaths";
         private static string CharactersColumnValues => $"@{CharactersColumnNames.Replace(",", ",@")}";
+        public static void TraceLog(string? message)
+        {
+            string toWrite = $"{DateTime.Now:MM/dd/yyyy HH:mm:ss}: {message ?? ""}";
+            Trace.WriteLine(toWrite);
+        }
 
         #region CharacterModel
         public static List<CharacterModel> LoadCharacters()
@@ -67,7 +69,7 @@ namespace SQLLibrary
                 int maxSQLEnteriesPerCharacter = Properties.Settings.Default.MaxSQLEntriesPerCharacter; //ConfigurationManager.AppSettings["MaxSQLEntriesPerCharacter"] ?? "2";
                 //int maxCount = int.TryParse(maxSQLEnteriesPerCharacter, out maxCount) ? maxCount - 1 : 1;
                 DateTime endTime = DateTime.Now.AddSeconds(10);
-                while (endTime>DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter)
+                while (endTime > DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter)
                 {
                     DateQuery minDateQuery = conn.QueryFirst<DateQuery>(minDateIndexQuery, new DynamicParameters());
                     string deleteQuery = $"Delete From {tableName} Where \"index\" = {minDateQuery.Index}";
@@ -384,19 +386,14 @@ namespace SQLLibrary
         private static bool ConnectionStringLoaded = false;
         private static string LoadConnectionString(string id = "Default")
         {
-            string connectionString;
-            switch(id)
+            string connectionString = id switch
             {
-                case "Default":
-                    connectionString = Properties.Settings.Default.ConnectionString;
-                    break;
-                default:
-                    connectionString = Properties.Settings.Default.Properties[id].ToString() ?? Properties.Settings.Default.ConnectionString;
-                    break;
-            }         
-            if(!ConnectionStringLoaded)
+                "Default" => Properties.Settings.Default.ConnectionString,
+                _ => Properties.Settings.Default.Properties[id].ToString() ?? Properties.Settings.Default.ConnectionString,
+            };
+            if (!ConnectionStringLoaded)
             {
-                Logger.Debug($"Using connection string {id}:{connectionString}");
+                TraceLog($"Using connection string {id}:{connectionString}");
                 ConnectionStringLoaded = true;
             }
             return connectionString;//ConfigurationManager.ConnectionStrings[id].ConnectionString;

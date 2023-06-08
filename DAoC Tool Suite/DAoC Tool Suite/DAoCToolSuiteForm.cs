@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Logger;
-using Windows.UI.WebUI;
+﻿using Logger;
 
 namespace DAoCToolSuite
 {
@@ -38,15 +36,17 @@ namespace DAoCToolSuite
 
         private void ActivateThis()
         {
-            if (!this.IsDisposed)
-                this.Activate();
+            if (!IsDisposed)
+            {
+                Activate();
+            }
         }
 
         private void ChimpToolForm_FormClosing(object? sender, FormClosingEventArgs e)
         {
             try
             {
-                this.ActivateThis(); //Focus();
+                ActivateThis(); //Focus();
             }
             catch (Exception ex)
             {

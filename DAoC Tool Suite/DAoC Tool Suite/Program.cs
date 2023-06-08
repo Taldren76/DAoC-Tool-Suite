@@ -1,4 +1,4 @@
-using Logger;
+using System.Diagnostics;
 
 namespace DAoCToolSuite
 {
@@ -8,21 +8,39 @@ namespace DAoCToolSuite
         ///  The main entry point for the application.
         /// </summary>
         /// 
-        internal static LogManager Logger => LogManager.Instance;
         [STAThread]
-        public static void Main()
+        private static void Main()
         {
-
-            try
+            _ = Trace.Listeners.Add(new TextWriterTraceListener("DAoCToolSuite.log"));
+            Trace.AutoFlush = true;
+            Trace.WriteLine($"***************************************************");
+            Trace.WriteLine($"* Log Started: {DateTime.Now:MM/dd/yyyy HH:mm:ss}                *");
+            Trace.WriteLine($"***************************************************");
+            bool instanceCountOne;
+            using Mutex mtex = new(true, "DAoCToolSuite", out instanceCountOne);
+            if (instanceCountOne)
             {
-                // To customize application configuration such as set high DPI settings or default font,
-                // see https://aka.ms/applicationconfiguration.
-                ApplicationConfiguration.Initialize();
-                Application.Run(new DAoCToolSuiteForm());
+                try
+                {
+                    ApplicationConfiguration.Initialize();
+                    Application.Run(new DAoCToolSuiteForm());
+                    mtex.ReleaseMutex();
+                }
+                catch (System.Exception ex)
+                {
+                    TraceLog(ex.Message);
+                    TraceLog(ex.StackTrace);
+                }
             }
-            catch (Exception ex) { 
-                Logger.Error(ex);
+            else
+            {
+                _ = MessageBox.Show("An DAoCToolSuite instance is already running");
             }
+        }
+        public static void TraceLog(string? message)
+        {
+            string toWrite = $"{DateTime.Now:MM/dd/yyyy HH:mm:ss}: {message ?? ""}";
+            Trace.WriteLine(toWrite);
         }
     }
 }

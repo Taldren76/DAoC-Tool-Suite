@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="CharacterDB.db" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="CharacterDB.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="DAoCTools.ico" />
   </ItemGroup>
 
@@ -25,11 +32,7 @@
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.117" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Logger\Logger.csproj" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

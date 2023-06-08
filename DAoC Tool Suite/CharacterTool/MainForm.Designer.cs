@@ -743,7 +743,7 @@ namespace DAoCToolSuite.CharacterTool
             restoreDataGridView.ShowRowErrors = false;
             restoreDataGridView.Size = new Size(762, 259);
             restoreDataGridView.TabIndex = 23;
-            restoreDataGridView.DataSourceChanged += restoreDataGridView_DataSourceChanged;
+            restoreDataGridView.DataSourceChanged += RestoreDataGridView_DataSourceChanged;
             // 
             // ClearFilterButton
             // 

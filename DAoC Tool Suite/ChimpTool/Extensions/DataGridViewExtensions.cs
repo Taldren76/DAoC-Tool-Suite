@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using DAoCToolSuite.ChimpTool.Json;
-using Logger;
 using DAoCToolSuite.ChimpTool.Settings;
+using Logger;
 
 namespace DAoCToolSuite.ChimpTool.Extensions
 {

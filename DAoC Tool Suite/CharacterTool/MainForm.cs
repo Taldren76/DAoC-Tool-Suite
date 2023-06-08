@@ -3,20 +3,21 @@ using System.IO;
 using DAoCToolSuite.CharacterTool.Files;
 using DAoCToolSuite.CharacterTool.Json;
 using DAoCToolSuite.CharacterTool.Settings;
+using Logger;
 using Newtonsoft.Json;
 using SQLLibrary;
-using Logger;
 
 namespace DAoCToolSuite.CharacterTool
 {
     public partial class MainForm : Form
-    { 
+    {
         internal static LogManager Logger => LogManager.Instance;
         internal string DAoCCharacterDataFolder { get; private set; }
         internal static SettingsManager Settings { get; set; } = new SettingsManager();
         internal static ParseDirectory? ParseDirectory { get; set; }
         private List<SettingsBackUpModel> Backups { get; set; } = new();
         private BindingSource BindingSource { get; set; } = new();
+
         private Dictionary<string, int>? _characterList = null;
         private Dictionary<string, int> CharacterList
         {
@@ -28,11 +29,9 @@ namespace DAoCToolSuite.CharacterTool
             set => _characterList = value;
         }
         private string[] CharacterNameList => CharacterList.Keys.ToArray();
-
-        private readonly List<string?> ServerNames = new();
-        private static ServerListINI? ServerList { get; set; }
-        private static RealmClassINI? RealmList { get; set; }
-        private static DataTable RestoreDataTable { get; set; } = new DataTable();
+        private List<string?> ServerNames { get; set; } = new();
+        private static ServerListINI? ServerList { get; set; } = new();
+        private static RealmClassINI? RealmList { get; set; } = new();
         private static string GetServerName(int serverIndex)
         {
             Server? result = ServerList?.Servers?.Server?.Where(x => x.Index == serverIndex).FirstOrDefault();
@@ -43,7 +42,7 @@ namespace DAoCToolSuite.CharacterTool
             Server? result = ServerList?.Servers?.Server?.Where(x => x.Name == serverName).FirstOrDefault();
             return result?.Index ?? -1;
         }
-        private static List<string?>? GetServerList()
+        private static List<string?> GetServerList()
         {
             List<string?>? result = ServerList?.Servers?.Server?.Select(x => x.Name)?.ToList();
             //result?.Sort();
@@ -72,11 +71,11 @@ namespace DAoCToolSuite.CharacterTool
 
         public MainForm()
         {
-
-            Logger.Debug("CharacterTool Form Starting");
+            Logger.Debug("Starting CharacterTool.MainForm()");
+            InitializeComponent();
+            DAoCCharacterDataFolder = DefaultLocation();
             ServerList = DeserializeServerList(Settings.Servers);
             RealmList = DeserializeRealmClass(Settings.RealmClasses);
-            InitializeComponent();
             _ = BackUpRealmComboBox.Items.Add("Albion");
             _ = BackUpRealmComboBox.Items.Add("Hibernia");
             _ = BackUpRealmComboBox.Items.Add("Midgard");
@@ -85,7 +84,6 @@ namespace DAoCToolSuite.CharacterTool
             _ = RestoreRealmComboBox.Items.Add("Midgard");
             DAoCDirectoryTextBox.Text = DefaultLocation();
             ClearFilterButton.Enabled = false;
-            DAoCCharacterDataFolder = DAoCDirectoryTextBox.Text;
             ParseDirectory = new ParseDirectory(DAoCCharacterDataFolder);
             restoreDataGridView.DataSource = BindingSource;
             UpdateCharNameAutoComplete();
@@ -525,7 +523,18 @@ namespace DAoCToolSuite.CharacterTool
                 AttachBackups();
                 FormatGridView();
                 FilterDataSource();
+                if (Backups.Count > 0)
+                {
+                    RestoreRestoreSettingsButton.Enabled = true;
+                    RestoreDeleteSettingsButton.Enabled = true;
+                }
+                else
+                {
+                    RestoreRestoreSettingsButton.Enabled = false;
+                    RestoreDeleteSettingsButton.Enabled = false;
+                }
                 Logger.Debug("Setting Backups Loaded");
+
             }
             catch (Exception ex)
             {
@@ -561,7 +570,7 @@ namespace DAoCToolSuite.CharacterTool
                         column.DisplayIndex = visibleColumns.IndexOf(column.Name);
                         column.HeaderText = visibleColumnHeaderNames[visibleColumns.IndexOf(column.Name)];
                         column.ValueType = typeof(string);
-                        Logger.Debug($"{column.Name},{index},{column.DisplayIndex},{column.Visible}");
+                        //Logger.Debug($"{column.Name},{index},{column.DisplayIndex},{column.Visible}");
                         column.AutoSizeMode = column.Name switch
                         {
                             "Description" => DataGridViewAutoSizeColumnMode.Fill,
@@ -578,7 +587,7 @@ namespace DAoCToolSuite.CharacterTool
             BindingSource.DataSource = Backups ?? new();
         }
 
-        private void restoreDataGridView_DataSourceChanged(object sender, EventArgs e)
+        private void RestoreDataGridView_DataSourceChanged(object sender, EventArgs e)
         {
             FormatGridView();
         }

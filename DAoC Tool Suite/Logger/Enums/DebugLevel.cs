@@ -1,4 +1,4 @@
-﻿namespace DAoCToolSuite.ChimpTool.Enums
+﻿namespace Logger.Enums
 {
     public enum DebugLevel
     {

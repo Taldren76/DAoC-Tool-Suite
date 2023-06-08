@@ -27,7 +27,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="App.config" />
-		<None Remove="CharacterDB.db" />
 		<None Remove="ChimpTools.Config" />
 		<None Remove="DAoCTools.xcf" />
 		<None Remove="DAoCToolsBW.ico" />
@@ -43,9 +42,6 @@
 	<ItemGroup>
 		<Content Include="App.config">
 		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-		</Content>
-		<Content Include="CharacterDB.db">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="ChimpTools.Config">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -87,15 +83,12 @@
 		</Content>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="CefSharp.Common.NETCore" Version="113.1.40" />
 		<PackageReference Include="CefSharp.OffScreen.NETCore" Version="113.1.40" />
-		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0-preview1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="Selenium.Support" Version="4.9.1" />
+		<PackageReference Include="chromiumembeddedframework.runtime" Version="113.1.4" />
+		<PackageReference Include="Microsoft.NETCore.Platforms" Version="1.1.1" />
+		<PackageReference Include="Microsoft.NETCore.Targets" Version="1.1.3" />
 		<PackageReference Include="Selenium.WebDriver" Version="4.9.1" />
-		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />
-		<PackageReference Include="System.IO" Version="4.3.0" />
-		<PackageReference Include="System.Runtime" Version="4.3.1" />
+		<PackageReference Include="System.Memory" Version="4.5.5" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Logger\Logger.csproj" />

@@ -1,37 +1,46 @@
-﻿using NLog;
-using NLog.Targets;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Configuration;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace Logger
 {
+
     public class LogManager
     {
-        private static readonly object thisLock = new();
-        public readonly NLog.Logger NLogLogger = NLog.LogManager.GetCurrentClassLogger();
-        private static bool? _Initialized = null;
-        public string PATH { get; set; } = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Log.log";
-        private static LogManager? _Instance = null;
+
+        private NLog.Logger NLogLogger { get; set; }
+        public string PATH { get; private set; } = Properties.Settings.Default.LogFileName;
         public static LogManager Instance
         {
             get
             {
                 lock (thisLock)
                 {
-                    if (_Instance == null)
-                        _Instance = new();
+                    _Instance ??= new();
                     return _Instance;
                 }
             }
+        }
+        private static LogManager? _Instance = null;
+        private static readonly object thisLock = new();
+        private static bool? _Initialized = null;
+        public static void TraceLog(string? message)
+        {
+            string toWrite = $"{DateTime.Now:MM/dd/yyyy HH:mm:ss}: {message ?? ""}";
+            Trace.WriteLine(toWrite);
         }
 
         private static bool Initialized
         {
             get
             {
-                _Initialized ??= false;
-
-                return (bool)_Initialized;
+                lock (thisLock)
+                {
+                    _Initialized ??= false;
+                    return (bool)_Initialized;
+                }
             }
             set => _Initialized = value;
         }
@@ -40,7 +49,16 @@ namespace Logger
         {
             lock (thisLock)
             {
-                NLogLogger.Debug<T>(message);
+                try
+                {
+                    NLogLogger.Debug<T>(message);
+                }
+                catch (Exception ex)
+                {
+                    TraceLog(ex.Message);
+                    TraceLog(ex.StackTrace);
+                    TraceLog($"Attempted to write: {message}");
+                }
             }
         }
 
@@ -48,7 +66,15 @@ namespace Logger
         {
             lock (thisLock)
             {
-                NLogLogger.Warn<T>(message);
+                try
+                {
+                    NLogLogger.Warn<T>(message);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                    System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+                }
             }
         }
 
@@ -56,55 +82,104 @@ namespace Logger
         {
             lock (thisLock)
             {
-                NLogLogger.Error<T>(message);
+                try
+                {
+                    NLogLogger.Error<T>(message);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                    System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+                }
+            }
+        }
+
+        public string GetPath()
+        {
+            try
+            {
+                //     $"{System.IO.Path.GetDirectoryName(Application.ExecutablePath)}\\DAoCToolSuite.log";
+                //     $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\DAoCToolSuite.log";
+                string path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\{Properties.Settings.Default.LogFileName}";
+                TraceLog($"Path: {path}");
+                return path;
+            }
+            catch (Exception ex)
+            {
+                TraceLog(ex.Message);
+                TraceLog(ex.StackTrace);
+                return Properties.Settings.Default.LogFileName;
             }
         }
 
         public LogManager()
         {
-            //     $"{System.IO.Path.GetDirectoryName(Application.ExecutablePath)}\\DAoCToolSuite.log";
-            //     $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\DAoCToolSuite.log";
-            PATH = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\{Properties.Settings.Default.LogFileName}";
-            InitalizeLogger();
+            PATH = GetPath();
+            if (!Initialized)
+            {
+                InitalizeLogger();
+            }
+            NLogLogger = NLog.LogManager.GetCurrentClassLogger();
+            Debug($"Log created at {PATH}");
         }
 
-        public void InitalizeLogger()
+        private void InitalizeLogger()
         {
             lock (thisLock)
             {
-                if (Initialized)
+                try
                 {
-                    return;
+                    // Step 1. Create configuration object 
+                    LoggingConfiguration config = new();
+
+                    // Step 2. Create targets and add them to the configuration 
+                    FileTarget fileTarget = new()
+                    {
+                        Name = "file",
+                        FileName = PATH,
+                        DeleteOldFileOnStartup = true
+                    };
+                    config.AddTarget("file", fileTarget);
+
+                    // Step 3. Define rules
+                    LoggingRule rule = new("*", LogLevel.Debug, fileTarget);
+                    config.LoggingRules.Add(rule);
+
+                    // Step 4. Activate the configuration
+                    NLog.LogManager.Configuration = config;
+                    Initialized = true;
                 }
-
-                NLog.Config.LoggingConfiguration configuration = NLog.LogManager.Configuration;
-                FileTarget fileTarget = new()
+                catch (Exception ex)
                 {
-                    Name = "file",
-                    FileName = PATH,
-                    DeleteOldFileOnStartup = true
-                };
-
-                NLog.LogManager.ReconfigExistingLoggers();
-
-                Initialized = true;
+                    TraceLog(ex.Message);
+                    TraceLog(ex.StackTrace);
+                }
             }
         }
 
         public string GetLogContents()
         {
-            string contents;
-            lock (thisLock)
+            try
             {
-                FileAttributes attributes = File.GetAttributes(Instance.PATH);
-                using (FileStream fs = new(Instance.PATH, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                string contents;
+                lock (thisLock)
                 {
-                    using StreamReader sr = new(fs);
-                    contents = sr.ReadToEnd();
+                    FileAttributes attributes = File.GetAttributes(PATH);
+                    using (FileStream fs = new(PATH, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        using StreamReader sr = new(fs);
+                        contents = sr.ReadToEnd();
+                    }
+                    File.SetAttributes(PATH, attributes);
                 }
-                File.SetAttributes(Instance.PATH, attributes);
+                return contents;
             }
-            return contents;
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+                return string.Empty;
+            }
         }
     }
 }

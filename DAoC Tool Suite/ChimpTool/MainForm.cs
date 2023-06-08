@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using System.Diagnostics;
 using System.IO;
-using DAoCToolSuite.ChimpTool.Enums;
 using DAoCToolSuite.ChimpTool.Exceptions;
 using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.HeraldAPI;
@@ -9,6 +8,7 @@ using DAoCToolSuite.ChimpTool.Json;
 using DAoCToolSuite.ChimpTool.Selenium;
 using DAoCToolSuite.ChimpTool.Settings;
 using Logger;
+using Logger.Enums;
 using Newtonsoft.Json;
 using SQLLibrary;
 using SQLLibrary.Enums;
@@ -77,10 +77,10 @@ namespace DAoCToolSuite.ChimpTool
             RestoreButton.Enabled = HasBackupChimpRepository();
             SearchButton.Enabled = UseSelenium || UseAPI;
             SearchComboBox.Enabled = UseSelenium || UseAPI;
-            this.Shown -= new System.EventHandler(MainForm_Shown!);
-            this.Shown += new System.EventHandler(MainForm_Shown!);
-            this.FormClosing -= new FormClosingEventHandler(MainForm_FormClosing);
-            this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
+            Shown -= new System.EventHandler(MainForm_Shown!);
+            Shown += new System.EventHandler(MainForm_Shown!);
+            FormClosing -= new FormClosingEventHandler(MainForm_FormClosing);
+            FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
@@ -278,14 +278,17 @@ namespace DAoCToolSuite.ChimpTool
             Debug.WriteLine($"NLog | {level} | {message}");
         }
 
-        private static object thisLock = new object();
+        private static readonly object thisLock = new();
         private void DebugLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
                 LinkLabel lnk = (LinkLabel)sender;
                 if (lnk is null || lnk.IsDisposed)
+                {
                     return;
+                }
+
                 if (e.Link?.LinkData?.ToString() == null)
                 {
                     return;
@@ -311,7 +314,7 @@ namespace DAoCToolSuite.ChimpTool
                     LogViewer = new();
                 }
                 LogViewer.LogViewerTextBox.Text = contents;
-                LogViewer.Location = this.Location;
+                LogViewer.Location = Location;
                 LogViewer.Show();
                 LogViewer.LogViewerTextBox.SelectionStart = LogViewer.LogViewerTextBox.TextLength;
                 LogViewer.LogViewerTextBox.ScrollToCaret();
