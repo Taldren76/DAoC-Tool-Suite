@@ -26,6 +26,11 @@ namespace DAoCToolSuite
                     Application.Run(new DAoCToolSuiteForm());
                     mtex.ReleaseMutex();
                 }
+                catch (System.ObjectDisposedException e)
+                {
+                    TraceLog(e.Message);
+                    TraceLog(e.StackTrace);
+                }
                 catch (System.Exception ex)
                 {
                     TraceLog(ex.Message);

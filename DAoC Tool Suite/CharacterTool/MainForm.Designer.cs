@@ -819,6 +819,7 @@ namespace DAoCToolSuite.CharacterTool
             ClientSize = new Size(800, 450);
             Controls.Add(TabPanel);
             Controls.Add(DAoCDirectoryPanel);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(816, 489);
             Name = "MainForm";

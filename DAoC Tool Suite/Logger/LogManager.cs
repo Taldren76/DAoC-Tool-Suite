@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using Logger.Enums;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -9,7 +10,7 @@ namespace Logger
 
     public class LogManager
     {
-
+        public DebugLevel CurrentDebugLevel { get; set; } = DebugLevel.Debug;
         private NLog.Logger NLogLogger { get; set; }
         public string PATH { get; private set; } = Properties.Settings.Default.LogFileName;
         public static LogManager Instance
@@ -52,6 +53,10 @@ namespace Logger
                 try
                 {
                     NLogLogger.Debug<T>(message);
+                    if (DebugLevel.Debug >= CurrentDebugLevel)
+                    {
+                        CurrentDebugLevel = DebugLevel.Debug;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -69,6 +74,10 @@ namespace Logger
                 try
                 {
                     NLogLogger.Warn<T>(message);
+                    if (DebugLevel.Warning >= CurrentDebugLevel)
+                    {
+                        CurrentDebugLevel = DebugLevel.Warning;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -85,6 +94,10 @@ namespace Logger
                 try
                 {
                     NLogLogger.Error<T>(message);
+                    if (DebugLevel.Error >= CurrentDebugLevel)
+                    {
+                        CurrentDebugLevel = DebugLevel.Error;
+                    }
                 }
                 catch (Exception ex)
                 {

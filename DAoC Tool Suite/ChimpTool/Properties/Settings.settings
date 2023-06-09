@@ -8,5 +8,11 @@
     <Setting Name="LoadCount" Type="System.Int64" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="NextRefreshAll" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2001-01-01</Value>
+    </Setting>
+    <Setting Name="NextRefresh" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2001-01-01</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

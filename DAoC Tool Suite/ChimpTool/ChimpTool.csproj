@@ -30,13 +30,9 @@
 		<None Remove="ChimpTools.Config" />
 		<None Remove="DAoCTools.xcf" />
 		<None Remove="DAoCToolsBW.ico" />
-		<None Remove="Icons\CharacterTool.ico" />
-		<None Remove="Icons\CharacterTool.png" />
 		<None Remove="Icons\ChimpTool.ico" />
 		<None Remove="Icons\DAoCTools.ico" />
 		<None Remove="Icons\DAoCTools.png" />
-		<None Remove="Icons\LogParser.ico" />
-		<None Remove="Icons\LogParser.png" />
 		<None Remove="Selenium\chromedriver.exe" />
 	</ItemGroup>
 	<ItemGroup>
@@ -45,12 +41,6 @@
 		</Content>
 		<Content Include="ChimpTools.Config">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Icons\CharacterTool.ico">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Icons\CharacterTool.png">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Icons\ChimpTool.ico">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -66,16 +56,7 @@
 		  <PackagePath>\</PackagePath>
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="Icons\DAoCToolsBW.ico">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
 		<Content Include="DeleteIcon.png">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Icons\LogParser.ico">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Icons\LogParser.png">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Selenium\chromedriver.exe">

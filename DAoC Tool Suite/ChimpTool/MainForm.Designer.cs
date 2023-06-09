@@ -32,8 +32,8 @@ namespace DAoCToolSuite.ChimpTool
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             GridPanel = new Panel();
             LoadingTabelLabel = new Label();
@@ -50,7 +50,6 @@ namespace DAoCToolSuite.ChimpTool
             AccountComboBox = new ComboBox();
             HiberniaTotalsTextBox = new TextBox();
             RefreshPanel = new Panel();
-            linkLabel1 = new LinkLabel();
             RefreshButton = new Button();
             MidgardTotalsTextBox = new TextBox();
             RefreshAllButton = new Button();
@@ -61,6 +60,7 @@ namespace DAoCToolSuite.ChimpTool
             TotalRPLabel = new Label();
             TotalRPTextBox = new TextBox();
             SearchProgressBar = new TextProgressBar();
+            DebugLogButton = new Button();
             GridPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SearchGridView).BeginInit();
             CharacterSearchPanel.SuspendLayout();
@@ -102,24 +102,24 @@ namespace DAoCToolSuite.ChimpTool
             SearchGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             SearchGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             SearchGridView.BackgroundColor = SystemColors.Control;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            SearchGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            SearchGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             SearchGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.NullValue = "null";
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            SearchGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.NullValue = "null";
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            SearchGridView.DefaultCellStyle = dataGridViewCellStyle4;
             SearchGridView.Dock = DockStyle.Fill;
             SearchGridView.Location = new Point(0, 0);
             SearchGridView.Margin = new Padding(4, 3, 4, 3);
@@ -256,7 +256,7 @@ namespace DAoCToolSuite.ChimpTool
             // RefreshPanel
             // 
             RefreshPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            RefreshPanel.Controls.Add(linkLabel1);
+            RefreshPanel.Controls.Add(DebugLogButton);
             RefreshPanel.Controls.Add(RefreshButton);
             RefreshPanel.Controls.Add(MidgardTotalsTextBox);
             RefreshPanel.Controls.Add(RefreshAllButton);
@@ -265,19 +265,6 @@ namespace DAoCToolSuite.ChimpTool
             RefreshPanel.Name = "RefreshPanel";
             RefreshPanel.Size = new Size(397, 72);
             RefreshPanel.TabIndex = 22;
-            // 
-            // linkLabel1
-            // 
-            linkLabel1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            linkLabel1.Location = new Point(4, 6);
-            linkLabel1.Margin = new Padding(4, 0, 4, 0);
-            linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(114, 29);
-            linkLabel1.TabIndex = 7;
-            linkLabel1.TabStop = true;
-            linkLabel1.Text = "Debug.Log";
-            linkLabel1.TextAlign = ContentAlignment.MiddleCenter;
-            linkLabel1.LinkClicked += DebugLog_LinkClicked;
             // 
             // RefreshButton
             // 
@@ -409,6 +396,16 @@ namespace DAoCToolSuite.ChimpTool
             SearchProgressBar.Visible = false;
             SearchProgressBar.VisualMode = ProgressBarDisplayMode.Percentage;
             // 
+            // DebugLogButton
+            // 
+            DebugLogButton.Location = new Point(4, 6);
+            DebugLogButton.Name = "DebugLogButton";
+            DebugLogButton.Size = new Size(107, 29);
+            DebugLogButton.TabIndex = 19;
+            DebugLogButton.Text = "Debug.Log";
+            DebugLogButton.UseVisualStyleBackColor = true;
+            DebugLogButton.Click += DebugLog_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -425,7 +422,8 @@ namespace DAoCToolSuite.ChimpTool
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ChimpTool v1.3.0";
-            FormClosing += MainForm_Closing;
+            FormClosing += MainForm_FormClosing;
+            FormClosed += MainForm_FormClosed;
             GridPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)SearchGridView).EndInit();
             CharacterSearchPanel.ResumeLayout(false);
@@ -452,7 +450,6 @@ namespace DAoCToolSuite.ChimpTool
         private Button AddAccountButton;
         private TextBox HiberniaTotalsTextBox;
         private Panel RefreshPanel;
-        private LinkLabel linkLabel1;
         private Button RefreshButton;
         private TextBox MidgardTotalsTextBox;
         private Button RefreshAllButton;
@@ -466,6 +463,7 @@ namespace DAoCToolSuite.ChimpTool
         public ComboBox AccountComboBox;
         public ComboBox SearchComboBox;
         private Label LoadingTabelLabel;
+        private Button DebugLogButton;
     }
 }
 

@@ -17,12 +17,9 @@ namespace DAoCToolSuite
         {
             try
             {
-                if (ChimpToolForm is null || ChimpToolForm.IsDisposed)
-                {
-                    ChimpToolForm = new();
-                }
-                ChimpToolForm.FormClosing -= ChimpToolForm_FormClosing;
-                ChimpToolForm.FormClosing += ChimpToolForm_FormClosing;
+                ChimpToolForm ??= new();
+                ChimpToolForm.Disposed -= ChimpToolForm_Disposed;
+                ChimpToolForm.Disposed += ChimpToolForm_Disposed;
                 ChimpToolForm.Show();
                 Logger.Debug("ChimpToolForm MainForm Shown");
                 _ = ChimpToolForm.Focus();
@@ -34,36 +31,19 @@ namespace DAoCToolSuite
             }
         }
 
-        private void ActivateThis()
+        private void ChimpToolForm_Disposed(object? sender, EventArgs e)
         {
-            if (!IsDisposed)
-            {
-                Activate();
-            }
+            Activate();
+            ChimpToolForm = null;
         }
 
-        private void ChimpToolForm_FormClosing(object? sender, FormClosingEventArgs e)
+        private void CharacterToolButton_Click(object sender, EventArgs e)
         {
             try
             {
-                ActivateThis(); //Focus();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
-        }
-
-        private void characterToolButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (CharacterToolForm is null || CharacterToolForm.IsDisposed)
-                {
-                    CharacterToolForm = new();
-                }
-                CharacterToolForm.FormClosing -= CharacterToolForm_FormClosing;
-                CharacterToolForm.FormClosing += CharacterToolForm_FormClosing;
+                CharacterToolForm ??= new();
+                CharacterToolForm.Disposed -= CharacterToolForm_Disposed;
+                CharacterToolForm.Disposed += CharacterToolForm_Disposed;
                 CharacterToolForm.Show();
                 Logger.Debug("CharacterTool MainForm Shown");
                 _ = CharacterToolForm.Focus();
@@ -75,15 +55,10 @@ namespace DAoCToolSuite
             }
         }
 
-        private void CharacterToolForm_FormClosing(object? sender, FormClosingEventArgs e)
+        private void CharacterToolForm_Disposed(object? sender, EventArgs e)
         {
-            _ = Focus();
-        }
-
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-
+            Activate();
+            CharacterToolForm = null;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -116,7 +91,7 @@ namespace DAoCToolSuite
             Properties.Settings.Default.Save();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             ChimpTool.Properties.Settings.Default.Reset();
             ChimpTool.Properties.Settings.Default.Save();

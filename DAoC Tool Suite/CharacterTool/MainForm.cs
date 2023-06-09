@@ -523,16 +523,6 @@ namespace DAoCToolSuite.CharacterTool
                 AttachBackups();
                 FormatGridView();
                 FilterDataSource();
-                if (Backups.Count > 0)
-                {
-                    RestoreRestoreSettingsButton.Enabled = true;
-                    RestoreDeleteSettingsButton.Enabled = true;
-                }
-                else
-                {
-                    RestoreRestoreSettingsButton.Enabled = false;
-                    RestoreDeleteSettingsButton.Enabled = false;
-                }
                 Logger.Debug("Setting Backups Loaded");
 
             }
@@ -585,6 +575,10 @@ namespace DAoCToolSuite.CharacterTool
         private void AttachBackups()
         {
             BindingSource.DataSource = Backups ?? new();
+            RestoreRestoreSettingsButton.Enabled = BindingSource.Count > 0;
+            RestoreDeleteSettingsButton.Enabled = BindingSource.Count > 0;
+            BackupDBButton.Enabled = BindingSource.Count > 0;
+            RestoreDBButton.Enabled = HasDBBackupJson();
         }
 
         private void RestoreDataGridView_DataSourceChanged(object sender, EventArgs e)
@@ -882,6 +876,7 @@ namespace DAoCToolSuite.CharacterTool
         {
             string json = SerializeBackups();
             WriteDBBackup(json);
+            RestoreDBButton.Enabled = HasDBBackupJson();
         }
 
         private static bool HasDBBackupJson()

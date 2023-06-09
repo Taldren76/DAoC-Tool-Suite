@@ -58,7 +58,7 @@ namespace DAoCToolSuite
             characterToolButton.Size = new Size(140, 140);
             characterToolButton.TabIndex = 1;
             characterToolButton.UseVisualStyleBackColor = true;
-            characterToolButton.Click += characterToolButton_Click;
+            characterToolButton.Click += CharacterToolButton_Click;
             // 
             // logParserButton
             // 
@@ -109,7 +109,7 @@ namespace DAoCToolSuite
             button1.TabIndex = 6;
             button1.Text = "R";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            button1.Click += Button1_Click;
             // 
             // DAoCToolSuiteForm
             // 
@@ -128,7 +128,7 @@ namespace DAoCToolSuite
             MinimumSize = new Size(476, 220);
             Name = "DAoCToolSuiteForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "DAoC Tool Suite v0.4.0";
+            Text = "DAoC Tool Suite v0.5.0";
             FormClosing += DAoCTestSuiteForm_FormClosing;
             ResumeLayout(false);
         }

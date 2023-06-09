@@ -17,11 +17,11 @@ namespace DAoCToolSuite.ChimpTool
 {
     public partial class MainForm : Form
     {
-        internal static WaitCursor WaitCursor = new();
-        private static readonly System.Windows.Forms.ToolTip MouseOverTooltip = new();
+        public static System.Windows.Forms.Timer Timer { get; set; } = new();
+        internal static WaitCursor WaitCursor { get; set; } = new();
+        private static System.Windows.Forms.ToolTip MouseOverTooltip { get; set; } = new();
         private static List<AccountModel> Accounts { get; set; } = new List<AccountModel>();
         private static List<GuildModel> Guilds { get; set; } = new List<GuildModel>();
-        private static LogViewer? LogViewer { get; set; } = null;
 
         #region DataGridView Data
         private static List<CharacterModel> Characters { get; set; } = new List<CharacterModel>();
@@ -65,11 +65,8 @@ namespace DAoCToolSuite.ChimpTool
         #region MainForm
         public MainForm()
         {
-            //EnableSelectIndexChangedEvent = false;
-            //Settings = new SettingsManager();
             WaitCursor.Push();
             InitializeComponent();
-            LinkLabelLinkToAFile();
             LoadAccounts();
             SetToLastAccount();
             SetAutoCompleteCharacterList();
@@ -77,13 +74,83 @@ namespace DAoCToolSuite.ChimpTool
             RestoreButton.Enabled = HasBackupChimpRepository();
             SearchButton.Enabled = UseSelenium || UseAPI;
             SearchComboBox.Enabled = UseSelenium || UseAPI;
-            Shown -= new System.EventHandler(MainForm_Shown!);
             Shown += new System.EventHandler(MainForm_Shown!);
-            FormClosing -= new FormClosingEventHandler(MainForm_FormClosing);
-            FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
+            Timer.Tick -= new EventHandler(MainForm_TimerHander);
+            Timer.Tick += new EventHandler(MainForm_TimerHander);
+            Timer.Interval = 1000;
+            Timer.Start();
+            RefreshAllTimer = DateTime.Now < Properties.Settings.Default.NextRefreshAll;
+            RefreshTimer = DateTime.Now < Properties.Settings.Default.NextRefresh;
         }
 
-        private void MainForm_Shown(object sender, EventArgs e)
+        private static bool RefreshAllTimer = false;
+        private static bool RefreshTimer = false;
+        private void MainForm_TimerHander(object? sender, EventArgs e)
+        {
+            #region Refresh All Button State
+            if (RefreshAllTimer && DateTime.Now >= Properties.Settings.Default.NextRefreshAll)
+            {
+                RefreshAllTimer = false;
+                RefreshAllButton.Text = "Refresh All";
+                RefreshAllButton.Enabled = true;
+            }
+            else if (RefreshAllTimer && DateTime.Now < Properties.Settings.Default.NextRefreshAll)
+            {
+                TimeSpan Diff = Properties.Settings.Default.NextRefreshAll - DateTime.Now;
+                RefreshAllButton.Text = Convert.ToInt32(Diff.TotalSeconds).ToString();
+                RefreshAllButton.Enabled = false;
+            }
+            else if (!RefreshAllTimer && BindingSource.Count > 0)
+            {
+                RefreshAllButton.Text = "Refresh All";
+                RefreshAllButton.Enabled = true;
+            }
+            else if (!RefreshAllTimer && BindingSource.Count < 1)
+            {
+                RefreshAllButton.Text = "Refresh All";
+                RefreshAllButton.Enabled = false;
+            }
+            #endregion
+            #region Refresh Button State
+            if (RefreshTimer && DateTime.Now >= Properties.Settings.Default.NextRefresh)
+            {
+                RefreshTimer = false;
+                RefreshButton.Text = "Refresh";
+                RefreshButton.Enabled = true;
+            }
+            else if (RefreshTimer && DateTime.Now < Properties.Settings.Default.NextRefresh)
+            {
+                TimeSpan Diff = Properties.Settings.Default.NextRefresh - DateTime.Now;
+                RefreshButton.Text = Convert.ToInt32(Diff.TotalSeconds).ToString();
+                RefreshButton.Enabled = false;
+            }
+            else if (!RefreshTimer && BindingSource.Count > 0)
+            {
+                RefreshButton.Text = "Refresh";
+                RefreshButton.Enabled = true;
+            }
+            else if (!RefreshTimer && BindingSource.Count < 1)
+            {
+                RefreshButton.Text = "Refresh";
+                RefreshButton.Enabled = false;
+            }
+            #endregion
+            #region Debug Log Button State
+            switch (Logger.CurrentDebugLevel)
+            {
+                case DebugLevel.Error:
+                    DebugLogButton.BackColor = Color.Red;
+                    break;
+                case DebugLevel.Warning:
+                    DebugLogButton.BackColor = Color.Yellow;
+                    break;
+                default:
+                    break;
+            }
+            #endregion
+        }
+
+        private void MainForm_Shown(object? sender, EventArgs e)
         {
             bool check = AlwaysOnTop;
             OnTopCheckBox.Checked = check;
@@ -93,9 +160,38 @@ namespace DAoCToolSuite.ChimpTool
             WaitCursor.PopAll();
         }
 
+        private void MainForm_FormClosed(object? sender, FormClosedEventArgs e)
+        {
+            FormClosing -= new FormClosingEventHandler(MainForm_FormClosing);
+            Thread.Sleep(1000);
+        }
+
         private void MainForm_FormClosing(object? sender, FormClosingEventArgs e)
         {
-            LogViewer?.Close();
+            Logger.Debug($"Shutting down.");
+            Timer.Stop();
+            Shown -= new System.EventHandler(MainForm_Shown);
+            Timer.Tick -= new EventHandler(MainForm_TimerHander);
+
+            if (sender is not MainForm form)
+            {
+                return;
+            }
+            form.Hide();
+            Properties.Settings.Default.WindowLocation = form.Location;
+            Properties.Settings.Default.Save();
+            CamelotHerald.Quit();
+
+            ShutDown sd = new()
+            {
+                StartPosition = FormStartPosition.Manual,
+                Owner = form,
+                Enabled = true,
+                TopMost = true
+            };
+            sd.SetLocation();
+            sd.Show();
+            sd.Refresh();
         }
 
         private void SearchGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -125,17 +221,7 @@ namespace DAoCToolSuite.ChimpTool
                 CalculateRPTotals();
             }
         }
-        private void MainForm_Closing(object sender, EventArgs e)
-        {
-            if (sender is not MainForm form)
-            {
-                return;
-            }
-            Properties.Settings.Default.WindowLocation = form.Location;
-            Properties.Settings.Default.Save();
-            Logger.Debug($"Shutting down.");
-            CamelotHerald.Quit();
-        }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -166,7 +252,6 @@ namespace DAoCToolSuite.ChimpTool
             AlwaysOnTop = checkbox.Checked;
             Logger.Debug($"AlwaysOnTop.Checked = {checkbox.Checked}");
             Logger.Debug($"Settings.AlwaysOnTop = {AlwaysOnTop}");
-            UpdateDebugLinkBackColor();
         }
         #endregion
 
@@ -240,104 +325,39 @@ namespace DAoCToolSuite.ChimpTool
         #endregion
 
         #region Debug.Log DataLink
-        public static DebugLevel CurrentDebugLevel { get; set; } = DebugLevel.Debug;
-        public void LinkLabelLinkToAFile()
-        {
-            linkLabel1.BorderStyle = BorderStyle.None;
-            linkLabel1.LinkBehavior = LinkBehavior.NeverUnderline;
-            _ = linkLabel1.Links.Add(0, linkLabel1.Text.ToString().Length, Logger.PATH);
-        }
-
-        public static void UpdateDataLinkColor(string level, string message)
-        {
-            switch (level.ToLower())
-            {
-                case "error":
-                    if (DebugLevel.Error >= CurrentDebugLevel)
-                    {
-                        CurrentDebugLevel = DebugLevel.Error;
-                    }
-
-                    break;
-                case "warn":
-                    if (DebugLevel.Warning >= CurrentDebugLevel)
-                    {
-                        CurrentDebugLevel = DebugLevel.Warning;
-                    }
-
-                    break;
-                default:
-                    if (DebugLevel.Debug >= CurrentDebugLevel)
-                    {
-                        CurrentDebugLevel = DebugLevel.Debug;
-                    }
-
-                    break;
-            }
-
-            Debug.WriteLine($"NLog | {level} | {message}");
-        }
 
         private static readonly object thisLock = new();
-        private void DebugLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+
+        private void DebugLog_Click(object sender, EventArgs e)
         {
+            DebugLogButton.Enabled = false;
             try
             {
-                LinkLabel lnk = (LinkLabel)sender;
-                if (lnk is null || lnk.IsDisposed)
-                {
-                    return;
-                }
-
-                if (e.Link?.LinkData?.ToString() == null)
-                {
-                    return;
-                }
-                //_ = new LinkLabel();
-                string path = e.Link.LinkData.ToString()!;
-                lnk.Links[lnk.Links.IndexOf(e.Link)].Visited = true;
-                string contents = string.Empty;
-
+                string contents;
                 lock (thisLock)
                 {
-                    FileAttributes attributes = File.GetAttributes(path);
-                    using (FileStream fs = new(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    FileAttributes attributes = File.GetAttributes(Logger.PATH);
+                    using (FileStream fs = new(Logger.PATH, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         using StreamReader sr = new(fs);
                         contents = sr.ReadToEnd();
                     }
-                    File.SetAttributes(path, attributes);
+                    File.SetAttributes(Logger.PATH, attributes);
                 }
 
-                if (LogViewer is null || LogViewer.IsDisposed)
-                {
-                    LogViewer = new();
-                }
-                LogViewer.LogViewerTextBox.Text = contents;
-                LogViewer.Location = Location;
-                LogViewer.Show();
-                LogViewer.LogViewerTextBox.SelectionStart = LogViewer.LogViewerTextBox.TextLength;
-                LogViewer.LogViewerTextBox.ScrollToCaret();
+                using LogViewer logViewer = new();
+                logViewer.LogViewerTextBox.Text = contents;
+                logViewer.Location = Location;
+                logViewer.Size = Size;
+                logViewer.LogViewerTextBox.SelectionStart = logViewer.LogViewerTextBox.TextLength;
+                logViewer.LogViewerTextBox.ScrollToCaret();
+                _ = logViewer.ShowDialog();
             }
             catch (System.Exception ex)
             {
                 Logger.Error(ex);
             }
-        }
-
-        private void UpdateDebugLinkBackColor()
-        {
-            switch (CurrentDebugLevel)
-            {
-                case DebugLevel.Error:
-                    linkLabel1.BackColor = Color.Red;
-                    break;
-                case DebugLevel.Warning:
-                    linkLabel1.BackColor = Color.Yellow;
-                    break;
-                default:
-                    break;
-            }
+            DebugLogButton.Enabled = true;
         }
         #endregion
 
@@ -490,19 +510,20 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void BackupButton_Click(object sender, EventArgs e)
         {
-
+            BackupButton.Enabled = false;
             WaitCursor.Push();
             Logger.Debug("Backup button has been pressed.");
             LoadCharacters();
             BackupToChimpRepository();
             Logger.Debug($"Backup created at {BackupRepositoryFullPath}");
             RestoreButton.Enabled = File.Exists(BackupRepositoryFullPath);
-            UpdateDebugLinkBackColor();
             WaitCursor.Pop();
+            BackupButton.Enabled = true;
 
         }
         private void RestoreButton_Click(object sender, EventArgs e)
         {
+            RestoreButton.Enabled = false;
             WaitCursor.Push();
             Logger.Debug("Restore button has been pressed.");
             SearchGridView.Visible = false;
@@ -523,8 +544,8 @@ namespace DAoCToolSuite.ChimpTool
                 Logger.Debug($"No backup chimp repository found at {BackupRepositoryFullPath}");
                 RestoreButton.Enabled = false;
             }
-            UpdateDebugLinkBackColor();
             WaitCursor.Pop();
+            RestoreButton.Enabled = true;
         }
         #endregion
 
@@ -697,7 +718,6 @@ namespace DAoCToolSuite.ChimpTool
                 MouseOverTooltip.ForeColor = Color.Black;
                 MouseOverTooltip.Show(toShow, GridPanel, p, 10000); // show tool tip
             }
-            UpdateDebugLinkBackColor();
         }
 
         private void SearchGridView_DataSourceChanged(object sender, EventArgs e)
@@ -740,22 +760,28 @@ namespace DAoCToolSuite.ChimpTool
         private void AttachCharacters()
         {
             BindingSource.DataSource = CharactersByAccountLastDateUpdated?.ToChimpJsonList() ?? new();
-            if (BindingSource.Count > 0)
-            {
-                RefreshButton.Enabled = true;
-                RefreshAllButton.Enabled = true;
-            }
-            else
-            {
-                RefreshButton.Enabled = false;
-                RefreshAllButton.Enabled = false;
-            }
-            //SearchGridView.DataSource = null;
-            //SearchGridView.DataSource = CharactersByAccountLastDateUpdated_Json;
+            //if (BindingSource.Count > 0)
+            //{
+            //    if (!RefreshTimer)
+            //    {
+            //        RefreshButton.Enabled = true;
+            //    }
+
+            //    if (!RefreshAllTimer)
+            //    {
+            //        RefreshAllButton.Enabled = true;
+            //    }
+            //}
+            //else
+            //{
+            //    RefreshButton.Enabled = false;
+            //    RefreshAllButton.Enabled = false;
+            //}
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
         {
+            RefreshButton.Enabled = false;
             Logger.Debug("Refresh button clicked.");
             WaitCursor.Push();
             DataGridViewSelectedRowCollection rowsToRefresh = SearchGridView.SelectedRows;
@@ -784,6 +810,9 @@ namespace DAoCToolSuite.ChimpTool
                 chimpsToBeRefreshed.Add(new ChimpJson() { WebID = webID });
             }
             RefreshChimps(chimpsToBeRefreshed, date);
+            RefreshTimer = true;
+            Properties.Settings.Default.NextRefresh = DateTime.Now.AddSeconds(10);
+            Properties.Settings.Default.Save();
         }
 
         private void RefreshChimps(List<ChimpJson> chimpsToBeRefreshed, DateTime date)
@@ -856,12 +885,12 @@ namespace DAoCToolSuite.ChimpTool
                 SearchProgressBar.CustomText = "";
                 SearchProgressBar.VisualMode = ProgressBarDisplayMode.Percentage;
                 SearchProgressBar.Refresh();
-                UpdateDebugLinkBackColor();
             }
         }
 
         private void RefreshAllButton_Click(object sender, EventArgs e)
         {
+            RefreshAllButton.Enabled = false;
             if (CharactersByAccountLastDateUpdated is null)
             {
                 return;
@@ -874,10 +903,15 @@ namespace DAoCToolSuite.ChimpTool
             WaitCursor.Push();
             List<ChimpJson> chimpsToBeRefreshed = CharactersByAccountLastDateUpdated.Select(x => x.CovertToChimp()).ToList();
             RefreshChimps(chimpsToBeRefreshed, date);
+
+            Properties.Settings.Default.NextRefreshAll = DateTime.Now.AddMinutes(1);
+            Properties.Settings.Default.Save();
+            RefreshAllTimer = true;
         }
 
         private void RemoveButton_Click(object sender, EventArgs e)
         {
+            RemoveButton.Enabled = false;
             try
             {
                 WaitCursor.Push();
@@ -912,13 +946,13 @@ namespace DAoCToolSuite.ChimpTool
                 }
                 LoadCharacters();
                 CalculateRPTotals();
-                UpdateDebugLinkBackColor();
                 WaitCursor.Pop();
             }
             catch (System.Exception ex)
             {
                 Logger.Error(ex);
             }
+
 
         }
 
@@ -971,7 +1005,6 @@ namespace DAoCToolSuite.ChimpTool
                     }
                 }
                 SearchComboBox.Text = string.Empty;
-                UpdateDebugLinkBackColor();
                 WaitCursor.Pop();
             }
             catch (MaintenanceException)
@@ -983,8 +1016,9 @@ namespace DAoCToolSuite.ChimpTool
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
-
+            SearchButton.Enabled = false;
             AddNewCharacter();
+            SearchButton.Enabled = true;
 
         }
 
@@ -1029,7 +1063,9 @@ namespace DAoCToolSuite.ChimpTool
 
         private void AddAccountButton_Click(object sender, EventArgs e)
         {
+            AddAccountButton.Enabled = false;
             AddAccount();
+            AddAccountButton.Enabled = true;
         }
 
         private void AccountComboBox_CheckEnterKeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
@@ -1042,6 +1078,7 @@ namespace DAoCToolSuite.ChimpTool
 
         private void DeleteAccountButton_Click(object sender, EventArgs e)
         {
+            DeleteAccountButton.Enabled = false;
             int index = AccountComboBoxIndex;
             if (index < 1)
             {
@@ -1077,5 +1114,10 @@ namespace DAoCToolSuite.ChimpTool
             }
         }
         #endregion
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

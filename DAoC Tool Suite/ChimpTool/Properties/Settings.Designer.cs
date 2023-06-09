@@ -46,5 +46,29 @@ namespace DAoCToolSuite.ChimpTool.Properties {
                 this["LoadCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2001-01-01")]
+        public global::System.DateTime NextRefreshAll {
+            get {
+                return ((global::System.DateTime)(this["NextRefreshAll"]));
+            }
+            set {
+                this["NextRefreshAll"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2001-01-01")]
+        public global::System.DateTime NextRefresh {
+            get {
+                return ((global::System.DateTime)(this["NextRefresh"]));
+            }
+            set {
+                this["NextRefresh"] = value;
+            }
+        }
     }
 }

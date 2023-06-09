@@ -32,13 +32,8 @@
     <None Remove="App.config" />
     <None Remove="CharacterTool.Config" />
     <None Remove="Icons\CharacterTool.ico" />
-    <None Remove="Icons\ChimpTool.ico" />
-    <None Remove="Icons\ChimpTool.png" />
     <None Remove="Icons\DAoCTools.ico" />
     <None Remove="Icons\DAoCTools.png" />
-    <None Remove="Icons\DAoCToolsBW.ico" />
-    <None Remove="Icons\LogParser.ico" />
-    <None Remove="Icons\LogParser.png" />
     <None Remove="RealmClassConfig.json" />
     <None Remove="ServerConfig.json" />
   </ItemGroup>
@@ -56,28 +51,13 @@
     <Content Include="Icons\CharacterTool.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icons\ChimpTool.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\ChimpTool.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Icons\DAoCTools.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\DAoCTools.png">
-      <Pack>True</Pack>
       <PackagePath>\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\DAoCToolsBW.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\LogParser.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\LogParser.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>True</Pack>
     </Content>
   </ItemGroup>
 
