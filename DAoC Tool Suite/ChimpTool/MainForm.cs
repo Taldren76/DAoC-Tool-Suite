@@ -75,8 +75,8 @@ namespace DAoCToolSuite.ChimpTool
             SearchButton.Enabled = UseSelenium || UseAPI;
             SearchComboBox.Enabled = UseSelenium || UseAPI;
             Shown += new System.EventHandler(MainForm_Shown!);
-            Timer.Tick -= new EventHandler(MainForm_TimerHander);
-            Timer.Tick += new EventHandler(MainForm_TimerHander);
+            Timer.Tick -= new EventHandler(MainForm_TimerHandler);
+            Timer.Tick += new EventHandler(MainForm_TimerHandler);
             Timer.Interval = 1000;
             Timer.Start();
             RefreshAllTimer = DateTime.Now < Properties.Settings.Default.NextRefreshAll;
@@ -85,7 +85,7 @@ namespace DAoCToolSuite.ChimpTool
 
         private static bool RefreshAllTimer = false;
         private static bool RefreshTimer = false;
-        private void MainForm_TimerHander(object? sender, EventArgs e)
+        private void MainForm_TimerHandler(object? sender, EventArgs e)
         {
             #region Refresh All Button State
             if (RefreshAllTimer && DateTime.Now >= Properties.Settings.Default.NextRefreshAll)
@@ -171,7 +171,7 @@ namespace DAoCToolSuite.ChimpTool
             Logger.Debug($"Shutting down.");
             Timer.Stop();
             Shown -= new System.EventHandler(MainForm_Shown);
-            Timer.Tick -= new EventHandler(MainForm_TimerHander);
+            Timer.Tick -= new EventHandler(MainForm_TimerHandler);
 
             if (sender is not MainForm form)
             {
