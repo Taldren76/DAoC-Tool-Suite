@@ -37,6 +37,7 @@
             LogDatesComboBox = new ComboBox();
             ParseButton = new Button();
             label1 = new Label();
+            OverlayTransparentCheckBox = new CheckBox();
             FontColorPanel = new Panel();
             OverLayFontColorButton = new Button();
             label2 = new Label();
@@ -44,7 +45,7 @@
             LockOverlayButton = new Button();
             OverlayButton = new Button();
             colorDialog1 = new ColorDialog();
-            OverlayTransparentCheckBox = new CheckBox();
+            FilterPlayersOnlyCheckBox = new CheckBox();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -97,6 +98,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            splitContainer1.Panel2.Controls.Add(FilterPlayersOnlyCheckBox);
             splitContainer1.Panel2.Controls.Add(OverlayTransparentCheckBox);
             splitContainer1.Panel2.Controls.Add(FontColorPanel);
             splitContainer1.Panel2.Controls.Add(OverLayFontColorButton);
@@ -154,19 +156,30 @@
             label1.TabIndex = 3;
             label1.Text = "Start Location";
             // 
+            // OverlayTransparentCheckBox
+            // 
+            OverlayTransparentCheckBox.AutoSize = true;
+            OverlayTransparentCheckBox.Location = new Point(3, 138);
+            OverlayTransparentCheckBox.Name = "OverlayTransparentCheckBox";
+            OverlayTransparentCheckBox.Size = new Size(87, 19);
+            OverlayTransparentCheckBox.TabIndex = 6;
+            OverlayTransparentCheckBox.Text = "Transparent";
+            OverlayTransparentCheckBox.UseVisualStyleBackColor = true;
+            OverlayTransparentCheckBox.CheckedChanged += OverlayTransparentCheckBox_CheckedChanged;
+            // 
             // FontColorPanel
             // 
             FontColorPanel.BorderStyle = BorderStyle.FixedSingle;
-            FontColorPanel.Location = new Point(101, 179);
+            FontColorPanel.Location = new Point(96, 109);
             FontColorPanel.Name = "FontColorPanel";
             FontColorPanel.Size = new Size(23, 23);
             FontColorPanel.TabIndex = 5;
             // 
             // OverLayFontColorButton
             // 
-            OverLayFontColorButton.Location = new Point(20, 179);
+            OverLayFontColorButton.Location = new Point(3, 109);
             OverLayFontColorButton.Name = "OverLayFontColorButton";
-            OverLayFontColorButton.Size = new Size(75, 23);
+            OverLayFontColorButton.Size = new Size(87, 23);
             OverLayFontColorButton.TabIndex = 4;
             OverLayFontColorButton.Text = "Font Color";
             OverLayFontColorButton.UseVisualStyleBackColor = true;
@@ -175,7 +188,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(20, 114);
+            label2.Location = new Point(3, 62);
             label2.Name = "label2";
             label2.Size = new Size(91, 15);
             label2.TabIndex = 3;
@@ -183,17 +196,17 @@
             // 
             // OverLayOpacityControl
             // 
-            OverLayOpacityControl.Location = new Point(20, 132);
+            OverLayOpacityControl.Location = new Point(3, 80);
             OverLayOpacityControl.Name = "OverLayOpacityControl";
-            OverLayOpacityControl.Size = new Size(103, 23);
+            OverLayOpacityControl.Size = new Size(116, 23);
             OverLayOpacityControl.TabIndex = 2;
             OverLayOpacityControl.ValueChanged += OverLayOpacityControl_ValueChanged;
             // 
             // LockOverlayButton
             // 
-            LockOverlayButton.Location = new Point(20, 74);
+            LockOverlayButton.Location = new Point(3, 36);
             LockOverlayButton.Name = "LockOverlayButton";
-            LockOverlayButton.Size = new Size(103, 23);
+            LockOverlayButton.Size = new Size(116, 23);
             LockOverlayButton.TabIndex = 1;
             LockOverlayButton.Text = "Lock Overlay";
             LockOverlayButton.UseVisualStyleBackColor = true;
@@ -201,24 +214,24 @@
             // 
             // OverlayButton
             // 
-            OverlayButton.Location = new Point(20, 24);
+            OverlayButton.Location = new Point(3, 7);
             OverlayButton.Name = "OverlayButton";
-            OverlayButton.Size = new Size(103, 23);
+            OverlayButton.Size = new Size(116, 23);
             OverlayButton.TabIndex = 0;
             OverlayButton.Text = "Show Overlay";
             OverlayButton.UseVisualStyleBackColor = true;
             OverlayButton.Click += OverlayButton_Click;
             // 
-            // checkBox1
+            // FilterPlayersOnlyCheckBox
             // 
-            OverlayTransparentCheckBox.AutoSize = true;
-            OverlayTransparentCheckBox.Location = new Point(20, 218);
-            OverlayTransparentCheckBox.Name = "OverlayTransparentCheckBox";
-            OverlayTransparentCheckBox.Size = new Size(83, 19);
-            OverlayTransparentCheckBox.TabIndex = 6;
-            OverlayTransparentCheckBox.Text = "Overlay Transparent";
-            OverlayTransparentCheckBox.UseVisualStyleBackColor = true;
-            OverlayTransparentCheckBox.CheckedChanged += OverlayTransparentCheckBox_CheckedChanged;
+            FilterPlayersOnlyCheckBox.AutoSize = true;
+            FilterPlayersOnlyCheckBox.Location = new Point(3, 163);
+            FilterPlayersOnlyCheckBox.Name = "FilterPlayersOnlyCheckBox";
+            FilterPlayersOnlyCheckBox.Size = new Size(91, 19);
+            FilterPlayersOnlyCheckBox.TabIndex = 7;
+            FilterPlayersOnlyCheckBox.Text = "Players Only";
+            FilterPlayersOnlyCheckBox.UseVisualStyleBackColor = true;
+            FilterPlayersOnlyCheckBox.CheckedChanged += FilterPlayersOnlyCheckBox_CheckedChanged;
             // 
             // MainForm
             // 
@@ -227,6 +240,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(splitContainer1);
             Controls.Add(groupBox1);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
             Text = "LogTool v0.1.0";
@@ -260,5 +274,6 @@
         private ColorDialog colorDialog1;
         private Panel FontColorPanel;
         private CheckBox OverlayTransparentCheckBox;
+        private CheckBox FilterPlayersOnlyCheckBox;
     }
 }

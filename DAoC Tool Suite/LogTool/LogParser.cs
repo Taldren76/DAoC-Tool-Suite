@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace DAoCToolSuite.LogTool
 {
-    public class ParseLog
+    public class LogParser
     {
         #region Raw Data
         private int HealHit = 0;         // Number of individual Heals Done. AE counts as multiple Hits.
@@ -77,6 +77,7 @@ namespace DAoCToolSuite.LogTool
         #endregion
 
         private static readonly object ThisLock = new object();
+        private List<string> PlayersOnlyFilter { get; set; } = new();
         private int LogFileReadIndex { get; set; } = -1;
         private string LogPath { get; set; } = "chat.log";
         private List<string> RejectLineContent { get; set; } = new();
@@ -85,6 +86,34 @@ namespace DAoCToolSuite.LogTool
 
         public Dictionary<DateTime, int> LogOpenEntries = new();
         public Dictionary<DateTime, int> LogCloseEntries = new();
+
+        public void PopulatePlayersOnlyFilter()
+        {
+            List<string> playersOnlyFilter = new List<string>()
+            {
+                "You hit the",
+                "The"
+            };
+            PlayersOnlyFilter = playersOnlyFilter;
+        }
+
+        public void SetPlayersOnlyFilter(bool filter)
+        {
+            if(filter)
+            {
+                if (RejectLineContent.Contains(""))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (!RejectLineContent.Contains(""))
+                {
+                    return;
+                }
+            }
+        }
 
         /// <summary>
         /// Determines if the LogFile contains information that has not been parsed.
@@ -100,7 +129,7 @@ namespace DAoCToolSuite.LogTool
             return false;
         }
 
-        public ParseLog(string path)
+        public LogParser(string path)
         {
             LogPath = path;           
             PopulateRejectLineContentList();
@@ -109,7 +138,7 @@ namespace DAoCToolSuite.LogTool
             ParseLogClosed();
         }
 
-        public ParseLog(string path, int startIndex)
+        public LogParser(string path, int startIndex)
         {
             LogPath = path;
             LogFileReadIndex = startIndex;
@@ -193,38 +222,6 @@ namespace DAoCToolSuite.LogTool
             }
         }
 
-        //private void DontFuckThisUp()
-        //{
-        //    List<string> fullList = new();
-        //    FileAttributes attributes = File.GetAttributes(LogPath);
-        //    using (FileStream fs = new(LogPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        //    {
-        //        using StreamReader sr = new(fs);
-        //        while (!sr.EndOfStream)
-        //        {
-        //            var lineRead = sr.ReadLine();
-        //            if (lineRead is not null)
-        //                fullList.Add(lineRead);
-        //        }
-        //    }
-        //    File.SetAttributes(LogPath, attributes)
-        //    List<string> rejectList = new();
-        //    foreach (string line in fullList)
-        //    {
-        //        foreach (string reject in RejectLineContent)
-        //        {
-        //            string? delimitedLine = line.Split(']').Last().Trim();
-        //            if (string.IsNullOrEmpty(delimitedLine) || delimitedLine.Contains(reject) || line.Contains("@@"))
-        //            {
-        //                rejectList.Add(line);
-        //                break;
-        //            }
-        //        }
-        //    }
-        //    var filteredList = fullList.Except(rejectList).ToList();
-        //    FilteredLog = filteredList;
-        //}
-
         /// <summary>
         /// Returns the DateTime stamp that represents the last time the LogFile was modified.
         /// </summary>
@@ -241,9 +238,9 @@ namespace DAoCToolSuite.LogTool
         /// <summary>
         /// Parses the FilteredLog list and populates statistics.
         /// </summary>
-        public void ParseFile()
+        public void Parse()
         {
-            if (!HasUnparsedData())
+            if (!HasUnparsedData() || FilteredLog.Count == 0)
             {
                 return;
             }
