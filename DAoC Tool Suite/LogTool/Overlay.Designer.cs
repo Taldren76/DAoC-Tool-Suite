@@ -28,48 +28,48 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label13 = new Label();
+            DamageCritRateLabel = new Label();
             DamageCritRateTextBox = new TextBox();
-            label12 = new Label();
+            RealmPointsLabel = new Label();
             RealmPointsTextBox = new TextBox();
-            label11 = new Label();
+            TotalDamageDoneLabel = new Label();
             TotalDamageDoneTextBox = new TextBox();
-            label9 = new Label();
+            TotalHealingRecievedLabel = new Label();
             TotalHealingRecievedTextBox = new TextBox();
-            label10 = new Label();
+            TotalHealingDoneLabel = new Label();
             TotalHealingDoneTextBox = new TextBox();
-            label8 = new Label();
+            HealCritRateLabel = new Label();
             HealCritRateTextBox = new TextBox();
-            label6 = new Label();
+            CritHealRatioLabel = new Label();
             CritHealRatioTextBox = new TextBox();
-            label7 = new Label();
+            HealSelfRatioLabel = new Label();
             HealSelfRatioTextBox = new TextBox();
-            label5 = new Label();
+            AverageCritHealingDoneLabel = new Label();
             AverageCritHealingDoneTextBox = new TextBox();
-            label4 = new Label();
-            label3 = new Label();
-            label2 = new Label();
+            AverageHealingDoneLabel = new Label();
+            AverageCritDamageDoneLabel = new Label();
+            AverageDamageDoneLabel = new Label();
             AverageHealingDoneTextBox = new TextBox();
             AverageCritDamageDoneTextBox = new TextBox();
             AverageDamageDoneTextBox = new TextBox();
             MoveLabel = new Label();
             SuspendLayout();
             // 
-            // label13
+            // DamageCritRateLabel
             // 
-            label13.AutoSize = true;
-            label13.BackColor = Color.Black;
-            label13.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label13.ForeColor = Color.White;
-            label13.Location = new Point(327, 72);
-            label13.Name = "label13";
-            label13.Size = new Size(141, 14);
-            label13.TabIndex = 47;
-            label13.Text = "Total Damage Done:";
+            DamageCritRateLabel.AutoSize = true;
+            DamageCritRateLabel.BackColor = Color.DimGray;
+            DamageCritRateLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            DamageCritRateLabel.ForeColor = Color.White;
+            DamageCritRateLabel.Location = new Point(340, 72);
+            DamageCritRateLabel.Name = "DamageCritRateLabel";
+            DamageCritRateLabel.Size = new Size(128, 14);
+            DamageCritRateLabel.TabIndex = 47;
+            DamageCritRateLabel.Text = "Damage Crit Rate:";
             // 
             // DamageCritRateTextBox
             // 
-            DamageCritRateTextBox.BackColor = Color.Black;
+            DamageCritRateTextBox.BackColor = Color.DimGray;
             DamageCritRateTextBox.BorderStyle = BorderStyle.None;
             DamageCritRateTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             DamageCritRateTextBox.ForeColor = Color.White;
@@ -80,21 +80,21 @@
             DamageCritRateTextBox.TabIndex = 46;
             DamageCritRateTextBox.TabStop = false;
             // 
-            // label12
+            // RealmPointsLabel
             // 
-            label12.AutoSize = true;
-            label12.BackColor = Color.Black;
-            label12.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label12.ForeColor = Color.White;
-            label12.Location = new Point(370, 134);
-            label12.Name = "label12";
-            label12.Size = new Size(98, 14);
-            label12.TabIndex = 45;
-            label12.Text = "Realm Points:";
+            RealmPointsLabel.AutoSize = true;
+            RealmPointsLabel.BackColor = Color.DimGray;
+            RealmPointsLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            RealmPointsLabel.ForeColor = Color.White;
+            RealmPointsLabel.Location = new Point(370, 134);
+            RealmPointsLabel.Name = "RealmPointsLabel";
+            RealmPointsLabel.Size = new Size(98, 14);
+            RealmPointsLabel.TabIndex = 45;
+            RealmPointsLabel.Text = "Realm Points:";
             // 
             // RealmPointsTextBox
             // 
-            RealmPointsTextBox.BackColor = Color.Black;
+            RealmPointsTextBox.BackColor = Color.DimGray;
             RealmPointsTextBox.BorderStyle = BorderStyle.None;
             RealmPointsTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             RealmPointsTextBox.ForeColor = Color.White;
@@ -105,21 +105,21 @@
             RealmPointsTextBox.TabIndex = 44;
             RealmPointsTextBox.TabStop = false;
             // 
-            // label11
+            // TotalDamageDoneLabel
             // 
-            label11.AutoSize = true;
-            label11.BackColor = Color.Black;
-            label11.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label11.ForeColor = Color.White;
-            label11.Location = new Point(327, 51);
-            label11.Name = "label11";
-            label11.Size = new Size(141, 14);
-            label11.TabIndex = 43;
-            label11.Text = "Total Damage Done:";
+            TotalDamageDoneLabel.AutoSize = true;
+            TotalDamageDoneLabel.BackColor = Color.DimGray;
+            TotalDamageDoneLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            TotalDamageDoneLabel.ForeColor = Color.White;
+            TotalDamageDoneLabel.Location = new Point(327, 51);
+            TotalDamageDoneLabel.Name = "TotalDamageDoneLabel";
+            TotalDamageDoneLabel.Size = new Size(141, 14);
+            TotalDamageDoneLabel.TabIndex = 43;
+            TotalDamageDoneLabel.Text = "Total Damage Done:";
             // 
             // TotalDamageDoneTextBox
             // 
-            TotalDamageDoneTextBox.BackColor = Color.Black;
+            TotalDamageDoneTextBox.BackColor = Color.DimGray;
             TotalDamageDoneTextBox.BorderStyle = BorderStyle.None;
             TotalDamageDoneTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             TotalDamageDoneTextBox.ForeColor = Color.White;
@@ -130,21 +130,21 @@
             TotalDamageDoneTextBox.TabIndex = 42;
             TotalDamageDoneTextBox.TabStop = false;
             // 
-            // label9
+            // TotalHealingRecievedLabel
             // 
-            label9.AutoSize = true;
-            label9.BackColor = Color.Black;
-            label9.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label9.ForeColor = Color.White;
-            label9.Location = new Point(5, 135);
-            label9.Name = "label9";
-            label9.Size = new Size(163, 14);
-            label9.TabIndex = 41;
-            label9.Text = "Total Healing Recieved:";
+            TotalHealingRecievedLabel.AutoSize = true;
+            TotalHealingRecievedLabel.BackColor = Color.DimGray;
+            TotalHealingRecievedLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            TotalHealingRecievedLabel.ForeColor = Color.White;
+            TotalHealingRecievedLabel.Location = new Point(5, 135);
+            TotalHealingRecievedLabel.Name = "TotalHealingRecievedLabel";
+            TotalHealingRecievedLabel.Size = new Size(163, 14);
+            TotalHealingRecievedLabel.TabIndex = 41;
+            TotalHealingRecievedLabel.Text = "Total Healing Recieved:";
             // 
             // TotalHealingRecievedTextBox
             // 
-            TotalHealingRecievedTextBox.BackColor = Color.Black;
+            TotalHealingRecievedTextBox.BackColor = Color.DimGray;
             TotalHealingRecievedTextBox.BorderStyle = BorderStyle.None;
             TotalHealingRecievedTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             TotalHealingRecievedTextBox.ForeColor = Color.White;
@@ -155,21 +155,21 @@
             TotalHealingRecievedTextBox.TabIndex = 40;
             TotalHealingRecievedTextBox.TabStop = false;
             // 
-            // label10
+            // TotalHealingDoneLabel
             // 
-            label10.AutoSize = true;
-            label10.BackColor = Color.Black;
-            label10.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label10.ForeColor = Color.White;
-            label10.Location = new Point(31, 114);
-            label10.Name = "label10";
-            label10.Size = new Size(137, 14);
-            label10.TabIndex = 39;
-            label10.Text = "Total Healing Done:";
+            TotalHealingDoneLabel.AutoSize = true;
+            TotalHealingDoneLabel.BackColor = Color.DimGray;
+            TotalHealingDoneLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            TotalHealingDoneLabel.ForeColor = Color.White;
+            TotalHealingDoneLabel.Location = new Point(31, 114);
+            TotalHealingDoneLabel.Name = "TotalHealingDoneLabel";
+            TotalHealingDoneLabel.Size = new Size(137, 14);
+            TotalHealingDoneLabel.TabIndex = 39;
+            TotalHealingDoneLabel.Text = "Total Healing Done:";
             // 
             // TotalHealingDoneTextBox
             // 
-            TotalHealingDoneTextBox.BackColor = Color.Black;
+            TotalHealingDoneTextBox.BackColor = Color.DimGray;
             TotalHealingDoneTextBox.BorderStyle = BorderStyle.None;
             TotalHealingDoneTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             TotalHealingDoneTextBox.ForeColor = Color.White;
@@ -180,21 +180,21 @@
             TotalHealingDoneTextBox.TabIndex = 38;
             TotalHealingDoneTextBox.TabStop = false;
             // 
-            // label8
+            // HealCritRateLabel
             // 
-            label8.AutoSize = true;
-            label8.BackColor = Color.Black;
-            label8.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label8.ForeColor = Color.White;
-            label8.Location = new Point(61, 51);
-            label8.Name = "label8";
-            label8.Size = new Size(108, 14);
-            label8.TabIndex = 37;
-            label8.Text = "Crit Heal Ratio:";
+            HealCritRateLabel.AutoSize = true;
+            HealCritRateLabel.BackColor = Color.DimGray;
+            HealCritRateLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            HealCritRateLabel.ForeColor = Color.White;
+            HealCritRateLabel.Location = new Point(64, 72);
+            HealCritRateLabel.Name = "HealCritRateLabel";
+            HealCritRateLabel.Size = new Size(104, 14);
+            HealCritRateLabel.TabIndex = 33;
+            HealCritRateLabel.Text = "Heal Crit Rate:";
             // 
             // HealCritRateTextBox
             // 
-            HealCritRateTextBox.BackColor = Color.Black;
+            HealCritRateTextBox.BackColor = Color.DimGray;
             HealCritRateTextBox.BorderStyle = BorderStyle.None;
             HealCritRateTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             HealCritRateTextBox.ForeColor = Color.White;
@@ -205,21 +205,21 @@
             HealCritRateTextBox.TabIndex = 36;
             HealCritRateTextBox.TabStop = false;
             // 
-            // label6
+            // CritHealRatioLabel
             // 
-            label6.AutoSize = true;
-            label6.BackColor = Color.Black;
-            label6.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label6.ForeColor = Color.White;
-            label6.Location = new Point(58, 93);
-            label6.Name = "label6";
-            label6.Size = new Size(110, 14);
-            label6.TabIndex = 35;
-            label6.Text = "Self Heal Ratio:";
+            CritHealRatioLabel.AutoSize = true;
+            CritHealRatioLabel.BackColor = Color.DimGray;
+            CritHealRatioLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            CritHealRatioLabel.ForeColor = Color.White;
+            CritHealRatioLabel.Location = new Point(61, 51);
+            CritHealRatioLabel.Name = "CritHealRatioLabel";
+            CritHealRatioLabel.Size = new Size(108, 14);
+            CritHealRatioLabel.TabIndex = 37;
+            CritHealRatioLabel.Text = "Crit Heal Ratio:";
             // 
             // CritHealRatioTextBox
             // 
-            CritHealRatioTextBox.BackColor = Color.Black;
+            CritHealRatioTextBox.BackColor = Color.DimGray;
             CritHealRatioTextBox.BorderStyle = BorderStyle.None;
             CritHealRatioTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             CritHealRatioTextBox.ForeColor = Color.White;
@@ -230,21 +230,21 @@
             CritHealRatioTextBox.TabIndex = 34;
             CritHealRatioTextBox.TabStop = false;
             // 
-            // label7
+            // HealSelfRatioLabel
             // 
-            label7.AutoSize = true;
-            label7.BackColor = Color.Black;
-            label7.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label7.ForeColor = Color.White;
-            label7.Location = new Point(64, 72);
-            label7.Name = "label7";
-            label7.Size = new Size(104, 14);
-            label7.TabIndex = 33;
-            label7.Text = "Heal Crit Rate:";
+            HealSelfRatioLabel.AutoSize = true;
+            HealSelfRatioLabel.BackColor = Color.DimGray;
+            HealSelfRatioLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            HealSelfRatioLabel.ForeColor = Color.White;
+            HealSelfRatioLabel.Location = new Point(58, 93);
+            HealSelfRatioLabel.Name = "HealSelfRatioLabel";
+            HealSelfRatioLabel.Size = new Size(110, 14);
+            HealSelfRatioLabel.TabIndex = 35;
+            HealSelfRatioLabel.Text = "Self Heal Ratio:";
             // 
             // HealSelfRatioTextBox
             // 
-            HealSelfRatioTextBox.BackColor = Color.Black;
+            HealSelfRatioTextBox.BackColor = Color.DimGray;
             HealSelfRatioTextBox.BorderStyle = BorderStyle.None;
             HealSelfRatioTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             HealSelfRatioTextBox.ForeColor = Color.White;
@@ -255,21 +255,21 @@
             HealSelfRatioTextBox.TabIndex = 32;
             HealSelfRatioTextBox.TabStop = false;
             // 
-            // label5
+            // AverageCritHealingDoneLabel
             // 
-            label5.AutoSize = true;
-            label5.BackColor = Color.Black;
-            label5.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label5.ForeColor = Color.White;
-            label5.Location = new Point(39, 30);
-            label5.Name = "label5";
-            label5.Size = new Size(129, 14);
-            label5.TabIndex = 31;
-            label5.Text = "Average Crit Heal:";
+            AverageCritHealingDoneLabel.AutoSize = true;
+            AverageCritHealingDoneLabel.BackColor = Color.DimGray;
+            AverageCritHealingDoneLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            AverageCritHealingDoneLabel.ForeColor = Color.White;
+            AverageCritHealingDoneLabel.Location = new Point(39, 30);
+            AverageCritHealingDoneLabel.Name = "AverageCritHealingDoneLabel";
+            AverageCritHealingDoneLabel.Size = new Size(129, 14);
+            AverageCritHealingDoneLabel.TabIndex = 31;
+            AverageCritHealingDoneLabel.Text = "Average Crit Heal:";
             // 
             // AverageCritHealingDoneTextBox
             // 
-            AverageCritHealingDoneTextBox.BackColor = Color.Black;
+            AverageCritHealingDoneTextBox.BackColor = Color.DimGray;
             AverageCritHealingDoneTextBox.BorderStyle = BorderStyle.None;
             AverageCritHealingDoneTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             AverageCritHealingDoneTextBox.ForeColor = Color.White;
@@ -280,45 +280,45 @@
             AverageCritHealingDoneTextBox.TabIndex = 30;
             AverageCritHealingDoneTextBox.TabStop = false;
             // 
-            // label4
+            // AverageHealingDoneLabel
             // 
-            label4.AutoSize = true;
-            label4.BackColor = Color.Black;
-            label4.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label4.ForeColor = Color.White;
-            label4.Location = new Point(67, 9);
-            label4.Name = "label4";
-            label4.Size = new Size(101, 14);
-            label4.TabIndex = 29;
-            label4.Text = "Average Heal:";
+            AverageHealingDoneLabel.AutoSize = true;
+            AverageHealingDoneLabel.BackColor = Color.DimGray;
+            AverageHealingDoneLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            AverageHealingDoneLabel.ForeColor = Color.White;
+            AverageHealingDoneLabel.Location = new Point(67, 9);
+            AverageHealingDoneLabel.Name = "AverageHealingDoneLabel";
+            AverageHealingDoneLabel.Size = new Size(101, 14);
+            AverageHealingDoneLabel.TabIndex = 29;
+            AverageHealingDoneLabel.Text = "Average Heal:";
             // 
-            // label3
+            // AverageCritDamageDoneLabel
             // 
-            label3.AutoSize = true;
-            label3.BackColor = Color.Black;
-            label3.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label3.ForeColor = Color.White;
-            label3.Location = new Point(315, 30);
-            label3.Name = "label3";
-            label3.Size = new Size(153, 14);
-            label3.TabIndex = 28;
-            label3.Text = "Average Crit Damage:";
+            AverageCritDamageDoneLabel.AutoSize = true;
+            AverageCritDamageDoneLabel.BackColor = Color.DimGray;
+            AverageCritDamageDoneLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            AverageCritDamageDoneLabel.ForeColor = Color.White;
+            AverageCritDamageDoneLabel.Location = new Point(315, 30);
+            AverageCritDamageDoneLabel.Name = "AverageCritDamageDoneLabel";
+            AverageCritDamageDoneLabel.Size = new Size(153, 14);
+            AverageCritDamageDoneLabel.TabIndex = 28;
+            AverageCritDamageDoneLabel.Text = "Average Crit Damage:";
             // 
-            // label2
+            // AverageDamageDoneLabel
             // 
-            label2.AutoSize = true;
-            label2.BackColor = Color.Black;
-            label2.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.ForeColor = Color.White;
-            label2.Location = new Point(343, 9);
-            label2.Name = "label2";
-            label2.Size = new Size(125, 14);
-            label2.TabIndex = 27;
-            label2.Text = "Average Damage:";
+            AverageDamageDoneLabel.AutoSize = true;
+            AverageDamageDoneLabel.BackColor = Color.DimGray;
+            AverageDamageDoneLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            AverageDamageDoneLabel.ForeColor = Color.White;
+            AverageDamageDoneLabel.Location = new Point(343, 9);
+            AverageDamageDoneLabel.Name = "AverageDamageDoneLabel";
+            AverageDamageDoneLabel.Size = new Size(125, 14);
+            AverageDamageDoneLabel.TabIndex = 27;
+            AverageDamageDoneLabel.Text = "Average Damage:";
             // 
             // AverageHealingDoneTextBox
             // 
-            AverageHealingDoneTextBox.BackColor = Color.Black;
+            AverageHealingDoneTextBox.BackColor = Color.DimGray;
             AverageHealingDoneTextBox.BorderStyle = BorderStyle.None;
             AverageHealingDoneTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             AverageHealingDoneTextBox.ForeColor = Color.White;
@@ -331,7 +331,7 @@
             // 
             // AverageCritDamageDoneTextBox
             // 
-            AverageCritDamageDoneTextBox.BackColor = Color.Black;
+            AverageCritDamageDoneTextBox.BackColor = Color.DimGray;
             AverageCritDamageDoneTextBox.BorderStyle = BorderStyle.None;
             AverageCritDamageDoneTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             AverageCritDamageDoneTextBox.ForeColor = Color.White;
@@ -344,7 +344,7 @@
             // 
             // AverageDamageDoneTextBox
             // 
-            AverageDamageDoneTextBox.BackColor = Color.Black;
+            AverageDamageDoneTextBox.BackColor = Color.DimGray;
             AverageDamageDoneTextBox.BorderStyle = BorderStyle.None;
             AverageDamageDoneTextBox.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             AverageDamageDoneTextBox.ForeColor = Color.White;
@@ -357,7 +357,7 @@
             // 
             // MoveLabel
             // 
-            MoveLabel.BackColor = Color.LightGray;
+            MoveLabel.BackColor = Color.Gray;
             MoveLabel.Font = new Font("Verdana", 12F, FontStyle.Bold, GraphicsUnit.Point);
             MoveLabel.ForeColor = Color.Black;
             MoveLabel.Location = new Point(2, 1);
@@ -372,67 +372,66 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Black;
+            BackColor = Color.DimGray;
             ClientSize = new Size(598, 160);
             Controls.Add(MoveLabel);
-            Controls.Add(label13);
+            Controls.Add(DamageCritRateLabel);
             Controls.Add(DamageCritRateTextBox);
-            Controls.Add(label12);
+            Controls.Add(RealmPointsLabel);
             Controls.Add(RealmPointsTextBox);
-            Controls.Add(label11);
+            Controls.Add(TotalDamageDoneLabel);
             Controls.Add(TotalDamageDoneTextBox);
-            Controls.Add(label9);
+            Controls.Add(TotalHealingRecievedLabel);
             Controls.Add(TotalHealingRecievedTextBox);
-            Controls.Add(label10);
+            Controls.Add(TotalHealingDoneLabel);
             Controls.Add(TotalHealingDoneTextBox);
-            Controls.Add(label8);
             Controls.Add(HealCritRateTextBox);
-            Controls.Add(label6);
+            Controls.Add(HealCritRateLabel);
+            Controls.Add(CritHealRatioLabel);
             Controls.Add(CritHealRatioTextBox);
-            Controls.Add(label7);
+            Controls.Add(HealSelfRatioLabel);
             Controls.Add(HealSelfRatioTextBox);
-            Controls.Add(label5);
+            Controls.Add(AverageCritHealingDoneLabel);
             Controls.Add(AverageCritHealingDoneTextBox);
-            Controls.Add(label4);
-            Controls.Add(label3);
-            Controls.Add(label2);
+            Controls.Add(AverageHealingDoneLabel);
+            Controls.Add(AverageCritDamageDoneLabel);
+            Controls.Add(AverageDamageDoneLabel);
             Controls.Add(AverageHealingDoneTextBox);
             Controls.Add(AverageCritDamageDoneTextBox);
             Controls.Add(AverageDamageDoneTextBox);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.None;
             Name = "Overlay";
-            Opacity = 0.6D;
             Text = "Overlay";
             TopMost = true;
-            TransparencyKey = Color.Black;
+            TransparencyKey = Color.DimGray;
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Label label13;
+        public Label DamageCritRateLabel;
         public TextBox DamageCritRateTextBox;
-        private Label label12;
+        public Label RealmPointsLabel;
         public TextBox RealmPointsTextBox;
-        private Label label11;
+        public Label TotalDamageDoneLabel;
         public TextBox TotalDamageDoneTextBox;
-        private Label label9;
+        public Label TotalHealingRecievedLabel;
         public TextBox TotalHealingRecievedTextBox;
-        private Label label10;
+        public Label TotalHealingDoneLabel;
         public TextBox TotalHealingDoneTextBox;
-        private Label label8;
+        public Label CritHealRatioLabel;
         public TextBox HealCritRateTextBox;
-        private Label label6;
+        public Label HealCritRateLabel;
         public TextBox CritHealRatioTextBox;
-        private Label label7;
+        public Label HealSelfRatioLabel;
         public TextBox HealSelfRatioTextBox;
-        private Label label5;
+        public Label AverageCritHealingDoneLabel;
         public TextBox AverageCritHealingDoneTextBox;
-        private Label label4;
-        private Label label3;
-        private Label label2;
+        public Label AverageHealingDoneLabel;
+        public Label AverageCritDamageDoneLabel;
+        public Label AverageDamageDoneLabel;
         public TextBox AverageHealingDoneTextBox;
         public TextBox AverageCritDamageDoneTextBox;
         public TextBox AverageDamageDoneTextBox;

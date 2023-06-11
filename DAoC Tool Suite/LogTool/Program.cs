@@ -23,6 +23,7 @@ namespace DAoCToolSuite.LogTool
                 try
                 {
                     ApplicationConfiguration.Initialize();
+                    Application.SetCompatibleTextRenderingDefault(false);
                     Application.Run(new MainForm());
                     mtex.ReleaseMutex();
                 }

@@ -37,13 +37,20 @@
             LogDatesComboBox = new ComboBox();
             ParseButton = new Button();
             label1 = new Label();
-            OverlayButton = new Button();
+            FontColorPanel = new Panel();
+            OverLayFontColorButton = new Button();
+            label2 = new Label();
+            OverLayOpacityControl = new NumericUpDown();
             LockOverlayButton = new Button();
+            OverlayButton = new Button();
+            colorDialog1 = new ColorDialog();
+            OverlayTransparentCheckBox = new CheckBox();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)OverLayOpacityControl).BeginInit();
             SuspendLayout();
             // 
             // BrowseButton
@@ -90,6 +97,11 @@
             // 
             // splitContainer1.Panel2
             // 
+            splitContainer1.Panel2.Controls.Add(OverlayTransparentCheckBox);
+            splitContainer1.Panel2.Controls.Add(FontColorPanel);
+            splitContainer1.Panel2.Controls.Add(OverLayFontColorButton);
+            splitContainer1.Panel2.Controls.Add(label2);
+            splitContainer1.Panel2.Controls.Add(OverLayOpacityControl);
             splitContainer1.Panel2.Controls.Add(LockOverlayButton);
             splitContainer1.Panel2.Controls.Add(OverlayButton);
             splitContainer1.Size = new Size(776, 360);
@@ -142,15 +154,40 @@
             label1.TabIndex = 3;
             label1.Text = "Start Location";
             // 
-            // OverlayButton
+            // FontColorPanel
             // 
-            OverlayButton.Location = new Point(20, 24);
-            OverlayButton.Name = "OverlayButton";
-            OverlayButton.Size = new Size(103, 23);
-            OverlayButton.TabIndex = 0;
-            OverlayButton.Text = "Show Overlay";
-            OverlayButton.UseVisualStyleBackColor = true;
-            OverlayButton.Click += OverlayButton_Click;
+            FontColorPanel.BorderStyle = BorderStyle.FixedSingle;
+            FontColorPanel.Location = new Point(101, 179);
+            FontColorPanel.Name = "FontColorPanel";
+            FontColorPanel.Size = new Size(23, 23);
+            FontColorPanel.TabIndex = 5;
+            // 
+            // OverLayFontColorButton
+            // 
+            OverLayFontColorButton.Location = new Point(20, 179);
+            OverLayFontColorButton.Name = "OverLayFontColorButton";
+            OverLayFontColorButton.Size = new Size(75, 23);
+            OverLayFontColorButton.TabIndex = 4;
+            OverLayFontColorButton.Text = "Font Color";
+            OverLayFontColorButton.UseVisualStyleBackColor = true;
+            OverLayFontColorButton.Click += button1_Click;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(20, 114);
+            label2.Name = "label2";
+            label2.Size = new Size(91, 15);
+            label2.TabIndex = 3;
+            label2.Text = "Overlay Opacity";
+            // 
+            // OverLayOpacityControl
+            // 
+            OverLayOpacityControl.Location = new Point(20, 132);
+            OverLayOpacityControl.Name = "OverLayOpacityControl";
+            OverLayOpacityControl.Size = new Size(103, 23);
+            OverLayOpacityControl.TabIndex = 2;
+            OverLayOpacityControl.ValueChanged += OverLayOpacityControl_ValueChanged;
             // 
             // LockOverlayButton
             // 
@@ -161,6 +198,27 @@
             LockOverlayButton.Text = "Lock Overlay";
             LockOverlayButton.UseVisualStyleBackColor = true;
             LockOverlayButton.Click += LockOverlayButton_Click;
+            // 
+            // OverlayButton
+            // 
+            OverlayButton.Location = new Point(20, 24);
+            OverlayButton.Name = "OverlayButton";
+            OverlayButton.Size = new Size(103, 23);
+            OverlayButton.TabIndex = 0;
+            OverlayButton.Text = "Show Overlay";
+            OverlayButton.UseVisualStyleBackColor = true;
+            OverlayButton.Click += OverlayButton_Click;
+            // 
+            // checkBox1
+            // 
+            OverlayTransparentCheckBox.AutoSize = true;
+            OverlayTransparentCheckBox.Location = new Point(20, 218);
+            OverlayTransparentCheckBox.Name = "OverlayTransparentCheckBox";
+            OverlayTransparentCheckBox.Size = new Size(83, 19);
+            OverlayTransparentCheckBox.TabIndex = 6;
+            OverlayTransparentCheckBox.Text = "Overlay Transparent";
+            OverlayTransparentCheckBox.UseVisualStyleBackColor = true;
+            OverlayTransparentCheckBox.CheckedChanged += OverlayTransparentCheckBox_CheckedChanged;
             // 
             // MainForm
             // 
@@ -177,8 +235,10 @@
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
+            splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)OverLayOpacityControl).EndInit();
             ResumeLayout(false);
         }
 
@@ -194,5 +254,11 @@
         private Button ResetButton;
         private Button OverlayButton;
         private Button LockOverlayButton;
+        private Label label2;
+        private NumericUpDown OverLayOpacityControl;
+        private Button OverLayFontColorButton;
+        private ColorDialog colorDialog1;
+        private Panel FontColorPanel;
+        private CheckBox OverlayTransparentCheckBox;
     }
 }
