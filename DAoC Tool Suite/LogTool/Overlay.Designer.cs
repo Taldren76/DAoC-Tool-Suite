@@ -29,30 +29,31 @@
         private void InitializeComponent()
         {
             DamageCritRateLabel = new Label();
-            DamageCritRateTextBox = new TextBox();
+            DamageCritRateTextBox = new Label();
             RealmPointsLabel = new Label();
-            RealmPointsTextBox = new TextBox();
+            RealmPointsTextBox = new Label();
             TotalDamageDoneLabel = new Label();
-            TotalDamageDoneTextBox = new TextBox();
+            TotalDamageDoneTextBox = new Label();
             TotalHealingRecievedLabel = new Label();
-            TotalHealingRecievedTextBox = new TextBox();
+            TotalHealingRecievedTextBox = new Label();
             TotalHealingDoneLabel = new Label();
-            TotalHealingDoneTextBox = new TextBox();
+            TotalHealingDoneTextBox = new Label();
             HealCritRateLabel = new Label();
-            HealCritRateTextBox = new TextBox();
+            HealCritRateTextBox = new Label();
             CritHealRatioLabel = new Label();
-            CritHealRatioTextBox = new TextBox();
+            CritHealRatioTextBox = new Label();
             HealSelfRatioLabel = new Label();
-            HealSelfRatioTextBox = new TextBox();
+            HealSelfRatioTextBox = new Label();
             AverageCritHealingDoneLabel = new Label();
-            AverageCritHealingDoneTextBox = new TextBox();
+            AverageCritHealingDoneTextBox = new Label();
             AverageHealingDoneLabel = new Label();
             AverageCritDamageDoneLabel = new Label();
             AverageDamageDoneLabel = new Label();
-            AverageHealingDoneTextBox = new TextBox();
-            AverageCritDamageDoneTextBox = new TextBox();
-            AverageDamageDoneTextBox = new TextBox();
+            AverageHealingDoneTextBox = new Label();
+            AverageCritDamageDoneTextBox = new Label();
+            AverageDamageDoneTextBox = new Label();
             MoveLabel = new Label();
+            TestValueLabel = new Label();
             SuspendLayout();
             // 
             // DamageCritRateLabel
@@ -75,7 +76,7 @@
             DamageCritRateTextBox.ForeColor = Color.White;
             DamageCritRateTextBox.Location = new Point(474, 72);
             DamageCritRateTextBox.Name = "DamageCritRateTextBox";
-            DamageCritRateTextBox.ReadOnly = true;
+            DamageCritRateTextBox.AutoSize = true;
             DamageCritRateTextBox.Size = new Size(100, 15);
             DamageCritRateTextBox.TabIndex = 46;
             DamageCritRateTextBox.TabStop = false;
@@ -100,7 +101,7 @@
             RealmPointsTextBox.ForeColor = Color.White;
             RealmPointsTextBox.Location = new Point(474, 134);
             RealmPointsTextBox.Name = "RealmPointsTextBox";
-            RealmPointsTextBox.ReadOnly = true;
+            RealmPointsTextBox.AutoSize = true;
             RealmPointsTextBox.Size = new Size(100, 15);
             RealmPointsTextBox.TabIndex = 44;
             RealmPointsTextBox.TabStop = false;
@@ -125,7 +126,7 @@
             TotalDamageDoneTextBox.ForeColor = Color.White;
             TotalDamageDoneTextBox.Location = new Point(474, 51);
             TotalDamageDoneTextBox.Name = "TotalDamageDoneTextBox";
-            TotalDamageDoneTextBox.ReadOnly = true;
+            TotalDamageDoneTextBox.AutoSize = true;
             TotalDamageDoneTextBox.Size = new Size(100, 15);
             TotalDamageDoneTextBox.TabIndex = 42;
             TotalDamageDoneTextBox.TabStop = false;
@@ -150,7 +151,7 @@
             TotalHealingRecievedTextBox.ForeColor = Color.White;
             TotalHealingRecievedTextBox.Location = new Point(174, 135);
             TotalHealingRecievedTextBox.Name = "TotalHealingRecievedTextBox";
-            TotalHealingRecievedTextBox.ReadOnly = true;
+            TotalHealingRecievedTextBox.AutoSize = true;
             TotalHealingRecievedTextBox.Size = new Size(100, 15);
             TotalHealingRecievedTextBox.TabIndex = 40;
             TotalHealingRecievedTextBox.TabStop = false;
@@ -175,7 +176,7 @@
             TotalHealingDoneTextBox.ForeColor = Color.White;
             TotalHealingDoneTextBox.Location = new Point(174, 114);
             TotalHealingDoneTextBox.Name = "TotalHealingDoneTextBox";
-            TotalHealingDoneTextBox.ReadOnly = true;
+            TotalHealingDoneTextBox.AutoSize = true;
             TotalHealingDoneTextBox.Size = new Size(100, 15);
             TotalHealingDoneTextBox.TabIndex = 38;
             TotalHealingDoneTextBox.TabStop = false;
@@ -200,7 +201,7 @@
             HealCritRateTextBox.ForeColor = Color.White;
             HealCritRateTextBox.Location = new Point(174, 72);
             HealCritRateTextBox.Name = "HealCritRateTextBox";
-            HealCritRateTextBox.ReadOnly = true;
+            HealCritRateTextBox.AutoSize = true;
             HealCritRateTextBox.Size = new Size(100, 15);
             HealCritRateTextBox.TabIndex = 36;
             HealCritRateTextBox.TabStop = false;
@@ -225,7 +226,7 @@
             CritHealRatioTextBox.ForeColor = Color.White;
             CritHealRatioTextBox.Location = new Point(174, 51);
             CritHealRatioTextBox.Name = "CritHealRatioTextBox";
-            CritHealRatioTextBox.ReadOnly = true;
+            CritHealRatioTextBox.AutoSize = true;
             CritHealRatioTextBox.Size = new Size(100, 15);
             CritHealRatioTextBox.TabIndex = 34;
             CritHealRatioTextBox.TabStop = false;
@@ -250,7 +251,7 @@
             HealSelfRatioTextBox.ForeColor = Color.White;
             HealSelfRatioTextBox.Location = new Point(174, 93);
             HealSelfRatioTextBox.Name = "HealSelfRatioTextBox";
-            HealSelfRatioTextBox.ReadOnly = true;
+            HealSelfRatioTextBox.AutoSize = true;
             HealSelfRatioTextBox.Size = new Size(100, 15);
             HealSelfRatioTextBox.TabIndex = 32;
             HealSelfRatioTextBox.TabStop = false;
@@ -275,7 +276,7 @@
             AverageCritHealingDoneTextBox.ForeColor = Color.White;
             AverageCritHealingDoneTextBox.Location = new Point(174, 30);
             AverageCritHealingDoneTextBox.Name = "AverageCritHealingDoneTextBox";
-            AverageCritHealingDoneTextBox.ReadOnly = true;
+            AverageCritHealingDoneTextBox.AutoSize = true;
             AverageCritHealingDoneTextBox.Size = new Size(100, 15);
             AverageCritHealingDoneTextBox.TabIndex = 30;
             AverageCritHealingDoneTextBox.TabStop = false;
@@ -324,7 +325,7 @@
             AverageHealingDoneTextBox.ForeColor = Color.White;
             AverageHealingDoneTextBox.Location = new Point(174, 9);
             AverageHealingDoneTextBox.Name = "AverageHealingDoneTextBox";
-            AverageHealingDoneTextBox.ReadOnly = true;
+            AverageHealingDoneTextBox.AutoSize = true;
             AverageHealingDoneTextBox.Size = new Size(100, 15);
             AverageHealingDoneTextBox.TabIndex = 26;
             AverageHealingDoneTextBox.TabStop = false;
@@ -337,7 +338,7 @@
             AverageCritDamageDoneTextBox.ForeColor = Color.White;
             AverageCritDamageDoneTextBox.Location = new Point(474, 30);
             AverageCritDamageDoneTextBox.Name = "AverageCritDamageDoneTextBox";
-            AverageCritDamageDoneTextBox.ReadOnly = true;
+            AverageCritDamageDoneTextBox.AutoSize = true;
             AverageCritDamageDoneTextBox.Size = new Size(100, 15);
             AverageCritDamageDoneTextBox.TabIndex = 25;
             AverageCritDamageDoneTextBox.TabStop = false;
@@ -350,7 +351,7 @@
             AverageDamageDoneTextBox.ForeColor = Color.White;
             AverageDamageDoneTextBox.Location = new Point(474, 9);
             AverageDamageDoneTextBox.Name = "AverageDamageDoneTextBox";
-            AverageDamageDoneTextBox.ReadOnly = true;
+            AverageDamageDoneTextBox.AutoSize = true;
             AverageDamageDoneTextBox.Size = new Size(100, 15);
             AverageDamageDoneTextBox.TabIndex = 24;
             AverageDamageDoneTextBox.TabStop = false;
@@ -368,12 +369,23 @@
             MoveLabel.TextAlign = ContentAlignment.MiddleCenter;
             MoveLabel.Click += MoveLabel_Click;
             // 
+            // TestValueLabel
+            // 
+            TestValueLabel.AutoSize = true;
+            TestValueLabel.BackColor = Color.DimGray;
+            TestValueLabel.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            TestValueLabel.Location = new Point(481, 109);
+            TestValueLabel.Name = "TestValueLabel";
+            TestValueLabel.Size = new Size(0, 14);
+            TestValueLabel.TabIndex = 49;
+            // 
             // Overlay
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DimGray;
             ClientSize = new Size(598, 160);
+            Controls.Add(TestValueLabel);
             Controls.Add(MoveLabel);
             Controls.Add(DamageCritRateLabel);
             Controls.Add(DamageCritRateTextBox);
@@ -412,29 +424,30 @@
         #endregion
 
         public Label DamageCritRateLabel;
-        public TextBox DamageCritRateTextBox;
+        public Label DamageCritRateTextBox;
         public Label RealmPointsLabel;
-        public TextBox RealmPointsTextBox;
+        public Label RealmPointsTextBox;
         public Label TotalDamageDoneLabel;
-        public TextBox TotalDamageDoneTextBox;
+        public Label TotalDamageDoneTextBox;
         public Label TotalHealingRecievedLabel;
-        public TextBox TotalHealingRecievedTextBox;
+        public Label TotalHealingRecievedTextBox;
         public Label TotalHealingDoneLabel;
-        public TextBox TotalHealingDoneTextBox;
+        public Label TotalHealingDoneTextBox;
         public Label CritHealRatioLabel;
-        public TextBox HealCritRateTextBox;
+        public Label HealCritRateTextBox;
         public Label HealCritRateLabel;
-        public TextBox CritHealRatioTextBox;
+        public Label CritHealRatioTextBox;
         public Label HealSelfRatioLabel;
-        public TextBox HealSelfRatioTextBox;
+        public Label HealSelfRatioTextBox;
         public Label AverageCritHealingDoneLabel;
-        public TextBox AverageCritHealingDoneTextBox;
+        public Label AverageCritHealingDoneTextBox;
         public Label AverageHealingDoneLabel;
         public Label AverageCritDamageDoneLabel;
         public Label AverageDamageDoneLabel;
-        public TextBox AverageHealingDoneTextBox;
-        public TextBox AverageCritDamageDoneTextBox;
-        public TextBox AverageDamageDoneTextBox;
+        public Label AverageHealingDoneTextBox;
+        public Label AverageCritDamageDoneTextBox;
+        public Label AverageDamageDoneTextBox;
         public Label MoveLabel;
+        public Label TestValueLabel;
     }
 }
