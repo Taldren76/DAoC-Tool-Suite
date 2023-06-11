@@ -235,6 +235,20 @@ namespace DAoCToolSuite.LogTool
             }
         }
 
+        #region RegEx Raw Stats
+        private static readonly Regex RealmPointsRegEx = new Regex(@"You earn (\d+).* realm points");
+        private static readonly Regex CritDamageDoneRegEx = new Regex(@"You hit .+ (\d+) .*\n.* You critical .* (\d+)");
+        private static readonly Regex DamageDoneRegex = new Regex(@"You hit .+ (\d+)");
+        private static readonly Regex HealProcPetSelfRegex = new Regex(@"Your .* heals you .* (\d+)");
+        private static readonly Regex HealSelfRegEx = new Regex(@"heal yourself .* (\d+)");
+        private static readonly Regex HealingDoneRegEx = new Regex(@"You heal .* (\d+)");
+        private static readonly Regex HealingTakenRegEx = new Regex(@"healed you .* (\d+)");
+        #endregion
+
+        #region RegEx Filter
+
+        #endregion
+
         /// <summary>
         /// Parses the FilteredLog list and populates statistics.
         /// </summary>
@@ -264,72 +278,65 @@ namespace DAoCToolSuite.LogTool
                 string line2 = (index + 1 < FilteredLog.Count) ? FilteredLog[(index + 1)] : "";
                 string twoLines = $"{line}\n{line2}";
 
-                Regex rps = new Regex(@"You earn (\d+).* realm points");
-                var rpsMatch = rps.Match(line);
-                if (rpsMatch.Success)
+                var realmPointsMatch = RealmPointsRegEx.Match(line);
+                if (realmPointsMatch.Success)
                 {
-                    int rpsEarned = Int32.TryParse(rpsMatch.Groups[1].Value, out rpsEarned) ? rpsEarned : 0;
+                    int rpsEarned = Int32.TryParse(realmPointsMatch.Groups[1].Value, out rpsEarned) ? rpsEarned : 0;
                     RealmPoints += rpsEarned;
                     continue;
                 }
 
-                Regex youCrit = new Regex(@"You hit .+ (\d+) .*\n.* You critical .* (\d+)");
-                var youCritMatch = youCrit.Match(twoLines);
-                if (youCritMatch.Success)
+                var critDamageMatch = CritDamageDoneRegEx.Match(twoLines);
+                if (critDamageMatch.Success)
                 {
-                    int normalDamageDone = Int32.TryParse(youCritMatch.Groups[1].Value, out normalDamageDone) ? normalDamageDone : 0;
-                    int critDamageDone = Int32.TryParse(youCritMatch.Groups[2].Value, out critDamageDone) ? critDamageDone : 0;
+                    int normalDamageDone = Int32.TryParse(critDamageMatch.Groups[1].Value, out normalDamageDone) ? normalDamageDone : 0;
+                    int critDamageDone = Int32.TryParse(critDamageMatch.Groups[2].Value, out critDamageDone) ? critDamageDone : 0;
                     CritDamageDone += normalDamageDone + critDamageDone;
                     CritHit += 1;
                     continue;
                 }
 
-                Regex youHit = new Regex(@"You hit .+ (\d+)");
-                var youHitMatch = youHit.Match(line);
-                if (youHitMatch.Success)
+                var damageDoneMatch = DamageDoneRegex.Match(line);
+                if (damageDoneMatch.Success)
                 {
-                    int damageDone = Int32.TryParse(youHitMatch.Groups[1].Value, out damageDone) ? damageDone : 0;
+                    int damageDone = Int32.TryParse(damageDoneMatch.Groups[1].Value, out damageDone) ? damageDone : 0;
                     DamageDone += damageDone;
                     Hit += 1;
                     continue;
                 }
 
-                Regex healProcsPets = new Regex(@"Your .* heals you .* (\d+)");
-                var healProcsPetsMatch = healProcsPets.Match(line);
-                if (healProcsPetsMatch.Success)
+                var healProcPetSelfMatch = HealProcPetSelfRegex.Match(line);
+                if (healProcPetSelfMatch.Success)
                 {
-                    int healProcPet = Int32.TryParse(healProcsPetsMatch.Groups[1].Value, out healProcPet) ? healProcPet : 0;
+                    int healProcPet = Int32.TryParse(healProcPetSelfMatch.Groups[1].Value, out healProcPet) ? healProcPet : 0;
                     HealProcPetSelf += healProcPet;
                     continue;
                 }
 
                 //You critical heal for an additional 139 hit points.
 
-                Regex youSelfHeal = new Regex(@"heal yourself .* (\d+)");
-                var youSelfHealMatch = youSelfHeal.Match(line);
-                if (youSelfHealMatch.Success)
+                var healSelfMatch = HealSelfRegEx.Match(line);
+                if (healSelfMatch.Success)
                 {
-                    int healSelfDone = Int32.TryParse(youSelfHealMatch.Groups[1].Value, out healSelfDone) ? healSelfDone : 0;
+                    int healSelfDone = Int32.TryParse(healSelfMatch.Groups[1].Value, out healSelfDone) ? healSelfDone : 0;
                     HealSelf += healSelfDone;
                     HealHit += 1;
                     continue;
                 }
 
-                Regex youHeal = new Regex(@"You heal .* (\d+)");
-                var youHealMatch = youHeal.Match(line);
-                if (youHealMatch.Success)
+                var healingDoneMatch = HealingDoneRegEx.Match(line);
+                if (healingDoneMatch.Success)
                 {
-                    int healDone = Int32.TryParse(youHealMatch.Groups[1].Value, out healDone) ? healDone : 0;
+                    int healDone = Int32.TryParse(healingDoneMatch.Groups[1].Value, out healDone) ? healDone : 0;
                     HealingDone += healDone;
                     HealHit += 1;
                     continue;
                 }
 
-                Regex healedBy = new Regex(@"healed you .* (\d+)");
-                var healedByMatch = healedBy.Match(line);
-                if (healedByMatch.Success)
+                var healingTakenMatch = HealingTakenRegEx.Match(line);
+                if (healingTakenMatch.Success)
                 {
-                    int healsTaken = Int32.TryParse(healedByMatch.Groups[1].Value, out healsTaken) ? healsTaken : 0;
+                    int healsTaken = Int32.TryParse(healingTakenMatch.Groups[1].Value, out healsTaken) ? healsTaken : 0;
                     HealingTaken += healsTaken;
                     continue;
                 }
