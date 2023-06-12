@@ -26,8 +26,8 @@ namespace DAoCToolSuite.LogTool
             LogFileTextBox.Text = LogPath;
             Timer.Tick -= new EventHandler(MainForm_TimerHandler);
             Timer.Tick += new EventHandler(MainForm_TimerHandler);
-            Timer.Interval = 5000;
-            LogParser = new LogParser(DefaultLogPath());
+            Timer.Interval = 1000;
+            LogParser = new LogParser(GetLastLogFolderPath());
             AttachLogDates();
             OverLayOpacityControl.Value = Convert.ToDecimal(Overlay.Opacity * 100);
             OverLayOpacityControl.Maximum = 100;
@@ -37,6 +37,8 @@ namespace DAoCToolSuite.LogTool
 
             FormInitialized = true;
         }
+
+        
 
         private void AttachLogDates()
         {
@@ -58,12 +60,14 @@ namespace DAoCToolSuite.LogTool
                 var startDate = Convert.ToDateTime(LogDatesComboBox.Text);
                 if (!LogParser.LogOpenEntries.ContainsKey(startDate))
                 {
-                    LogParser = new LogParser(LogPath, 0);
+                    LogParser.SetFileIndex(0);
+                    //LogParser = new LogParser(LogPath, 0);
                 }
                 else
                 {
                     int fileIndex = LogParser.LogOpenEntries[startDate];
-                    LogParser = new LogParser(LogPath, fileIndex);
+                    LogParser.SetFileIndex(fileIndex);
+                    //LogParser = new LogParser(LogPath, fileIndex);
                 }
             }
             DisplayParseLogStatistics();
@@ -82,7 +86,7 @@ namespace DAoCToolSuite.LogTool
             Overlay.HealCritRateValueLabel.Text = LogParser.HealCritRate.ToString() + "%";
             Overlay.TotalHealingDoneValueLabel.Text = LogParser.TotalHealingDone.ToString("N0");
             Overlay.TotalHealingRecievedValueLabel.Text = LogParser.TotalHealingRecieved.ToString("N0");
-            Overlay.RealmPointsValueLabel.Text = LogParser.RealmPoints.ToString("N0");
+            Overlay.RealmPointsValueLabel.Text = LogParser.RealmPointsEarned.ToString("N0");
             Overlay.Refresh();
         }
 
@@ -95,7 +99,15 @@ namespace DAoCToolSuite.LogTool
 
         private string DefaultLogPath()
         {
-            return $"{GetLastLogFolder()}\\chat.log";
+            return $"{DefaultLogFolder()}\\chat.log";
+        }
+
+        private string GetLastLogFolderPath()
+        {
+            var path = Properties.Settings.Default.LastLogPath;
+            if (string.IsNullOrEmpty(path))
+                return DefaultLogPath();
+            return Properties.Settings.Default.LastLogPath;
         }
 
         private static string DefaultLogFolder()
@@ -115,6 +127,10 @@ namespace DAoCToolSuite.LogTool
         private void BrowseButton_Click(object sender, EventArgs e)
         {
             BrowseButton.Enabled = false;
+            LogDatesComboBox.Enabled = false;
+            Timer.Stop();
+            ParseButton.Text = "Start";
+            Parsing = false;
             try
             {
                 OpenFileDialog ofd = new()
@@ -134,6 +150,7 @@ namespace DAoCToolSuite.LogTool
             LogParser = new LogParser(LogPath);
             AttachLogDates();
             DisplayParseLogStatistics();
+            LogDatesComboBox.Enabled = true;
             BrowseButton.Enabled = true;
         }
 
@@ -301,7 +318,7 @@ namespace DAoCToolSuite.LogTool
 
         private void FilterPlayersOnlyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-
+            LogParser.PlayersOnlyFilter = true;
         }
     }
 }

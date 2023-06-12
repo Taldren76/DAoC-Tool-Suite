@@ -34,5 +34,17 @@ namespace DAoCToolSuite.LogTool.Properties {
                 this["LastLogFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastLogPath {
+            get {
+                return ((string)(this["LastLogPath"]));
+            }
+            set {
+                this["LastLogPath"] = value;
+            }
+        }
     }
 }
