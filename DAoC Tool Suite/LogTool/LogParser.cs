@@ -62,8 +62,6 @@ namespace DAoCToolSuite.LogTool
 
         #endregion
 
-
-
         #region Heal Stats
         public int TotalHealingDone => HealingDone + CriticalHealingDone + SelfHealingDone + CriticalSelfHealingDone + AbilitySelfHealingDone + PetHealingDone + PetHealingYou + HealingDoneByYouToYourPet + CriticalHealingDoneByYouToYourPet + NonPlayerHealingDone;
         public int TotalHealingToSelf => SelfHealingDone + CriticalSelfHealingDone + AbilitySelfHealingDone + PetHealingYou;
