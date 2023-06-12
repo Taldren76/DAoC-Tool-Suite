@@ -15,12 +15,12 @@ namespace DAoCToolSuite.LogTool
             if(input == 1) return "1:1";
             if (input > 1)
             {
-                return $"{input.ToString("N2")}:1";
+                return $"{input:N2}:1";
             }
             else //(input < 0)
             {
                 double output = 1 / input;
-                return $"1:{output.ToString("N2")}";
+                return $"1:{output:N2}";
             }
         }
     }

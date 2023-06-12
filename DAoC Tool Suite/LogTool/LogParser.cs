@@ -46,9 +46,9 @@ namespace DAoCToolSuite.LogTool
 
         private int CritHit = 0;
 
-        private int PetHit = 0;
+        private int PetHit = 0; //TODO: Implement this
 
-        private int CritPetHit = 0;
+        private int CritPetHit = 0; //TODO: Implement this
 
         private int HealHit = 0;         // Number of individual Heals Done. AE counts as multiple Hits.
                                          // This counts both HealingDone and HealSelf.

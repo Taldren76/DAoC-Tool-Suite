@@ -69,6 +69,29 @@ namespace DAoCToolSuite.LogTool
 
         private void DisplayParseLogStatistics()
         {
+            Value_AverageCritDamageDone.Text = LogParser.AverageCritDamageDone.ToString("N0");
+            Value_AverageDamageDone.Text = LogParser.AverageDamageDone.ToString("N0");
+            Value_TotalDamageDone.Text = LogParser.TotalDamageDone.ToString("N0");
+            Value_CritDamageRatio.Text = LogParser.CritDamageRatio.ToString("0.0%");//.ToRatioString();
+            Value_DamageCritRate.Text = LogParser.DamageCritRate.ToString("0.0%");
+            Value_AverageHealingDone.Text = LogParser.AverageHealingDone.ToString("N0");
+            Value_AverageCritHealingDone.Text = LogParser.AverageCritHealingDone.ToString("N0");
+            Value_HealSelfRatio.Text = LogParser.HealSelfRatio.ToString("0.0%");//.ToRatioString();
+            Value_CritHealRatio.Text = LogParser.CritHealRatio.ToString("0.0%");//.ToRatioString();
+            Value_HealCritRate.Text = LogParser.HealCritRate.ToString("0.0%");
+            Value_TotalHealingDone.Text = LogParser.TotalHealingDone.ToString("N0");
+            Value_TotalHealingRecieved.Text = LogParser.TotalHealingRecieved.ToString("N0");
+            Value_RealmPoints.Text = LogParser.RealmPointsEarned.ToString("N0");
+            Value_DamageAbsorbed.Text = LogParser.DamageDoneAbsorbed.ToString("N0");
+            Value_DamageTakenAbsorbed.Text = LogParser.DamageTakenAbsorbed.ToString("N0");
+            Value_TotalDamageTaken.Text = LogParser.TotalDamageTaken.ToString("N0");
+            Value_DeathBlows.Text = LogParser.DeathBlows.ToString("N0");
+            Value_Deaths.Text = LogParser.Deaths.ToString("N0");
+            Value_DamageDoneBlocked.Text = LogParser.DamageDoneBlocked.ToString("N0");
+            Value_TotalDamageBlocked.Text = LogParser.TotalDamageBlocked.ToString("N0");
+            Value_TotalDamageConverted.Text = LogParser.TotalDamageConverted.ToString("N0");
+            Value_IRS.Text = LogParser.IRS.ToString("N0");
+
             Overlay.Value_AverageCritDamageDone.Text = LogParser.AverageCritDamageDone.ToString("N0");
             Overlay.Value_AverageDamageDone.Text = LogParser.AverageDamageDone.ToString("N0");
             Overlay.Value_TotalDamageDone.Text = LogParser.TotalDamageDone.ToString("N0");
@@ -164,7 +187,7 @@ namespace DAoCToolSuite.LogTool
             if (Parsing)
             {
                 Timer.Stop();
-                ParseButton.Text = "Start";
+                ParseButton.Text = "Continue";
                 Parsing = false;
                 ResetButton.Enabled = true;
                 LogFileTextBox.Enabled = true;
@@ -173,7 +196,7 @@ namespace DAoCToolSuite.LogTool
             else
             {
                 Timer.Start();
-                ParseButton.Text = "Stop";
+                ParseButton.Text = "Pause";
                 Parsing = true;
                 ResetButton.Enabled = false;
                 LogFileTextBox.Enabled = false;
