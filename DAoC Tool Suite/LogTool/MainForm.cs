@@ -5,7 +5,7 @@ namespace DAoCToolSuite.LogTool
     public partial class MainForm : Form
     {
         public static System.Windows.Forms.Timer Timer { get; set; } = new();
-        public LogParser LogParser { get; set; }
+        public LogParser LogParser { get; set; } = new() { };
 
         private static LogManager Logger => LogManager.Instance;
 
@@ -33,8 +33,6 @@ namespace DAoCToolSuite.LogTool
 
             FormInitialized = true;
         }
-
-
 
         private void AttachLogDates()
         {

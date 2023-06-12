@@ -84,169 +84,6 @@ namespace DAoCToolSuite.LogTool
         public int KDR => Convert.ToInt32(DeathBlows / (double)(Deaths == 0 ? 1 : Deaths));
         #endregion
 
-        private static readonly object ThisLock = new();
-        private static LogManager Logger => LogManager.Instance;
-        public bool PlayersOnlyFilter { get; set; } = false;
-        private int LogFileReadIndex { get; set; } = -1;
-        private string LogPath { get; set; } = "chat.log";
-        private static List<Regex> RejectLineContent { get; set; } = new();
-        private DateTime LastParse { get; set; } = DateTime.MinValue;
-        private List<string> FilteredLog { get; set; } = new();
-
-        public Dictionary<DateTime, int> LogOpenEntries = new();
-        public Dictionary<DateTime, int> LogCloseEntries = new();
-
-        /// <summary>
-        /// Determines if the LogFile contains information that has not been parsed.
-        /// </summary>
-        /// <returns>Boolean</returns>
-        public bool HasUnparsedData()
-        {
-            DateTime lastModified = GetLogLastModified();
-            return LastParse < lastModified;
-        }
-
-        public LogParser()
-        {
-
-        }
-
-        public LogParser(string path)
-        {
-            LogPath = path;
-            PopulateRejectLineContentList();
-            GetFilteredFileContent();
-            ParseLogOpen();
-            ParseLogClosed();
-        }
-
-        public LogParser(string path, int startIndex)
-        {
-            LogPath = path;
-            LogFileReadIndex = startIndex;
-            PopulateRejectLineContentList();
-            GetFilteredFileContent();
-            ParseLogOpen();
-            ParseLogClosed();
-        }
-
-        public void SetFileIndex(int index)
-        {
-            LogFileReadIndex = index;
-        }
-
-        /// <summary>
-        /// Polulates a list with substrings of log lines to be rejected from the filtered log.
-        /// </summary>
-        private static void PopulateRejectLineContentList()
-        {
-            List<Regex> rejectLineContent = new()
-            {
-                new Regex(@"@@.*"),
-                new Regex(@"##.*"),
-                new Regex(@"You (?!hit|critical|critically|begin|drain|earn|fail|attack|perform|prepare|steal|use|just|heal).*"),
-                new Regex(@"You prepare to sprint!"),
-                new Regex(@"Your share.*"),
-                new Regex(@"You've (?!been awarded).*"),
-                new Regex(@"Your target.*"),
-                new Regex(@"That target.*"),
-                new Regex(@".*casts a spell!"),
-                new Regex(@".*is dead!"),
-                new Regex(@".*as a follow up!"),
-                new Regex(@"(.*) uses [the ]*(.*)\."),
-                new Regex(@"(.*) doesn't currently.*")
-            };
-            RejectLineContent = rejectLineContent;
-        }
-
-        /// <summary>
-        /// Determines if a string contains a substring from the RejectLineContent list.
-        /// </summary>
-        /// <param name="line">Line from the log file</param>
-        /// <returns>Boolean</returns>
-        private static bool IsRejectContent(string line)
-        {
-            if (string.IsNullOrEmpty(line.Trim()))
-            {
-                return true;
-            }
-
-            foreach (Regex reject in RejectLineContent)
-            {
-                if (line[0].Equals('*'))
-                {
-                    return false;
-                }
-                else if (!line![0].Equals('['))
-                {
-                    return true;
-                }
-
-                try
-                {
-                    string? delimitedLine = line.Remove(0, 10).Trim();
-                    if (string.IsNullOrEmpty(delimitedLine) || reject.IsMatch(delimitedLine))
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex);
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Reads the Log File and populates the FilteredLog list.
-        /// </summary>
-        private void GetFilteredFileContent()
-        {
-            lock (ThisLock)
-            {
-                if (!File.Exists(LogPath))
-                {
-                    FilteredLog = new();
-                    return;
-                }
-                List<string> filteredList = new();
-                FileAttributes attributes = File.GetAttributes(LogPath);
-                using (FileStream fs = new(LogPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    using StreamReader sr = new(fs);
-                    while (!sr.EndOfStream)
-                    {
-                        string? lineRead = sr.ReadLine();
-                        if (lineRead is null)
-                        {
-                            continue;
-                        }
-
-                        if (!IsRejectContent(lineRead))
-                        {
-                            filteredList.Add(lineRead);
-                        }
-                    }
-                }
-                File.SetAttributes(LogPath, attributes);
-                FilteredLog = filteredList;
-            }
-        }
-
-        /// <summary>
-        /// Returns the DateTime stamp that represents the last time the LogFile was modified.
-        /// </summary>
-        /// <returns>DateTime</returns>
-        private DateTime GetLogLastModified()
-        {
-            lock (ThisLock)
-            {
-                DateTime lastModified = File.GetLastWriteTime(LogPath);
-                return lastModified;
-            }
-        }
-
         #region RegEx
         //Earnings
         private static readonly Regex RealmPointsEarnedRegEx = new(@"You earn (\d+).* realm points");
@@ -285,6 +122,56 @@ namespace DAoCToolSuite.LogTool
         //Misc
         private static readonly Regex ChatLogOpenedRegEx = new(@"Chat\sLog\sOpened:\s(\w+\s(\w+)\s+(\d+)\s(\d+:\d+:\d+)\s(\d+))");
         #endregion
+
+        public Dictionary<DateTime, int> LogOpenEntries = new();
+        public Dictionary<DateTime, int> LogCloseEntries = new();
+        public bool PlayersOnlyFilter { get; set; } = false; 
+        private static readonly object ThisLock = new();
+        private static LogManager Logger => LogManager.Instance;
+        private int LogFileReadIndex { get; set; } = -1;
+        private string LogPath { get; set; } = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Electronic Arts\\Dark Age of Camelot\\chat.log";
+        private static List<Regex> RejectLineContent { get; set; } = new();
+        private DateTime LastParse { get; set; } = DateTime.MinValue;
+        private List<string> FilteredLog { get; set; } = new();
+
+        public LogParser()
+        {
+
+        }
+
+        public LogParser(string path)
+        {
+            LogPath = path;
+            PopulateRejectLineContentList();
+            GetFilteredFileContent();
+            ParseLogOpen();
+            ParseLogClosed();
+        }
+
+        public LogParser(string path, int startIndex)
+        {
+            LogPath = path;
+            LogFileReadIndex = startIndex;
+            PopulateRejectLineContentList();
+            GetFilteredFileContent();
+            ParseLogOpen();
+            ParseLogClosed();
+        }
+
+        public void SetFileIndex(int index)
+        {
+            LogFileReadIndex = index;
+        }
+
+        /// <summary>
+        /// Determines if the LogFile contains information that has not been parsed.
+        /// </summary>
+        /// <returns>Boolean</returns>
+        public bool HasUnparsedData()
+        {
+            DateTime lastModified = GetLogLastModified();
+            return LastParse < lastModified;
+        }
 
         /// <summary>
         /// Parses the FilteredLog list and populates statistics.
@@ -694,6 +581,116 @@ namespace DAoCToolSuite.LogTool
                 LogCloseEntries.Add(DateTime.Now, 1);
             }
         }
+        /// <summary>
+        /// Polulates a list with substrings of log lines to be rejected from the filtered log.
+        /// </summary>
+        private static void PopulateRejectLineContentList()
+        {
+            List<Regex> rejectLineContent = new()
+            {
+                new Regex(@"@@.*"),
+                new Regex(@"##.*"),
+                new Regex(@"You (?!hit|critical|critically|begin|drain|earn|fail|attack|perform|prepare|steal|use|just|heal).*"),
+                new Regex(@"You prepare to sprint!"),
+                new Regex(@"Your share.*"),
+                new Regex(@"You've (?!been awarded).*"),
+                new Regex(@"Your target.*"),
+                new Regex(@"That target.*"),
+                new Regex(@".*casts a spell!"),
+                new Regex(@".*is dead!"),
+                new Regex(@".*as a follow up!"),
+                new Regex(@"(.*) uses [the ]*(.*)\."),
+                new Regex(@"(.*) doesn't currently.*")
+            };
+            RejectLineContent = rejectLineContent;
+        }
 
+        /// <summary>
+        /// Determines if a string contains a substring from the RejectLineContent list.
+        /// </summary>
+        /// <param name="line">Line from the log file</param>
+        /// <returns>Boolean</returns>
+        private static bool IsRejectContent(string line)
+        {
+            if (string.IsNullOrEmpty(line.Trim()))
+            {
+                return true;
+            }
+
+            foreach (Regex reject in RejectLineContent)
+            {
+                if (line[0].Equals('*'))
+                {
+                    return false;
+                }
+                else if (!line![0].Equals('['))
+                {
+                    return true;
+                }
+
+                try
+                {
+                    string? delimitedLine = line.Remove(0, 10).Trim();
+                    if (string.IsNullOrEmpty(delimitedLine) || reject.IsMatch(delimitedLine))
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Reads the Log File and populates the FilteredLog list.
+        /// </summary>
+        private void GetFilteredFileContent()
+        {
+            lock (ThisLock)
+            {
+                if (!File.Exists(LogPath))
+                {
+                    FilteredLog = new();
+                    return;
+                }
+                List<string> filteredList = new();
+                FileAttributes attributes = File.GetAttributes(LogPath);
+                using (FileStream fs = new(LogPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using StreamReader sr = new(fs);
+                    while (!sr.EndOfStream)
+                    {
+                        string? lineRead = sr.ReadLine();
+                        if (lineRead is null)
+                        {
+                            continue;
+                        }
+
+                        if (!IsRejectContent(lineRead))
+                        {
+                            filteredList.Add(lineRead);
+                        }
+                    }
+                }
+                File.SetAttributes(LogPath, attributes);
+                FilteredLog = filteredList;
+            }
+        }
+
+        /// <summary>
+        /// Returns the DateTime stamp that represents the last time the LogFile was modified.
+        /// </summary>
+        /// <returns>DateTime</returns>
+        private DateTime GetLogLastModified()
+        {
+            lock (ThisLock)
+            {
+                DateTime lastModified = File.GetLastWriteTime(LogPath);
+                return lastModified;
+            }
+        }
     }
 }
