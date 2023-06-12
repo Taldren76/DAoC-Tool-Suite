@@ -183,7 +183,7 @@
             OverLayFontColorButton.TabIndex = 4;
             OverLayFontColorButton.Text = "Font Color";
             OverLayFontColorButton.UseVisualStyleBackColor = true;
-            OverLayFontColorButton.Click += button1_Click;
+            OverLayFontColorButton.Click += ColorButton_Click;
             // 
             // label2
             // 

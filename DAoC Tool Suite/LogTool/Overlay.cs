@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace DAoCToolSuite.LogTool
+﻿namespace DAoCToolSuite.LogTool
 {
     public partial class Overlay : Form
     {
         public Overlay()
         {
             InitializeComponent();
-            this.MouseDown += new MouseEventHandler(Overlay_MouseDown);
+            MouseDown += new MouseEventHandler(Overlay_MouseDown);
             MoveLabel.MouseDown += new MouseEventHandler(MoveLabel_MouseDown);
         }
 
@@ -31,8 +21,8 @@ namespace DAoCToolSuite.LogTool
         {
             if (e.Button == MouseButtons.Left)
             {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                _ = ReleaseCapture();
+                _ = SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
 
@@ -40,8 +30,8 @@ namespace DAoCToolSuite.LogTool
         {
             if (e.Button == MouseButtons.Left)
             {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                _ = ReleaseCapture();
+                _ = SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
 

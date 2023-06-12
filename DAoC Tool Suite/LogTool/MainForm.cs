@@ -1,10 +1,4 @@
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Media.Animation;
 using Logger;
-using Microsoft.VisualBasic;
-using Windows.Security.EnterpriseData;
 
 namespace DAoCToolSuite.LogTool
 {
@@ -12,8 +6,10 @@ namespace DAoCToolSuite.LogTool
     {
         public static System.Windows.Forms.Timer Timer { get; set; } = new();
         public LogParser LogParser { get; set; }
-        LogManager Logger => LogManager.Instance;
-        Overlay Overlay { get; set; } = new();
+
+        private static LogManager Logger => LogManager.Instance;
+
+        private Overlay Overlay { get; set; } = new();
 
         private string LogPath { get; set; }
         private bool FormInitialized { get; set; } = false;
@@ -38,13 +34,13 @@ namespace DAoCToolSuite.LogTool
             FormInitialized = true;
         }
 
-        
+
 
         private void AttachLogDates()
         {
             try
             {
-                var logDates = LogParser.LogOpenEntries.Keys.Select(x => x.ToString("G")).ToList();
+                List<string> logDates = LogParser.LogOpenEntries.Keys.Select(x => x.ToString("G")).ToList();
                 LogDatesComboBox.DataSource = logDates;
             }
             catch (Exception ex)
@@ -57,7 +53,7 @@ namespace DAoCToolSuite.LogTool
         {
             if (FormInitialized)
             {
-                var startDate = Convert.ToDateTime(LogDatesComboBox.Text);
+                DateTime startDate = Convert.ToDateTime(LogDatesComboBox.Text);
                 if (!LogParser.LogOpenEntries.ContainsKey(startDate))
                 {
                     LogParser.SetFileIndex(0);
@@ -93,35 +89,34 @@ namespace DAoCToolSuite.LogTool
         private void MainForm_TimerHandler(object? sender, EventArgs e)
         {
             if (LogParser.HasUnparsedData())
+            {
                 LogParser.Parse();
+            }
+
             DisplayParseLogStatistics();
         }
 
-        private string DefaultLogPath()
+        private static string DefaultLogPath()
         {
             return $"{DefaultLogFolder()}\\chat.log";
         }
 
-        private string GetLastLogFolderPath()
+        private static string GetLastLogFolderPath()
         {
-            var path = Properties.Settings.Default.LastLogPath;
-            if (string.IsNullOrEmpty(path))
-                return DefaultLogPath();
-            return Properties.Settings.Default.LastLogPath;
+            string path = Properties.Settings.Default.LastLogPath;
+            return string.IsNullOrEmpty(path) ? DefaultLogPath() : Properties.Settings.Default.LastLogPath;
         }
 
         private static string DefaultLogFolder()
         {
-            var path = $"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Electronic Arts\\Dark Age of Camelot";
+            string path = $"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Electronic Arts\\Dark Age of Camelot";
             return path;
         }
 
-        private string GetLastLogFolder()
+        private static string GetLastLogFolder()
         {
-            var path = Properties.Settings.Default.LastLogFolder;
-            if (string.IsNullOrEmpty(path))
-                return DefaultLogFolder();
-            return Properties.Settings.Default.LastLogFolder;
+            string path = Properties.Settings.Default.LastLogFolder;
+            return string.IsNullOrEmpty(path) ? DefaultLogFolder() : Properties.Settings.Default.LastLogFolder;
         }
 
         private void BrowseButton_Click(object sender, EventArgs e)
@@ -139,7 +134,7 @@ namespace DAoCToolSuite.LogTool
                     Multiselect = false,
                     InitialDirectory = GetLastLogFolder()
                 };
-                ofd.ShowDialog(this);
+                _ = ofd.ShowDialog(this);
                 LogPath = ofd.FileName;
                 LogFileTextBox.Text = ofd.FileName;
             }
@@ -224,9 +219,9 @@ namespace DAoCToolSuite.LogTool
             Overlay.Refresh();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void ColorButton_Click(object sender, EventArgs e)
         {
-            colorDialog1.ShowDialog();
+            _ = colorDialog1.ShowDialog();
             Overlay.DamageCritRateLabel.ForeColor = colorDialog1.Color;
             Overlay.DamageCritRateValueLabel.ForeColor = colorDialog1.Color;
             Overlay.RealmPointsLabel.ForeColor = colorDialog1.Color;

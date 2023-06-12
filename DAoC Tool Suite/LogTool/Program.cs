@@ -3,7 +3,7 @@ using System.Diagnostics;
 namespace DAoCToolSuite.LogTool
 {
     internal static class Program
-    { 
+    {
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
