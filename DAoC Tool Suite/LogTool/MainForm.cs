@@ -22,24 +22,49 @@ namespace DAoCToolSuite.LogTool
             InitializeComponent();
             this.FormClosing -= new FormClosingEventHandler(MainForm_Closing);
             this.FormClosing += new FormClosingEventHandler(MainForm_Closing);
-            LogPath = DefaultLogPath();
-            LogFileTextBox.Text = LogPath;
+
             Timer.Tick -= new EventHandler(MainForm_TimerHandler);
             Timer.Tick += new EventHandler(MainForm_TimerHandler);
             Timer.Interval = 1000;
-            LogParser = new LogParser(GetLastLogFolderPath());
+
+            LogPath = GetLastLogFolderPath();
+            LogFileTextBox.Text = LogPath;
+            LogParser = new LogParser(LogPath, ParseProgressBar);
             AttachLogDates();
+
             OverLayOpacityControl.Maximum = 100;
             OverLayOpacityControl.Minimum = 0;
+
             BindingSource.DataSource = ProduceDataTable();
             AttachDataSource();
             FormatTable();
+
             FormInitialized = true;
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            #region Load Settings
+            colorDialog1.Color = Properties.Settings.Default.OverlayFontColor;
+            FontColorPanel.BackColor = Properties.Settings.Default.OverlayFontColor;
+            Overlay.SetLabelForecolor(Properties.Settings.Default.OverlayFontColor);
+            Overlay.SetLabelBackcolor(Properties.Settings.Default.OverlayTrans ? Color.DimGray : Color.Black);
+
+            FilterPlayersOnlyCheckBox.Checked = Properties.Settings.Default.PlayersOnly;
+            LogParser.PlayersOnlyFilter = Properties.Settings.Default.PlayersOnly;
+
+            OverlayTransparentCheckBox.Checked = Properties.Settings.Default.OverlayTrans;
+
+            LockOverlayButton.Text = Properties.Settings.Default.OverlayLocked ? "Unlock Overlay" : "Lock Overlay";
+            Overlay.MoveLabel.Visible = !Properties.Settings.Default.OverlayLocked;
+
+            Overlay.Opacity = Convert.ToDouble(Properties.Settings.Default.OverlayOpacity / 100);
+            OverLayOpacityControl.Value = Properties.Settings.Default.OverlayOpacity;
+            #endregion
+
+            #region  MainForm Location
             long currentCount = LogTool.Properties.Settings.Default.UseCountMainform;
             if (currentCount > 0)
             {
@@ -54,17 +79,8 @@ namespace DAoCToolSuite.LogTool
             {
                 LogTool.Properties.Settings.Default.UseCountMainform = currentCount + 1;
             }
-            colorDialog1.Color = Properties.Settings.Default.OverlayFontColor;
-            FontColorPanel.BackColor = Properties.Settings.Default.OverlayFontColor;
-            Overlay.SetLabelForecolor( Properties.Settings.Default.OverlayFontColor);          
-            FilterPlayersOnlyCheckBox.Checked = Properties.Settings.Default.PlayersOnly;
-            OverlayTransparentCheckBox.Checked = Properties.Settings.Default.OverlayTrans;
-            Overlay.SetLabelBackcolor(Properties.Settings.Default.OverlayTrans ? Color.DimGray : Color.Black);
-            LogParser.PlayersOnlyFilter = Properties.Settings.Default.PlayersOnly;
-            LockOverlayButton.Text = Properties.Settings.Default.OverlayLocked ? "Unlock Overlay" : "Lock Overlay";
-            Overlay.MoveLabel.Visible = !Properties.Settings.Default.OverlayLocked;
-            Overlay.Opacity = Convert.ToDouble(Properties.Settings.Default.OverlayOpacity / 100);
-            OverLayOpacityControl.Value = Properties.Settings.Default.OverlayOpacity;
+            #endregion
+
             LogTool.Properties.Settings.Default.Save();
         }
 
@@ -77,6 +93,8 @@ namespace DAoCToolSuite.LogTool
 
         private void FormatTable()
         {
+            dataGridView1.BackgroundColor = Color.Black;
+            dataGridView1.ForeColor = Color.White;
             dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridView1.Columns[1].DefaultCellStyle.Padding = new Padding(0, 0, 30, 0);
             dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -236,12 +254,14 @@ namespace DAoCToolSuite.LogTool
             {
                 Logger.Error(ex);
             }
-            LogParser = new LogParser(LogPath);
+            LogParser = new LogParser(LogPath, ParseProgressBar);
             LogParser.PlayersOnlyFilter = FilterPlayersOnlyCheckBox.Checked;
             AttachLogDates();
             DisplayParseLogStatistics();
             LogDatesComboBox.Enabled = true;
             BrowseButton.Enabled = true;
+            Properties.Settings.Default.LastLogPath = LogPath;
+            Properties.Settings.Default.Save();
         }
 
         private static bool Parsing = false;
@@ -273,7 +293,7 @@ namespace DAoCToolSuite.LogTool
         private void ResetButton_Click(object sender, EventArgs e)
         {
             ResetButton.Enabled = false;
-            LogParser = new LogParser(LogPath);
+            LogParser = new LogParser(LogPath, ParseProgressBar);
             LogParser.PlayersOnlyFilter = FilterPlayersOnlyCheckBox.Checked;
             AttachLogDates();
             DisplayParseLogStatistics();
@@ -283,6 +303,7 @@ namespace DAoCToolSuite.LogTool
 
         private void OverlayButton_Click(object sender, EventArgs e)
         {
+            OverlayButton.Enabled = false;
             if (Overlay.Visible)
             {
                 OverlayButton.Text = "Show Overlay";
@@ -293,10 +314,12 @@ namespace DAoCToolSuite.LogTool
                 OverlayButton.Text = "Hide Overlay";
                 Overlay.Show();
             }
+            OverlayButton.Enabled = true;
         }
 
         private void LockOverlayButton_Click(object sender, EventArgs e)
         {
+            LockOverlayButton.Enabled = false;
             if (!Overlay.Visible)
                 return;
 
@@ -313,6 +336,7 @@ namespace DAoCToolSuite.LogTool
                 Properties.Settings.Default.OverlayLocked = false;
             }
             Properties.Settings.Default.Save();
+            LockOverlayButton.Enabled = true;
         }
 
         private void OverLayOpacityControl_ValueChanged(object sender, EventArgs e)
@@ -323,11 +347,13 @@ namespace DAoCToolSuite.LogTool
             Properties.Settings.Default.Save();
         }
 
-        private void ColorButton_Click(object sender, EventArgs e)
+        private void OverLayFontColorButton_Click(object sender, EventArgs e)
         {
+            OverLayFontColorButton.Enabled = false;
             _ = colorDialog1.ShowDialog();
             Overlay.SetLabelForecolor(colorDialog1.Color);
             FontColorPanel.BackColor = colorDialog1.Color;
+            OverLayFontColorButton.Enabled = true;
             Properties.Settings.Default.OverlayFontColor = colorDialog1.Color;
             Properties.Settings.Default.Save();
         }

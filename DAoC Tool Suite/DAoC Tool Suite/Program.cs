@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO;
 
 namespace DAoCToolSuite
 {
@@ -11,6 +12,8 @@ namespace DAoCToolSuite
         [STAThread]
         private static void Main()
         {
+            if (File.Exists("DAoCToolSuite.log"))
+                File.Delete("DAoCToolSuite.log");
             _ = Trace.Listeners.Add(new TextWriterTraceListener("DAoCToolSuite.log"));
             Trace.AutoFlush = true;
             Trace.WriteLine($"***************************************************");

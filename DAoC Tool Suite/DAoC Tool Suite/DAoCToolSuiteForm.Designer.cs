@@ -92,7 +92,6 @@ namespace DAoCToolSuite
             // 
             // LogTool
             // 
-            LogTool.Enabled = false;
             LogTool.Font = new Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             LogTool.Location = new Point(304, 153);
             LogTool.Name = "LogTool";
@@ -128,7 +127,7 @@ namespace DAoCToolSuite
             MinimumSize = new Size(476, 220);
             Name = "DAoCToolSuiteForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "DAoC Tool Suite v0.5.0";
+            Text = "DAoC Tool Suite v0.6.1";
             FormClosing += DAoCTestSuiteForm_FormClosing;
             ResumeLayout(false);
         }

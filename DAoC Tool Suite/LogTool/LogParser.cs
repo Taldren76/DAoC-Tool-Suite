@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Shapes;
 using Logger;
+using static System.Windows.Forms.LinkLabel;
 
 namespace DAoCToolSuite.LogTool
 {
@@ -148,25 +150,28 @@ namespace DAoCToolSuite.LogTool
         private static List<Regex> RejectLineContent { get; set; } = new();
         private DateTime LastParse { get; set; } = DateTime.MinValue;
         private List<string> FilteredLog { get; set; } = new();
+        TextProgressBar? ProgressBar { get; set; } = null;
 
         public LogParser()
         {
 
         }
 
-        public LogParser(string path)
+        public LogParser(string path, TextProgressBar? progressBar = null)
         {
             LogPath = path;
+            ProgressBar = progressBar;
             PopulateRejectLineContentList();
             GetFilteredFileContent();
             ParseLogOpen();
             ParseLogClosed();
         }
 
-        public LogParser(string path, int startIndex)
+        public LogParser(string path, int startIndex, TextProgressBar? progressBar = null)
         {
             LogPath = path;
             LogFileReadIndex = startIndex;
+            ProgressBar = progressBar;
             PopulateRejectLineContentList();
             GetFilteredFileContent();
             ParseLogOpen();
@@ -218,8 +223,23 @@ namespace DAoCToolSuite.LogTool
                 endIndex = 1;
             }
 
+            if(ProgressBar != null)
+            {
+                ProgressBar.Minimum = startIndex;
+                ProgressBar.Maximum = endIndex;
+                ProgressBar.Value = startIndex;
+                ProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
+                ProgressBar.CustomText = "Parsing File";
+                ProgressBar.Visible = true;
+            }
+
             for (int index = startIndex; index < endIndex; index++)
             {
+                if (ProgressBar != null)
+                {
+                    ProgressBar.Value = index;
+                    
+                }
                 string line = FilteredLog[index];       
                 if (string.IsNullOrEmpty(line) || line[0].Equals('*')) //Checks for empty or Chat Open/Close lines
                     continue;        
@@ -544,6 +564,11 @@ namespace DAoCToolSuite.LogTool
                 #endregion
             }
             LogFileReadIndex = endIndex;
+
+            if (ProgressBar != null)
+            {
+                ProgressBar.Visible = false;
+            }
         }
 
         /// <summary>
@@ -727,13 +752,28 @@ namespace DAoCToolSuite.LogTool
         /// </summary>
         private void GetFilteredFileContent()
         {
+            long currentPosition = 0;
             lock (ThisLock)
             {
+                
                 if (!File.Exists(LogPath))
                 {
                     FilteredLog = new();
                     return;
                 }
+
+                long length = new FileInfo(LogPath).Length;
+
+                if (ProgressBar != null)
+                {
+                    ProgressBar.Value = 0;
+                    ProgressBar.Minimum = 0;
+                    ProgressBar.Maximum = 100;
+                    ProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
+                    ProgressBar.CustomText = "Reading File";
+                    ProgressBar.Visible = true;
+                }
+
                 List<string> filteredList = new();
                 FileAttributes attributes = File.GetAttributes(LogPath);
                 using (FileStream fs = new(LogPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -746,6 +786,7 @@ namespace DAoCToolSuite.LogTool
                         {
                             continue;
                         }
+                        UpdateProgressBar(lineRead.Length);
 
                         if (!IsRejectContent(lineRead))
                         {
@@ -755,6 +796,20 @@ namespace DAoCToolSuite.LogTool
                 }
                 File.SetAttributes(LogPath, attributes);
                 FilteredLog = filteredList;
+
+                if (ProgressBar != null)
+                {
+                    ProgressBar.Visible = false;
+                }
+
+                void UpdateProgressBar(int lineLength)
+                {
+                    currentPosition += lineLength;// or plus 2 if you need to take into account carriage return
+                    if (ProgressBar != null)
+                    {
+                        ProgressBar.Value = (int)(((decimal)currentPosition / (decimal)length) * (decimal)100);
+                    }
+                }
             }
         }
 

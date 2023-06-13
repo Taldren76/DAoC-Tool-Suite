@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO;
 
 namespace DAoCToolSuite.CharacterTool
 {
@@ -10,6 +11,8 @@ namespace DAoCToolSuite.CharacterTool
         [STAThread]
         private static void Main()
         {
+            if (File.Exists("CharacterTool.log"))
+                File.Delete("CharacterTool.log");
             _ = Trace.Listeners.Add(new TextWriterTraceListener("CharacterTool.log"));
             Trace.AutoFlush = true;
             Trace.WriteLine($"***************************************************");

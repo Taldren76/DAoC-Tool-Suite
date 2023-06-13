@@ -49,6 +49,7 @@
             LockOverlayButton = new Button();
             OverlayButton = new Button();
             colorDialog1 = new ColorDialog();
+            ParseProgressBar = new TextProgressBar();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -112,7 +113,7 @@
             splitContainer1.Panel2.Controls.Add(OverLayOpacityControl);
             splitContainer1.Panel2.Controls.Add(LockOverlayButton);
             splitContainer1.Panel2.Controls.Add(OverlayButton);
-            splitContainer1.Size = new Size(679, 297);
+            splitContainer1.Size = new Size(679, 280);
             splitContainer1.SplitterDistance = 525;
             splitContainer1.TabIndex = 2;
             // 
@@ -247,7 +248,7 @@
             OverLayFontColorButton.TabIndex = 4;
             OverLayFontColorButton.Text = "Font Color";
             OverLayFontColorButton.UseVisualStyleBackColor = true;
-            OverLayFontColorButton.Click += ColorButton_Click;
+            OverLayFontColorButton.Click += OverLayFontColorButton_Click;
             // 
             // label2
             // 
@@ -286,20 +287,35 @@
             OverlayButton.UseVisualStyleBackColor = true;
             OverlayButton.Click += OverlayButton_Click;
             // 
+            // ParseProgressBar
+            // 
+            ParseProgressBar.CustomText = "";
+            ParseProgressBar.ForeColor = Color.Chartreuse;
+            ParseProgressBar.Location = new Point(15, 361);
+            ParseProgressBar.Name = "ParseProgressBar";
+            ParseProgressBar.ProgressColor = Color.LightGreen;
+            ParseProgressBar.Size = new Size(670, 23);
+            ParseProgressBar.TabIndex = 3;
+            ParseProgressBar.TextColor = Color.Black;
+            ParseProgressBar.TextFont = new Font("Times New Roman", 11F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            ParseProgressBar.Visible = false;
+            ParseProgressBar.VisualMode = ProgressBarDisplayMode.CurrProgress;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(700, 382);
+            ClientSize = new Size(700, 387);
+            Controls.Add(ParseProgressBar);
             Controls.Add(splitContainer1);
             Controls.Add(groupBox1);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximumSize = new Size(720, 425);
-            MinimumSize = new Size(720, 425);
+            MaximumSize = new Size(720, 430);
+            MinimumSize = new Size(720, 430);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "LogTool v0.1.0";
+            Text = "LogTool v0.5.0";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
@@ -335,5 +351,6 @@
         private CheckBox FilterPlayersOnlyCheckBox;
         private DataGridView dataGridView1;
         private Panel panel1;
+        private TextProgressBar ParseProgressBar;
     }
 }

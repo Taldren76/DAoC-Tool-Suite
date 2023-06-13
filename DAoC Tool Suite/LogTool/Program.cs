@@ -1,4 +1,7 @@
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.IO;
+using Microsoft.VisualBasic.Logging;
 
 namespace DAoCToolSuite.LogTool
 {
@@ -11,6 +14,8 @@ namespace DAoCToolSuite.LogTool
         [STAThread]
         private static void Main()
         {
+            if (File.Exists("LogTool.log"))
+                File.Delete("LogTool.log");
             _ = Trace.Listeners.Add(new TextWriterTraceListener("LogTool.log"));
             Trace.AutoFlush = true;
             Trace.WriteLine($"***************************************************");

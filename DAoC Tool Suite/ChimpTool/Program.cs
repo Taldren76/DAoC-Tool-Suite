@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using DAoCToolSuite.ChimpTool.Selenium;
 
 namespace DAoCToolSuite.ChimpTool
@@ -11,6 +12,8 @@ namespace DAoCToolSuite.ChimpTool
         [STAThread]
         private static void Main()
         {
+            if (File.Exists("ChimpTool.log"))
+                File.Delete("ChimpTool.log");
             _ = Trace.Listeners.Add(new TextWriterTraceListener("ChimpTool.log"));
             Trace.AutoFlush = true;
             Trace.WriteLine($"***************************************************");
