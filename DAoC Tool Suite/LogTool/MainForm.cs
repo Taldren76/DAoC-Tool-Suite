@@ -11,7 +11,7 @@ namespace DAoCToolSuite.LogTool
         private static LogManager Logger => LogManager.Instance;
 
         private Overlay Overlay { get; set; } = new();
-
+        private bool OverlayLock { get; set; }
         private string LogPath { get; set; }
         private bool FormInitialized { get; set; } = false;
         private Dictionary<DateTime, int> CustomLogDates { get; set; } = new();
@@ -29,11 +29,8 @@ namespace DAoCToolSuite.LogTool
             Timer.Interval = 1000;
             LogParser = new LogParser(GetLastLogFolderPath());
             AttachLogDates();
-            OverLayOpacityControl.Value = Convert.ToDecimal(Overlay.Opacity * 100);
             OverLayOpacityControl.Maximum = 100;
             OverLayOpacityControl.Minimum = 0;
-            FontColorPanel.BackColor = Overlay.Title_TotalDamageDone.ForeColor;
-            OverlayTransparentCheckBox.Checked = true;
             BindingSource.DataSource = ProduceDataTable();
             AttachDataSource();
             FormatTable();
@@ -57,6 +54,17 @@ namespace DAoCToolSuite.LogTool
             {
                 LogTool.Properties.Settings.Default.UseCountMainform = currentCount + 1;
             }
+            colorDialog1.Color = Properties.Settings.Default.OverlayFontColor;
+            FontColorPanel.BackColor = Properties.Settings.Default.OverlayFontColor;
+            Overlay.SetLabelForecolor( Properties.Settings.Default.OverlayFontColor);          
+            FilterPlayersOnlyCheckBox.Checked = Properties.Settings.Default.PlayersOnly;
+            OverlayTransparentCheckBox.Checked = Properties.Settings.Default.OverlayTrans;
+            Overlay.SetLabelBackcolor(Properties.Settings.Default.OverlayTrans ? Color.DimGray : Color.Black);
+            LogParser.PlayersOnlyFilter = Properties.Settings.Default.PlayersOnly;
+            LockOverlayButton.Text = Properties.Settings.Default.OverlayLocked ? "Unlock Overlay" : "Lock Overlay";
+            Overlay.MoveLabel.Visible = !Properties.Settings.Default.OverlayLocked;
+            Overlay.Opacity = Convert.ToDouble(Properties.Settings.Default.OverlayOpacity / 100);
+            OverLayOpacityControl.Value = Properties.Settings.Default.OverlayOpacity;
             LogTool.Properties.Settings.Default.Save();
         }
 
@@ -72,7 +80,6 @@ namespace DAoCToolSuite.LogTool
             dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridView1.Columns[1].DefaultCellStyle.Padding = new Padding(0, 0, 30, 0);
             dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-
         }
 
         private void AttachDataSource()
@@ -101,13 +108,11 @@ namespace DAoCToolSuite.LogTool
                 if (!LogParser.LogOpenEntries.ContainsKey(startDate))
                 {
                     LogParser.SetFileIndex(0);
-                    //LogParser = new LogParser(LogPath, 0);
                 }
                 else
                 {
                     int fileIndex = LogParser.LogOpenEntries[startDate];
                     LogParser.SetFileIndex(fileIndex);
-                    //LogParser = new LogParser(LogPath, fileIndex);
                 }
             }
             DisplayParseLogStatistics();
@@ -149,7 +154,6 @@ namespace DAoCToolSuite.LogTool
         private void DisplayParseLogStatistics()
         {
             BindingSource.DataSource = ProduceDataTable();
-
             Overlay.Value_AverageCritDamageDone.Text = LogParser.AverageCritDamageDone.ToString("N0");
             Overlay.Value_AverageDamageDone.Text = LogParser.AverageDamageDone.ToString("N0");
             Overlay.Value_TotalDamageDone.Text = LogParser.TotalDamageDone.ToString("N0");
@@ -233,6 +237,7 @@ namespace DAoCToolSuite.LogTool
                 Logger.Error(ex);
             }
             LogParser = new LogParser(LogPath);
+            LogParser.PlayersOnlyFilter = FilterPlayersOnlyCheckBox.Checked;
             AttachLogDates();
             DisplayParseLogStatistics();
             LogDatesComboBox.Enabled = true;
@@ -269,6 +274,7 @@ namespace DAoCToolSuite.LogTool
         {
             ResetButton.Enabled = false;
             LogParser = new LogParser(LogPath);
+            LogParser.PlayersOnlyFilter = FilterPlayersOnlyCheckBox.Checked;
             AttachLogDates();
             DisplayParseLogStatistics();
             LogDatesComboBox.Enabled = true;
@@ -291,22 +297,30 @@ namespace DAoCToolSuite.LogTool
 
         private void LockOverlayButton_Click(object sender, EventArgs e)
         {
+            if (!Overlay.Visible)
+                return;
+
             if (Overlay.MoveLabel.Visible)
             {
                 LockOverlayButton.Text = "Unlock Overlay";
                 Overlay.MoveLabel.Hide();
+                Properties.Settings.Default.OverlayLocked = true;
             }
             else
             {
                 LockOverlayButton.Text = "Lock Overlay";
                 Overlay.MoveLabel.Show();
+                Properties.Settings.Default.OverlayLocked = false;
             }
+            Properties.Settings.Default.Save();
         }
 
         private void OverLayOpacityControl_ValueChanged(object sender, EventArgs e)
         {
             Overlay.Opacity = Convert.ToDouble(OverLayOpacityControl.Value / 100);
             Overlay.Refresh();
+            Properties.Settings.Default.OverlayOpacity = OverLayOpacityControl.Value;
+            Properties.Settings.Default.Save();
         }
 
         private void ColorButton_Click(object sender, EventArgs e)
@@ -314,7 +328,8 @@ namespace DAoCToolSuite.LogTool
             _ = colorDialog1.ShowDialog();
             Overlay.SetLabelForecolor(colorDialog1.Color);
             FontColorPanel.BackColor = colorDialog1.Color;
-            Overlay.Refresh();
+            Properties.Settings.Default.OverlayFontColor = colorDialog1.Color;
+            Properties.Settings.Default.Save();
         }
 
         private void OverlayTransparentCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -328,11 +343,17 @@ namespace DAoCToolSuite.LogTool
             {
                 Overlay.SetLabelBackcolor(Color.Black);
             }
+            Properties.Settings.Default.OverlayTrans = checkBox.Checked;
+            Properties.Settings.Default.Save();
         }
 
         private void FilterPlayersOnlyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            LogParser.PlayersOnlyFilter = true;
+            CheckBox checkBox = (CheckBox)sender;
+            LogParser.PlayersOnlyFilter = checkBox.Checked;
+            Properties.Settings.Default.PlayersOnly = checkBox.Checked;
+            Properties.Settings.Default.Save();
+
         }
     }
 }

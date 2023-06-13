@@ -94,5 +94,65 @@ namespace DAoCToolSuite.LogTool.Properties {
                 this["UseCountMainform"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("White")]
+        public global::System.Drawing.Color OverlayFontColor {
+            get {
+                return ((global::System.Drawing.Color)(this["OverlayFontColor"]));
+            }
+            set {
+                this["OverlayFontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool OverlayTrans {
+            get {
+                return ((bool)(this["OverlayTrans"]));
+            }
+            set {
+                this["OverlayTrans"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PlayersOnly {
+            get {
+                return ((bool)(this["PlayersOnly"]));
+            }
+            set {
+                this["PlayersOnly"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OverlayLocked {
+            get {
+                return ((bool)(this["OverlayLocked"]));
+            }
+            set {
+                this["OverlayLocked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public decimal OverlayOpacity {
+            get {
+                return ((decimal)(this["OverlayOpacity"]));
+            }
+            set {
+                this["OverlayOpacity"] = value;
+            }
+        }
     }
 }
