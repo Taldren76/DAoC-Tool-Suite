@@ -77,6 +77,7 @@
             // 
             // Title_DamageCritRate
             // 
+            Title_DamageCritRate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_DamageCritRate.AutoSize = true;
             Title_DamageCritRate.BackColor = Color.DimGray;
             Title_DamageCritRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -86,6 +87,7 @@
             Title_DamageCritRate.Size = new Size(128, 14);
             Title_DamageCritRate.TabIndex = 47;
             Title_DamageCritRate.Text = "Damage Crit Rate:";
+            Title_DamageCritRate.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_DamageCritRate
             // 
@@ -100,6 +102,7 @@
             // 
             // Title_RealmPoints
             // 
+            Title_RealmPoints.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_RealmPoints.AutoSize = true;
             Title_RealmPoints.BackColor = Color.DimGray;
             Title_RealmPoints.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -109,6 +112,7 @@
             Title_RealmPoints.Size = new Size(98, 14);
             Title_RealmPoints.TabIndex = 45;
             Title_RealmPoints.Text = "Realm Points:";
+            Title_RealmPoints.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_RealmPoints
             // 
@@ -123,6 +127,7 @@
             // 
             // Title_TotalDamageDone
             // 
+            Title_TotalDamageDone.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_TotalDamageDone.AutoSize = true;
             Title_TotalDamageDone.BackColor = Color.DimGray;
             Title_TotalDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -132,6 +137,7 @@
             Title_TotalDamageDone.Size = new Size(141, 14);
             Title_TotalDamageDone.TabIndex = 43;
             Title_TotalDamageDone.Text = "Total Damage Done:";
+            Title_TotalDamageDone.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_TotalDamageDone
             // 
@@ -296,6 +302,7 @@
             // 
             // Title_AverageCritDamageDone
             // 
+            Title_AverageCritDamageDone.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_AverageCritDamageDone.AutoSize = true;
             Title_AverageCritDamageDone.BackColor = Color.DimGray;
             Title_AverageCritDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -305,9 +312,11 @@
             Title_AverageCritDamageDone.Size = new Size(153, 14);
             Title_AverageCritDamageDone.TabIndex = 28;
             Title_AverageCritDamageDone.Text = "Average Crit Damage:";
+            Title_AverageCritDamageDone.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Title_AverageDamageDone
             // 
+            Title_AverageDamageDone.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_AverageDamageDone.AutoSize = true;
             Title_AverageDamageDone.BackColor = Color.DimGray;
             Title_AverageDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -317,6 +326,7 @@
             Title_AverageDamageDone.Size = new Size(125, 14);
             Title_AverageDamageDone.TabIndex = 27;
             Title_AverageDamageDone.Text = "Average Damage:";
+            Title_AverageDamageDone.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_AverageHealingDone
             // 
@@ -366,15 +376,18 @@
             // 
             // Title_CritDamageRatio
             // 
+            Title_CritDamageRatio.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_CritDamageRatio.AutoSize = true;
             Title_CritDamageRatio.BackColor = Color.DimGray;
             Title_CritDamageRatio.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_CritDamageRatio.ForeColor = Color.White;
+            Title_CritDamageRatio.ImageAlign = ContentAlignment.MiddleRight;
             Title_CritDamageRatio.Location = new Point(336, 130);
             Title_CritDamageRatio.Name = "Title_CritDamageRatio";
             Title_CritDamageRatio.Size = new Size(132, 14);
             Title_CritDamageRatio.TabIndex = 51;
             Title_CritDamageRatio.Text = "Crit Damage Ratio:";
+            Title_CritDamageRatio.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_CritDamageRatio
             // 
@@ -412,6 +425,7 @@
             // 
             // Title_DamageAbsorbed
             // 
+            Title_DamageAbsorbed.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_DamageAbsorbed.AutoSize = true;
             Title_DamageAbsorbed.BackColor = Color.DimGray;
             Title_DamageAbsorbed.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -421,6 +435,7 @@
             Title_DamageAbsorbed.Size = new Size(132, 14);
             Title_DamageAbsorbed.TabIndex = 54;
             Title_DamageAbsorbed.Text = "Damage Absorbed:";
+            Title_DamageAbsorbed.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_DamageAbsorbed
             // 
@@ -458,6 +473,7 @@
             // 
             // Title_Deaths
             // 
+            Title_Deaths.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_Deaths.AutoSize = true;
             Title_Deaths.BackColor = Color.DimGray;
             Title_Deaths.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -467,6 +483,7 @@
             Title_Deaths.Size = new Size(58, 14);
             Title_Deaths.TabIndex = 61;
             Title_Deaths.Text = "Deaths:";
+            Title_Deaths.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_Deaths
             // 
@@ -481,6 +498,7 @@
             // 
             // Title_DeathBlows
             // 
+            Title_DeathBlows.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_DeathBlows.AutoSize = true;
             Title_DeathBlows.BackColor = Color.DimGray;
             Title_DeathBlows.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -490,6 +508,7 @@
             Title_DeathBlows.Size = new Size(91, 14);
             Title_DeathBlows.TabIndex = 59;
             Title_DeathBlows.Text = "DeathBlows:";
+            Title_DeathBlows.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_DeathBlows
             // 
@@ -550,6 +569,7 @@
             // 
             // Title_DamageDoneBlocked
             // 
+            Title_DamageDoneBlocked.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_DamageDoneBlocked.AutoSize = true;
             Title_DamageDoneBlocked.BackColor = Color.DimGray;
             Title_DamageDoneBlocked.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -559,6 +579,7 @@
             Title_DamageDoneBlocked.Size = new Size(122, 14);
             Title_DamageDoneBlocked.TabIndex = 67;
             Title_DamageDoneBlocked.Text = "Damage Blocked:";
+            Title_DamageDoneBlocked.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_DamageDoneBlocked
             // 
@@ -573,6 +594,7 @@
             // 
             // Title_IRS
             // 
+            Title_IRS.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_IRS.AutoSize = true;
             Title_IRS.BackColor = Color.DimGray;
             Title_IRS.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -582,6 +604,7 @@
             Title_IRS.Size = new Size(36, 14);
             Title_IRS.TabIndex = 69;
             Title_IRS.Text = "IRS:";
+            Title_IRS.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Value_IRS
             // 
@@ -648,6 +671,7 @@
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.None;
             Name = "Overlay";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Overlay";
             TopMost = true;
             TransparencyKey = Color.DimGray;

@@ -12,13 +12,14 @@
     <PlatformTarget>x86</PlatformTarget>
     <RootNamespace>DAoCToolSuite.LogTool</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Icons\LogParser.ico</ApplicationIcon>
+    <PackageIcon>LogParser.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Icons\DAoCTools.ico" />
     <None Remove="Icons\DAoCTools.png" />
     <None Remove="Icons\LogParser.ico" />
-    <None Remove="Icons\LogParser.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,8 +68,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Icons\LogParser.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>

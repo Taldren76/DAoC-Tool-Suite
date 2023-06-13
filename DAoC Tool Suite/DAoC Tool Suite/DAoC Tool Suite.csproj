@@ -69,6 +69,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CharacterTool\CharacterTool.csproj" />
     <ProjectReference Include="..\ChimpTool\ChimpTool.csproj" />
+    <ProjectReference Include="..\LogTool\LogTool.csproj" />
   </ItemGroup>
 
   <ItemGroup>

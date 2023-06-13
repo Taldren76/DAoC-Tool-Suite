@@ -59,7 +59,8 @@ namespace DAoCToolSuite.LogTool
         #endregion
 
         #region Heal Stats
-        public int TotalHealingDone => HealingDone + CriticalHealingDone + SelfHealingDone + CriticalSelfHealingDone + AbilitySelfHealingDone + PetHealingDone + PetHealingYou + HealingDoneByYouToYourPet + CriticalHealingDoneByYouToYourPet + NonPlayerHealingDone;
+        public int TotalCritHealingDone => CriticalHealingDone + CriticalSelfHealingDone + CriticalHealingDoneByYouToYourPet + NonPlayerCriticalHealingDone;
+        public int TotalHealingDone => TotalCritHealingDone + HealingDone + SelfHealingDone + AbilitySelfHealingDone + PetHealingDone + PetHealingYou + HealingDoneByYouToYourPet + NonPlayerHealingDone;
         public int TotalHealingToSelf => SelfHealingDone + CriticalSelfHealingDone + AbilitySelfHealingDone + PetHealingYou;
         public double HealSelfRatio => TotalHealingToSelf / (double)(TotalHealingDone == 0 ? 1 : TotalHealingDone);
         public int TotalHealingRecieved => HealingTaken + TotalHealingToSelf + PetHealingYou;
@@ -67,17 +68,18 @@ namespace DAoCToolSuite.LogTool
         public int AverageCritHealingDone => Convert.ToInt32((CriticalHealingDone + CriticalSelfHealingDone + NonPlayerCriticalHealingDone + CriticalHealingDoneByYouToYourPet) / (double)(CritHealHit == 0 ? 1 : CritHealHit));
         private int TotalHeals => CritHealHit + HealHit;
         public double HealCritRate => CritHealHit / (double)(TotalHeals == 0 ? 1 : TotalHeals);
-        public double CritHealRatio => CriticalHealingDone / (double)(TotalHealingDone == 0 ? 1 : TotalHealingDone);
+        public double CritHealRatio => TotalCritHealingDone / (double)(TotalHealingDone == 0 ? 1 : TotalHealingDone);
 
         #endregion
 
         #region Damage Stats
         public int TotalDamageDone => DamageDone + CritDamageDone + PetDamageDone + NonPlayerDamageDone + NonPlayerCriticalDamageDone;
+        public int TotalCritDamageDone => CritDamageDone + NonPlayerCriticalDamageDone;
         public int AverageDamageDone => Convert.ToInt32((DamageDone + NonPlayerDamageDone) / (double)(Hit == 0 ? 1 : Hit));
         public int AverageCritDamageDone => Convert.ToInt32((CritDamageDone + NonPlayerCriticalDamageDone) / (double)(CritHit == 0 ? 1 : CritHit));
         public int TotalDamageHits => CritHit + Hit;
         public double DamageCritRate => CritHit / (double)(TotalDamageHits == 0 ? 1 : TotalDamageHits);
-        public double CritDamageRatio => CritDamageDone / (double)(TotalDamageDone == 0 ? 1 : TotalDamageDone);
+        public double CritDamageRatio => TotalCritDamageDone / (double)(TotalDamageDone == 0 ? 1 : TotalDamageDone);
         public int TotalDamageTaken => DamageTaken + NonPlayerDamageTaken; //TODO:Add Pet Damage!
         #endregion
 
@@ -114,7 +116,7 @@ namespace DAoCToolSuite.LogTool
         private static readonly Regex PetDamageDoneRegEx = new(@"Your (.*) (hits|attacks) (.*) for (\d+)");
         //TODO: Populate PetCriticalDamageDoneRegEx once I know what a chat log line looks like for that.
         private static readonly Regex HealingDoneByYouToYourPetRegEx = new(@"You heal your (.+) for (\d+)");
-        private static readonly Regex CriticalHealingDoneByYouToYourPetRegEx = new(@"You heal your (.+) for (\d+) .*\n.* You critical .* (\d+)");
+        private static readonly Regex CriticalHealingDoneByYouToYourPetRegEx = new(@"You heal your (.+) for (\d+).*\n.*You critical .* (\d+)");
 
         //Mitigation
         private static readonly Regex DamageTakenAbsorbedRegEx = new(@"Your .* absorb.* (\d+)");
@@ -125,7 +127,7 @@ namespace DAoCToolSuite.LogTool
         //Non-Player
         private static readonly Regex NonPlayerDamageTakenRegEx = new(@"The (.*) hits you for (\d+)");
         private static readonly Regex NonPlayerDamageDoneRegEx = new(@"You hit the (.*) for (\d+)");
-        private static readonly Regex NonPlayerCriticalDamageDoneRegEx = new(@"You hit the (.+) for (\d+) .*\n.* You critical .* (\d+)");
+        private static readonly Regex NonPlayerCriticalDamageDoneRegEx = new(@"You hit the (.+) for (\d+).*\n.*You critical .* (\d+)");
         private static readonly Regex NonPlayerHealingDoneRegEx = new(@"You heal (.*)'s (.*) for (\d+)");
         private static readonly Regex NonPlayerCriticalHealingDoneRegEx = new(@"You critical heal.* (\d+).*\n.*You heal (.*)'s (.*) for (\d+)");
 
@@ -491,7 +493,7 @@ namespace DAoCToolSuite.LogTool
                 Match nonPlayerCriticalDamageDoneRegEx = NonPlayerCriticalDamageDoneRegEx.Match(lines);
                 if (nonPlayerCriticalDamageDoneRegEx.Success)
                 {
-                    //new Regex(@"You hit the (.+) for (\d+) .*\n.* You critical .* (\d+)");
+                    //new Regex(@"You hit the (.+) for (\d+).*\n.*You critical .* (\d+)");
                     int nonPlayerDamageDone = int.TryParse(nonPlayerCriticalDamageDoneRegEx.Groups[2].Value, out nonPlayerDamageDone) ? nonPlayerDamageDone : 0;
                     int nonPlayerCriticalDamageDone = int.TryParse(nonPlayerCriticalDamageDoneRegEx.Groups[3].Value, out nonPlayerCriticalDamageDone) ? nonPlayerCriticalDamageDone : 0;
                     NonPlayerCriticalDamageDone += nonPlayerCriticalDamageDone + nonPlayerDamageDone;

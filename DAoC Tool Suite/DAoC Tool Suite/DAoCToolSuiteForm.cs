@@ -7,6 +7,7 @@ namespace DAoCToolSuite
         internal static LogManager Logger => LogManager.Instance;
         private static ChimpTool.MainForm? ChimpToolForm { get; set; } = null;
         private static CharacterTool.MainForm? CharacterToolForm { get; set; } = null;
+        private static LogTool.MainForm? LogToolForm { get; set; } = null;
 
         public DAoCToolSuiteForm()
         {
@@ -97,8 +98,34 @@ namespace DAoCToolSuite
             ChimpTool.Properties.Settings.Default.Save();
             CharacterTool.Properties.Settings.Default.Reset();
             CharacterTool.Properties.Settings.Default.Save();
+            DAoCToolSuite.LogTool.Properties.Settings.Default.Reset();
+            DAoCToolSuite.LogTool.Properties.Settings.Default.Save();
+            Properties.Settings.Default.Save();
             Properties.Settings.Default.Reset();
             Properties.Settings.Default.Save();
+        }
+
+        private void LogParserButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LogToolForm ??= new();
+                LogToolForm.Disposed -= LogToolForm_Disposed;
+                LogToolForm.Disposed += LogToolForm_Disposed;
+                LogToolForm.Show();
+                Logger.Debug("LogTool MainForm Shown");
+                _ = LogToolForm.Focus();
+                Logger.Debug("LogToolForm MainForm Focused");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+        }
+        private void LogToolForm_Disposed(object? sender, EventArgs e)
+        {
+            Activate();
+            LogToolForm = null;
         }
     }
 }

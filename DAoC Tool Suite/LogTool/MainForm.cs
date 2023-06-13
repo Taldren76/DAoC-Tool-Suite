@@ -1,3 +1,4 @@
+using System.Data;
 using Logger;
 
 namespace DAoCToolSuite.LogTool
@@ -14,10 +15,13 @@ namespace DAoCToolSuite.LogTool
         private string LogPath { get; set; }
         private bool FormInitialized { get; set; } = false;
         private Dictionary<DateTime, int> CustomLogDates { get; set; } = new();
+        BindingSource BindingSource { get; set; } = new();
 
         public MainForm()
         {
             InitializeComponent();
+            this.FormClosing -= new FormClosingEventHandler(MainForm_Closing);
+            this.FormClosing += new FormClosingEventHandler(MainForm_Closing);
             LogPath = DefaultLogPath();
             LogFileTextBox.Text = LogPath;
             Timer.Tick -= new EventHandler(MainForm_TimerHandler);
@@ -30,8 +34,50 @@ namespace DAoCToolSuite.LogTool
             OverLayOpacityControl.Minimum = 0;
             FontColorPanel.BackColor = Overlay.Title_TotalDamageDone.ForeColor;
             OverlayTransparentCheckBox.Checked = true;
-
+            BindingSource.DataSource = ProduceDataTable();
+            AttachDataSource();
+            FormatTable();
             FormInitialized = true;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            long currentCount = LogTool.Properties.Settings.Default.UseCountMainform;
+            if (currentCount > 0)
+            {
+                Location = LogTool.Properties.Settings.Default.LastLocationMainform;
+            }
+            else
+            {
+                //ScreenCentered by Default
+                LogTool.Properties.Settings.Default.LastLocationMainform = Location;
+            }
+            if (currentCount != long.MaxValue)
+            {
+                LogTool.Properties.Settings.Default.UseCountMainform = currentCount + 1;
+            }
+            LogTool.Properties.Settings.Default.Save();
+        }
+
+        private void MainForm_Closing(object? sender, FormClosingEventArgs e)
+        {
+            Overlay?.Close();
+            Properties.Settings.Default.LastLocationMainform = this.Location;
+            Properties.Settings.Default.Save();
+        }
+
+        private void FormatTable()
+        {
+            dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridView1.Columns[1].DefaultCellStyle.Padding = new Padding(0, 0, 30, 0);
+            dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+
+        }
+
+        private void AttachDataSource()
+        {
+            dataGridView1.DataSource = BindingSource;
         }
 
         private void AttachLogDates()
@@ -67,40 +113,52 @@ namespace DAoCToolSuite.LogTool
             DisplayParseLogStatistics();
         }
 
+        private DataTable ProduceDataTable()
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            AddRow("Average Heal:", LogParser.AverageHealingDone.ToString("N0"), "Average Damage:", LogParser.AverageDamageDone.ToString("N0"));
+            AddRow("Average Crit Heal:", LogParser.AverageCritHealingDone.ToString("N0"), "Average Crit Damage:", LogParser.AverageCritDamageDone.ToString("N0"));
+            AddRow("Total Healing Done:", LogParser.TotalHealingDone.ToString("N0"), "Total Damage Done:", LogParser.TotalDamageDone.ToString("N0"));
+            AddRow("Heal Crit Rate:", LogParser.HealCritRate.ToString("0.0%"), "Damage Absorbed:", LogParser.DamageDoneAbsorbed.ToString("N0"));
+            AddRow("Crit:Heal Ratio:", LogParser.CritHealRatio.ToString("0.0%"), "Damage Blocked:", LogParser.DamageDoneBlocked.ToString("N0"));
+            AddRow("Self:Heal Ratio:", LogParser.HealSelfRatio.ToString("0.0%"), "Damage Crit Rate:", LogParser.DamageCritRate.ToString("0.0%"));
+            AddRow("", "", "Crit:Damage Ratio:", LogParser.CritDamageRatio.ToString("0.0%"));
+            AddRow("Total Healing Recieved:", LogParser.TotalHealingRecieved.ToString("N0"), "", "");
+            AddRow("", "", "DeathBlows:", LogParser.DeathBlows.ToString("N0"));
+            AddRow("Total Damage Taken:", LogParser.TotalDamageTaken.ToString("N0"), "Deaths:", LogParser.Deaths.ToString("N0"));
+            AddRow("Total Damage Converted:", LogParser.TotalDamageConverted.ToString("N0"), "", "");
+            AddRow("Total Damage Absorbed:", LogParser.DamageTakenAbsorbed.ToString("N0"), "Realm Points:", LogParser.RealmPointsEarned.ToString("N0"));
+            AddRow("Total Damage Blocked:", LogParser.TotalDamageBlocked.ToString("N0"), "IRS", LogParser.IRS.ToString("N0"));
+            return dt;
+
+            void AddRow(string title1 = "", string value1 = "", string title2 = "", string value2 = "")
+            {
+                DataRow dr = dt.NewRow();
+                dr[0] = title1;
+                dr[1] = value1;
+                dr[2] = title2;
+                dr[3] = value2;
+                dt.Rows.Add(dr);
+            }
+        }
+
         private void DisplayParseLogStatistics()
         {
-            Value_AverageCritDamageDone.Text = LogParser.AverageCritDamageDone.ToString("N0");
-            Value_AverageDamageDone.Text = LogParser.AverageDamageDone.ToString("N0");
-            Value_TotalDamageDone.Text = LogParser.TotalDamageDone.ToString("N0");
-            Value_CritDamageRatio.Text = LogParser.CritDamageRatio.ToString("0.0%");//.ToRatioString();
-            Value_DamageCritRate.Text = LogParser.DamageCritRate.ToString("0.0%");
-            Value_AverageHealingDone.Text = LogParser.AverageHealingDone.ToString("N0");
-            Value_AverageCritHealingDone.Text = LogParser.AverageCritHealingDone.ToString("N0");
-            Value_HealSelfRatio.Text = LogParser.HealSelfRatio.ToString("0.0%");//.ToRatioString();
-            Value_CritHealRatio.Text = LogParser.CritHealRatio.ToString("0.0%");//.ToRatioString();
-            Value_HealCritRate.Text = LogParser.HealCritRate.ToString("0.0%");
-            Value_TotalHealingDone.Text = LogParser.TotalHealingDone.ToString("N0");
-            Value_TotalHealingRecieved.Text = LogParser.TotalHealingRecieved.ToString("N0");
-            Value_RealmPoints.Text = LogParser.RealmPointsEarned.ToString("N0");
-            Value_DamageAbsorbed.Text = LogParser.DamageDoneAbsorbed.ToString("N0");
-            Value_DamageTakenAbsorbed.Text = LogParser.DamageTakenAbsorbed.ToString("N0");
-            Value_TotalDamageTaken.Text = LogParser.TotalDamageTaken.ToString("N0");
-            Value_DeathBlows.Text = LogParser.DeathBlows.ToString("N0");
-            Value_Deaths.Text = LogParser.Deaths.ToString("N0");
-            Value_DamageDoneBlocked.Text = LogParser.DamageDoneBlocked.ToString("N0");
-            Value_TotalDamageBlocked.Text = LogParser.TotalDamageBlocked.ToString("N0");
-            Value_TotalDamageConverted.Text = LogParser.TotalDamageConverted.ToString("N0");
-            Value_IRS.Text = LogParser.IRS.ToString("N0");
+            BindingSource.DataSource = ProduceDataTable();
 
             Overlay.Value_AverageCritDamageDone.Text = LogParser.AverageCritDamageDone.ToString("N0");
             Overlay.Value_AverageDamageDone.Text = LogParser.AverageDamageDone.ToString("N0");
             Overlay.Value_TotalDamageDone.Text = LogParser.TotalDamageDone.ToString("N0");
-            Overlay.Value_CritDamageRatio.Text = LogParser.CritDamageRatio.ToString("0.0%");//.ToRatioString();
+            Overlay.Value_CritDamageRatio.Text = LogParser.CritDamageRatio.ToString("0.0%");
             Overlay.Value_DamageCritRate.Text = LogParser.DamageCritRate.ToString("0.0%");
             Overlay.Value_AverageHealingDone.Text = LogParser.AverageHealingDone.ToString("N0");
             Overlay.Value_AverageCritHealingDone.Text = LogParser.AverageCritHealingDone.ToString("N0");
-            Overlay.Value_HealSelfRatio.Text = LogParser.HealSelfRatio.ToString("0.0%");//.ToRatioString();
-            Overlay.Value_CritHealRatio.Text = LogParser.CritHealRatio.ToString("0.0%");//.ToRatioString();
+            Overlay.Value_HealSelfRatio.Text = LogParser.HealSelfRatio.ToString("0.0%");
+            Overlay.Value_CritHealRatio.Text = LogParser.CritHealRatio.ToString("0.0%");
             Overlay.Value_HealCritRate.Text = LogParser.HealCritRate.ToString("0.0%");
             Overlay.Value_TotalHealingDone.Text = LogParser.TotalHealingDone.ToString("N0");
             Overlay.Value_TotalHealingRecieved.Text = LogParser.TotalHealingRecieved.ToString("N0");
@@ -116,6 +174,7 @@ namespace DAoCToolSuite.LogTool
             Overlay.Value_IRS.Text = LogParser.IRS.ToString("N0");
             Overlay.Refresh();
         }
+
 
         private void MainForm_TimerHandler(object? sender, EventArgs e)
         {
@@ -253,30 +312,7 @@ namespace DAoCToolSuite.LogTool
         private void ColorButton_Click(object sender, EventArgs e)
         {
             _ = colorDialog1.ShowDialog();
-            Overlay.Title_DamageCritRate.ForeColor = colorDialog1.Color;
-            Overlay.Value_DamageCritRate.ForeColor = colorDialog1.Color;
-            Overlay.Title_RealmPoints.ForeColor = colorDialog1.Color;
-            Overlay.Value_RealmPoints.ForeColor = colorDialog1.Color;
-            Overlay.Title_TotalDamageDone.ForeColor = colorDialog1.Color;
-            Overlay.Value_TotalDamageDone.ForeColor = colorDialog1.Color;
-            Overlay.Title_TotalHealingRecieved.ForeColor = colorDialog1.Color;
-            Overlay.Value_TotalHealingRecieved.ForeColor = colorDialog1.Color;
-            Overlay.Title_TotalHealingDone.ForeColor = colorDialog1.Color;
-            Overlay.Value_TotalHealingDone.ForeColor = colorDialog1.Color;
-            Overlay.Title_CritHealRatio.ForeColor = colorDialog1.Color;
-            Overlay.Value_HealCritRate.ForeColor = colorDialog1.Color;
-            Overlay.Title_HealCritRate.ForeColor = colorDialog1.Color;
-            Overlay.Value_CritHealRatio.ForeColor = colorDialog1.Color;
-            Overlay.Title_HealSelfRatio.ForeColor = colorDialog1.Color;
-            Overlay.Value_HealSelfRatio.ForeColor = colorDialog1.Color;
-            Overlay.Title_AverageCritHealingDone.ForeColor = colorDialog1.Color;
-            Overlay.Value_AverageCritHealingDone.ForeColor = colorDialog1.Color;
-            Overlay.Title_AverageHealingDone.ForeColor = colorDialog1.Color;
-            Overlay.Title_AverageCritDamageDone.ForeColor = colorDialog1.Color;
-            Overlay.Title_AverageDamageDone.ForeColor = colorDialog1.Color;
-            Overlay.Value_AverageHealingDone.ForeColor = colorDialog1.Color;
-            Overlay.Value_AverageCritDamageDone.ForeColor = colorDialog1.Color;
-            Overlay.Value_AverageDamageDone.ForeColor = colorDialog1.Color;
+            Overlay.SetLabelForecolor(colorDialog1.Color);
             FontColorPanel.BackColor = colorDialog1.Color;
             Overlay.Refresh();
         }
@@ -286,59 +322,11 @@ namespace DAoCToolSuite.LogTool
             CheckBox checkBox = (CheckBox)sender;
             if (checkBox.Checked)
             {
-                Overlay.Title_DamageCritRate.BackColor = Color.DimGray;
-                Overlay.Value_DamageCritRate.BackColor = Color.DimGray;
-                Overlay.Title_RealmPoints.BackColor = Color.DimGray;
-                Overlay.Value_RealmPoints.BackColor = Color.DimGray;
-                Overlay.Title_TotalDamageDone.BackColor = Color.DimGray;
-                Overlay.Value_TotalDamageDone.BackColor = Color.DimGray;
-                Overlay.Title_TotalHealingRecieved.BackColor = Color.DimGray;
-                Overlay.Value_TotalHealingRecieved.BackColor = Color.DimGray;
-                Overlay.Title_TotalHealingDone.BackColor = Color.DimGray;
-                Overlay.Value_TotalHealingDone.BackColor = Color.DimGray;
-                Overlay.Title_CritHealRatio.BackColor = Color.DimGray;
-                Overlay.Value_HealCritRate.BackColor = Color.DimGray;
-                Overlay.Title_HealCritRate.BackColor = Color.DimGray;
-                Overlay.Value_CritHealRatio.BackColor = Color.DimGray;
-                Overlay.Title_HealSelfRatio.BackColor = Color.DimGray;
-                Overlay.Value_HealSelfRatio.BackColor = Color.DimGray;
-                Overlay.Title_AverageCritHealingDone.BackColor = Color.DimGray;
-                Overlay.Value_AverageCritHealingDone.BackColor = Color.DimGray;
-                Overlay.Title_AverageHealingDone.BackColor = Color.DimGray;
-                Overlay.Title_AverageCritDamageDone.BackColor = Color.DimGray;
-                Overlay.Title_AverageDamageDone.BackColor = Color.DimGray;
-                Overlay.Value_AverageHealingDone.BackColor = Color.DimGray;
-                Overlay.Value_AverageCritDamageDone.BackColor = Color.DimGray;
-                Overlay.Value_AverageDamageDone.BackColor = Color.DimGray;
-                Overlay.Refresh();
+                Overlay.SetLabelBackcolor(Color.DimGray);
             }
             else
             {
-                Overlay.Title_DamageCritRate.BackColor = Color.Black;
-                Overlay.Value_DamageCritRate.BackColor = Color.Black;
-                Overlay.Title_RealmPoints.BackColor = Color.Black;
-                Overlay.Value_RealmPoints.BackColor = Color.Black;
-                Overlay.Title_TotalDamageDone.BackColor = Color.Black;
-                Overlay.Value_TotalDamageDone.BackColor = Color.Black;
-                Overlay.Title_TotalHealingRecieved.BackColor = Color.Black;
-                Overlay.Value_TotalHealingRecieved.BackColor = Color.Black;
-                Overlay.Title_TotalHealingDone.BackColor = Color.Black;
-                Overlay.Value_TotalHealingDone.BackColor = Color.Black;
-                Overlay.Title_CritHealRatio.BackColor = Color.Black;
-                Overlay.Value_HealCritRate.BackColor = Color.Black;
-                Overlay.Title_HealCritRate.BackColor = Color.Black;
-                Overlay.Value_CritHealRatio.BackColor = Color.Black;
-                Overlay.Title_HealSelfRatio.BackColor = Color.Black;
-                Overlay.Value_HealSelfRatio.BackColor = Color.Black;
-                Overlay.Title_AverageCritHealingDone.BackColor = Color.Black;
-                Overlay.Value_AverageCritHealingDone.BackColor = Color.Black;
-                Overlay.Title_AverageHealingDone.BackColor = Color.Black;
-                Overlay.Title_AverageCritDamageDone.BackColor = Color.Black;
-                Overlay.Title_AverageDamageDone.BackColor = Color.Black;
-                Overlay.Value_AverageHealingDone.BackColor = Color.Black;
-                Overlay.Value_AverageCritDamageDone.BackColor = Color.Black;
-                Overlay.Value_AverageDamageDone.BackColor = Color.Black;
-                Overlay.Refresh();
+                Overlay.SetLabelBackcolor(Color.Black);
             }
         }
 

@@ -33,7 +33,7 @@ namespace DAoCToolSuite
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DAoCToolSuiteForm));
             chimpToolButton = new Button();
             characterToolButton = new Button();
-            logParserButton = new Button();
+            LogParserButton = new Button();
             chimpLabel = new Label();
             characterToolLabel = new Label();
             LogTool = new Label();
@@ -60,15 +60,15 @@ namespace DAoCToolSuite
             characterToolButton.UseVisualStyleBackColor = true;
             characterToolButton.Click += CharacterToolButton_Click;
             // 
-            // logParserButton
+            // LogParserButton
             // 
-            logParserButton.Enabled = false;
-            logParserButton.Image = Properties.Resources.LogParser;
-            logParserButton.Location = new Point(304, 12);
-            logParserButton.Name = "logParserButton";
-            logParserButton.Size = new Size(140, 140);
-            logParserButton.TabIndex = 2;
-            logParserButton.UseVisualStyleBackColor = true;
+            LogParserButton.Image = Properties.Resources.LogParser;
+            LogParserButton.Location = new Point(304, 12);
+            LogParserButton.Name = "LogParserButton";
+            LogParserButton.Size = new Size(140, 140);
+            LogParserButton.TabIndex = 2;
+            LogParserButton.UseVisualStyleBackColor = true;
+            LogParserButton.Click += LogParserButton_Click;
             // 
             // chimpLabel
             // 
@@ -120,7 +120,7 @@ namespace DAoCToolSuite
             Controls.Add(LogTool);
             Controls.Add(characterToolLabel);
             Controls.Add(chimpLabel);
-            Controls.Add(logParserButton);
+            Controls.Add(LogParserButton);
             Controls.Add(characterToolButton);
             Controls.Add(chimpToolButton);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -137,7 +137,7 @@ namespace DAoCToolSuite
 
         private Button chimpToolButton;
         private Button characterToolButton;
-        private Button logParserButton;
+        private Button LogParserButton;
         private Label chimpLabel;
         private Label characterToolLabel;
         private Label LogTool;
