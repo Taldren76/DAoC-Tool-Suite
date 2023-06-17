@@ -1,4 +1,6 @@
-﻿namespace DAoCToolSuite.LogTool
+﻿using System.Windows.Forms;
+
+namespace DAoCToolSuite.LogTool
 {
     partial class MainForm
     {
@@ -34,7 +36,7 @@
             groupBox1 = new GroupBox();
             LogFileTextBox = new TextBox();
             splitContainer1 = new SplitContainer();
-            panel1 = new Panel();
+            TablePanel = new Panel();
             dataGridView1 = new DataGridView();
             ResetButton = new Button();
             LogDatesComboBox = new ComboBox();
@@ -50,12 +52,14 @@
             OverlayButton = new Button();
             colorDialog1 = new ColorDialog();
             ParseProgressBar = new TextProgressBar();
+            Column1 = new DataGridViewTextBoxColumn();
+            Column2 = new DataGridViewTextBoxColumn();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
-            panel1.SuspendLayout();
+            TablePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)OverLayOpacityControl).BeginInit();
             SuspendLayout();
@@ -96,11 +100,12 @@
             // splitContainer1.Panel1
             // 
             splitContainer1.Panel1.BackColor = SystemColors.Control;
-            splitContainer1.Panel1.Controls.Add(panel1);
+            splitContainer1.Panel1.Controls.Add(TablePanel);
             splitContainer1.Panel1.Controls.Add(ResetButton);
             splitContainer1.Panel1.Controls.Add(LogDatesComboBox);
             splitContainer1.Panel1.Controls.Add(ParseButton);
             splitContainer1.Panel1.Controls.Add(label1);
+            splitContainer1.Panel1.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
             splitContainer1.Panel1.ForeColor = SystemColors.ControlText;
             // 
             // splitContainer1.Panel2
@@ -113,17 +118,20 @@
             splitContainer1.Panel2.Controls.Add(OverLayOpacityControl);
             splitContainer1.Panel2.Controls.Add(LockOverlayButton);
             splitContainer1.Panel2.Controls.Add(OverlayButton);
-            splitContainer1.Size = new Size(679, 280);
+            splitContainer1.Panel2.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            splitContainer1.Size = new Size(679, 385);
             splitContainer1.SplitterDistance = 525;
             splitContainer1.TabIndex = 2;
             // 
-            // panel1
+            // TablePanel
             // 
-            panel1.Controls.Add(dataGridView1);
-            panel1.Location = new Point(3, 54);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(519, 226);
-            panel1.TabIndex = 5;
+            TablePanel.BackColor = Color.Black;
+            TablePanel.Controls.Add(dataGridView1);
+            TablePanel.ForeColor = Color.White;
+            TablePanel.Location = new Point(3, 54);
+            TablePanel.Name = "TablePanel";
+            TablePanel.Size = new Size(519, 328);
+            TablePanel.TabIndex = 5;
             // 
             // dataGridView1
             // 
@@ -133,21 +141,22 @@
             dataGridView1.AllowUserToResizeRows = false;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridView1.BackgroundColor = Color.Black;
+            dataGridView1.BackgroundColor = Color.FromArgb(0, 0, 0);
             dataGridView1.BorderStyle = BorderStyle.None;
             dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.None;
+            dataGridView1.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.ColumnHeadersVisible = false;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle1.BackColor = Color.Black;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(0, 0, 0);
             dataGridViewCellStyle1.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = Color.Black;
-            dataGridViewCellStyle1.SelectionForeColor = Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(0, 0, 0);
+            dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(255, 255, 255);
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
             dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
             dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.GridColor = Color.DimGray;
+            dataGridView1.GridColor = Color.FromArgb(0, 0, 0);
             dataGridView1.Location = new Point(0, 0);
             dataGridView1.MultiSelect = false;
             dataGridView1.Name = "dataGridView1";
@@ -159,7 +168,7 @@
             dataGridView1.ShowCellToolTips = false;
             dataGridView1.ShowEditingIcon = false;
             dataGridView1.ShowRowErrors = false;
-            dataGridView1.Size = new Size(519, 226);
+            dataGridView1.Size = new Size(519, 328);
             dataGridView1.TabIndex = 114;
             dataGridView1.TabStop = false;
             // 
@@ -206,7 +215,7 @@
             label1.ForeColor = SystemColors.ControlText;
             label1.Location = new Point(6, 7);
             label1.Name = "label1";
-            label1.Size = new Size(80, 15);
+            label1.Size = new Size(95, 14);
             label1.TabIndex = 3;
             label1.Text = "Start Location";
             // 
@@ -215,7 +224,7 @@
             FilterPlayersOnlyCheckBox.AutoSize = true;
             FilterPlayersOnlyCheckBox.Location = new Point(12, 163);
             FilterPlayersOnlyCheckBox.Name = "FilterPlayersOnlyCheckBox";
-            FilterPlayersOnlyCheckBox.Size = new Size(91, 19);
+            FilterPlayersOnlyCheckBox.Size = new Size(104, 18);
             FilterPlayersOnlyCheckBox.TabIndex = 7;
             FilterPlayersOnlyCheckBox.Text = "Players Only";
             FilterPlayersOnlyCheckBox.UseVisualStyleBackColor = true;
@@ -226,7 +235,7 @@
             OverlayTransparentCheckBox.AutoSize = true;
             OverlayTransparentCheckBox.Location = new Point(12, 138);
             OverlayTransparentCheckBox.Name = "OverlayTransparentCheckBox";
-            OverlayTransparentCheckBox.Size = new Size(87, 19);
+            OverlayTransparentCheckBox.Size = new Size(102, 18);
             OverlayTransparentCheckBox.TabIndex = 6;
             OverlayTransparentCheckBox.Text = "Transparent";
             OverlayTransparentCheckBox.UseVisualStyleBackColor = true;
@@ -255,7 +264,7 @@
             label2.AutoSize = true;
             label2.Location = new Point(12, 62);
             label2.Name = "label2";
-            label2.Size = new Size(91, 15);
+            label2.Size = new Size(106, 14);
             label2.TabIndex = 3;
             label2.Text = "Overlay Opacity";
             // 
@@ -263,7 +272,7 @@
             // 
             OverLayOpacityControl.Location = new Point(12, 80);
             OverLayOpacityControl.Name = "OverLayOpacityControl";
-            OverLayOpacityControl.Size = new Size(116, 23);
+            OverLayOpacityControl.Size = new Size(116, 22);
             OverLayOpacityControl.TabIndex = 2;
             OverLayOpacityControl.ValueChanged += OverLayOpacityControl_ValueChanged;
             // 
@@ -289,33 +298,49 @@
             // 
             // ParseProgressBar
             // 
-            ParseProgressBar.CustomText = "";
+            ParseProgressBar.CustomText = "Loading File";
             ParseProgressBar.ForeColor = Color.Chartreuse;
-            ParseProgressBar.Location = new Point(15, 361);
+            ParseProgressBar.Location = new Point(15, 470);
             ParseProgressBar.Name = "ParseProgressBar";
-            ParseProgressBar.ProgressColor = Color.LightGreen;
+            ParseProgressBar.ProgressColor = Color.Chartreuse;
             ParseProgressBar.Size = new Size(670, 23);
             ParseProgressBar.TabIndex = 3;
             ParseProgressBar.TextColor = Color.Black;
             ParseProgressBar.TextFont = new Font("Times New Roman", 11F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             ParseProgressBar.Visible = false;
-            ParseProgressBar.VisualMode = ProgressBarDisplayMode.CurrProgress;
+            ParseProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
+            // 
+            // Column1
+            // 
+            Column1.HeaderText = "Column1";
+            Column1.Name = "Column1";
+            Column1.ReadOnly = true;
+            Column1.Width = 5;
+            // 
+            // Column2
+            // 
+            Column2.HeaderText = "Column2";
+            Column2.Name = "Column2";
+            Column2.ReadOnly = true;
+            Column2.Width = 5;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(700, 387);
-            Controls.Add(ParseProgressBar);
+            ClientSize = new Size(700, 497);
             Controls.Add(splitContainer1);
+            Controls.Add(ParseProgressBar);
             Controls.Add(groupBox1);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximumSize = new Size(720, 430);
-            MinimumSize = new Size(720, 430);
+            MaximizeBox = false;
+            MaximumSize = new Size(720, 540);
+            MinimizeBox = false;
+            MinimumSize = new Size(720, 540);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "LogTool v0.5.0";
+            Text = "LogTool v0.6.0";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
@@ -324,7 +349,7 @@
             splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
-            panel1.ResumeLayout(false);
+            TablePanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)OverLayOpacityControl).EndInit();
             ResumeLayout(false);
@@ -349,8 +374,10 @@
         private Panel FontColorPanel;
         private CheckBox OverlayTransparentCheckBox;
         private CheckBox FilterPlayersOnlyCheckBox;
-        private DataGridView dataGridView1;
-        private Panel panel1;
+        private Panel TablePanel;
         private TextProgressBar ParseProgressBar;
+        private DataGridView dataGridView1;
+        private DataGridViewTextBoxColumn Column1;
+        private DataGridViewTextBoxColumn Column2;
     }
 }

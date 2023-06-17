@@ -13,16 +13,22 @@
     <RootNamespace>DAoCToolSuite.LogTool</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icons\LogParser.ico</ApplicationIcon>
-    <PackageIcon>LogParser.png</PackageIcon>
+    <PackageIcon>Icons\LogParser.png</PackageIcon>
   </PropertyGroup>
+	<PropertyGroup Condition="'$(PlatformTarget)' == 'x86'">
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x86</RuntimeIdentifier>
+		<SelfContained Condition="'$(SelfContained)' == ''">false</SelfContained>
+	</PropertyGroup>
 
   <ItemGroup>
+    <None Remove="App.config" />
     <None Remove="Icons\DAoCTools.ico" />
     <None Remove="Icons\DAoCTools.png" />
     <None Remove="Icons\LogParser.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="App.config" />
     <Content Include="Icons\DAoCTools.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -7,19 +7,16 @@ namespace DAoCToolSuite.LogTool
     {
         public static System.Windows.Forms.Timer Timer { get; set; } = new();
         public LogParser LogParser { get; set; } = new() { };
-
         private static LogManager Logger => LogManager.Instance;
-
         private Overlay Overlay { get; set; } = new();
-        private bool OverlayLock { get; set; }
         private string LogPath { get; set; }
         private bool FormInitialized { get; set; } = false;
-        private Dictionary<DateTime, int> CustomLogDates { get; set; } = new();
-        BindingSource BindingSource { get; set; } = new();
+        private static BindingSource BindingSource { get; set; } = new();
 
         public MainForm()
         {
             InitializeComponent();
+
             this.FormClosing -= new FormClosingEventHandler(MainForm_Closing);
             this.FormClosing += new FormClosingEventHandler(MainForm_Closing);
 
@@ -30,14 +27,13 @@ namespace DAoCToolSuite.LogTool
             LogPath = GetLastLogFolderPath();
             LogFileTextBox.Text = LogPath;
             LogParser = new LogParser(LogPath, ParseProgressBar);
+
+            BindingSource.DataSource = ProduceDataTable();
+            AttachDataSource();
             AttachLogDates();
 
             OverLayOpacityControl.Maximum = 100;
             OverLayOpacityControl.Minimum = 0;
-
-            BindingSource.DataSource = ProduceDataTable();
-            AttachDataSource();
-            FormatTable();
 
             FormInitialized = true;
         }
@@ -45,7 +41,6 @@ namespace DAoCToolSuite.LogTool
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
             #region Load Settings
             colorDialog1.Color = Properties.Settings.Default.OverlayFontColor;
             FontColorPanel.BackColor = Properties.Settings.Default.OverlayFontColor;
@@ -91,10 +86,11 @@ namespace DAoCToolSuite.LogTool
             Properties.Settings.Default.Save();
         }
 
+        /// <summary>
+        /// Sets the Table Alignment for Title and Value.
+        /// </summary>
         private void FormatTable()
         {
-            dataGridView1.BackgroundColor = Color.Black;
-            dataGridView1.ForeColor = Color.White;
             dataGridView1.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridView1.Columns[1].DefaultCellStyle.Padding = new Padding(0, 0, 30, 0);
             dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -103,6 +99,7 @@ namespace DAoCToolSuite.LogTool
         private void AttachDataSource()
         {
             dataGridView1.DataSource = BindingSource;
+            FormatTable();
         }
 
         private void AttachLogDates()
@@ -132,30 +129,36 @@ namespace DAoCToolSuite.LogTool
                     int fileIndex = LogParser.LogOpenEntries[startDate];
                     LogParser.SetFileIndex(fileIndex);
                 }
+                DisplayParseLogStatistics();
             }
-            DisplayParseLogStatistics();
         }
 
         private DataTable ProduceDataTable()
         {
-            DataTable dt = new DataTable();
+            DataTable dt = new();
             dt.Columns.Add();
             dt.Columns.Add();
             dt.Columns.Add();
             dt.Columns.Add();
-            AddRow("Average Heal:", LogParser.AverageHealingDone.ToString("N0"), "Average Damage:", LogParser.AverageDamageDone.ToString("N0"));
-            AddRow("Average Crit Heal:", LogParser.AverageCritHealingDone.ToString("N0"), "Average Crit Damage:", LogParser.AverageCritDamageDone.ToString("N0"));
-            AddRow("Total Healing Done:", LogParser.TotalHealingDone.ToString("N0"), "Total Damage Done:", LogParser.TotalDamageDone.ToString("N0"));
-            AddRow("Heal Crit Rate:", LogParser.HealCritRate.ToString("0.0%"), "Damage Absorbed:", LogParser.DamageDoneAbsorbed.ToString("N0"));
-            AddRow("Crit:Heal Ratio:", LogParser.CritHealRatio.ToString("0.0%"), "Damage Blocked:", LogParser.DamageDoneBlocked.ToString("N0"));
-            AddRow("Self:Heal Ratio:", LogParser.HealSelfRatio.ToString("0.0%"), "Damage Crit Rate:", LogParser.DamageCritRate.ToString("0.0%"));
-            AddRow("", "", "Crit:Damage Ratio:", LogParser.CritDamageRatio.ToString("0.0%"));
-            AddRow("Total Healing Recieved:", LogParser.TotalHealingRecieved.ToString("N0"), "", "");
-            AddRow("", "", "DeathBlows:", LogParser.DeathBlows.ToString("N0"));
-            AddRow("Total Damage Taken:", LogParser.TotalDamageTaken.ToString("N0"), "Deaths:", LogParser.Deaths.ToString("N0"));
-            AddRow("Total Damage Converted:", LogParser.TotalDamageConverted.ToString("N0"), "", "");
-            AddRow("Total Damage Absorbed:", LogParser.DamageTakenAbsorbed.ToString("N0"), "Realm Points:", LogParser.RealmPointsEarned.ToString("N0"));
-            AddRow("Total Damage Blocked:", LogParser.TotalDamageBlocked.ToString("N0"), "IRS", LogParser.IRS.ToString("N0"));
+            AddRow("Total Damage Done:", LogParser.TotalDamageDone.ToString("N0"), "Total Healing Recieved:", LogParser.HealingTaken.ToString("N0"));
+            AddRow("", "", "", "");
+            AddRow("Total Spell Dmg:", LogParser.TotalNonMeleeDamageDone.ToString("N0"), "Total Healing Done:", LogParser.TotalHealingDone.ToString("N0"));
+            AddRow("Avg Spell Damage:", LogParser.AverageNonMeleeDamageDone.ToString("N0"), "Avg Heal:", LogParser.AverageHealDone.ToString("N0"));
+            AddRow("Avg Spell Crit Dmg:", LogParser.AverageNonMeleeCriticalDamageDone.ToString("N0"), "Avg Crit Heal:", LogParser.AverageCriticalHealingDone.ToString("N0"));
+            AddRow("Spell Crit Rate:", LogParser.NonMeleeCritRate.ToString("0.0%"), "Heal Crit Rate:", LogParser.HealCritRate.ToString("0.0%"));
+            AddRow("", "", "", "");
+            AddRow("Total Melee Dmg:", LogParser.TotalMeleeDamageDone.ToString("N0"), "Block Rate:", LogParser.AttacksBlockedRate.ToString("0.0%"));
+            AddRow("Avg Melee Dmg:", LogParser.AverageMeleeDamageDone.ToString("N0"), "Evade Rate:", LogParser.AttacksEvadedRate.ToString("0.0%"));
+            AddRow("Avg Melee Crit Dmg:", LogParser.AverageCriticalMeleeDamageDone.ToString("N0"), "Parry Rate:", LogParser.AttacksParriedRate.ToString("0.0%"));
+            AddRow("Melee Crit Rate:", LogParser.MeleeCritRate.ToString("0.0%"), "Miss Rate:", LogParser.AttackMissRate.ToString("0.0%"));
+            AddRow("", "", "", "");
+            AddRow("Total Dmg Taken:", LogParser.TotalDamageTaken.ToString("N0"), "Total Pet Damage:", LogParser.TotalPetDamageDone.ToString("N0"));
+            AddRow("Dmg Absorbed:", LogParser.DamageTakenAbsorbed.ToString("N0"), "Pet Melee Crit Rate:", LogParser.PetMeleeCritRate.ToString("0.0%"));
+            AddRow("Dmg Converted:", LogParser.DamageTakenConverted.ToString("N0"), "Total Pet Healing:", LogParser.TotalPetHealingDone.ToString("N0"));
+            AddRow("Dmg Blocked:", LogParser.TotalDamageTakeBlocked.ToString("N0"), "", "");
+            AddRow("", "", "Gold Earned:", LogParser.GoldEarned.ToString("N4"));
+            AddRow("DeathBlows:", LogParser.DeathBlows.ToString("N0"), "Realm Points Earned:", LogParser.RealmPointsEarned.ToString("N0"));
+            AddRow("Deaths:", LogParser.Deaths.ToString("N0"), "IRS:", LogParser.IRS.ToString("N0"));
             return dt;
 
             void AddRow(string title1 = "", string value1 = "", string title2 = "", string value2 = "")
@@ -169,43 +172,49 @@ namespace DAoCToolSuite.LogTool
             }
         }
 
+        /// <summary>
+        /// Updates the statistics displayed in the table and in the overlay.
+        /// </summary>
         private void DisplayParseLogStatistics()
         {
             BindingSource.DataSource = ProduceDataTable();
-            Overlay.Value_AverageCritDamageDone.Text = LogParser.AverageCritDamageDone.ToString("N0");
-            Overlay.Value_AverageDamageDone.Text = LogParser.AverageDamageDone.ToString("N0");
-            Overlay.Value_TotalDamageDone.Text = LogParser.TotalDamageDone.ToString("N0");
-            Overlay.Value_CritDamageRatio.Text = LogParser.CritDamageRatio.ToString("0.0%");
-            Overlay.Value_DamageCritRate.Text = LogParser.DamageCritRate.ToString("0.0%");
-            Overlay.Value_AverageHealingDone.Text = LogParser.AverageHealingDone.ToString("N0");
-            Overlay.Value_AverageCritHealingDone.Text = LogParser.AverageCritHealingDone.ToString("N0");
-            Overlay.Value_HealSelfRatio.Text = LogParser.HealSelfRatio.ToString("0.0%");
-            Overlay.Value_CritHealRatio.Text = LogParser.CritHealRatio.ToString("0.0%");
-            Overlay.Value_HealCritRate.Text = LogParser.HealCritRate.ToString("0.0%");
-            Overlay.Value_TotalHealingDone.Text = LogParser.TotalHealingDone.ToString("N0");
-            Overlay.Value_TotalHealingRecieved.Text = LogParser.TotalHealingRecieved.ToString("N0");
-            Overlay.Value_RealmPoints.Text = LogParser.RealmPointsEarned.ToString("N0");
-            Overlay.Value_DamageAbsorbed.Text = LogParser.DamageDoneAbsorbed.ToString("N0");
-            Overlay.Value_DamageTakenAbsorbed.Text = LogParser.DamageTakenAbsorbed.ToString("N0");
-            Overlay.Value_TotalDamageTaken.Text = LogParser.TotalDamageTaken.ToString("N0");
-            Overlay.Value_DeathBlows.Text = LogParser.DeathBlows.ToString("N0");
-            Overlay.Value_Deaths.Text = LogParser.Deaths.ToString("N0");
-            Overlay.Value_DamageDoneBlocked.Text = LogParser.DamageDoneBlocked.ToString("N0");
-            Overlay.Value_TotalDamageBlocked.Text = LogParser.TotalDamageBlocked.ToString("N0");
-            Overlay.Value_TotalDamageConverted.Text = LogParser.TotalDamageConverted.ToString("N0");
-            Overlay.Value_IRS.Text = LogParser.IRS.ToString("N0");
-            Overlay.Refresh();
+            //Overlay.Value_AverageCritDamageDone.Text = LogParser.AverageCritDamageDone.ToString("N0");
+            //Overlay.Value_AverageDamageDone.Text = LogParser.AverageDamageDone.ToString("N0");
+            //Overlay.Value_TotalDamageDone.Text = LogParser.TotalNonMeleeDamageDone.ToString("N0");
+            //Overlay.Value_CritDamageRatio.Text = LogParser.CritDamageRatio.ToString("0.0%");
+            //Overlay.Value_DamageCritRate.Text = LogParser.DamageCritRate.ToString("0.0%");
+            //Overlay.Value_AverageHealingDone.Text = LogParser.AverageHealingDone.ToString("N0");
+            //Overlay.Value_AverageCritHealingDone.Text = LogParser.AverageCritHealingDone.ToString("N0");
+            //Overlay.Value_HealSelfRatio.Text = LogParser.HealSelfRatio.ToString("0.0%");
+            //Overlay.Value_CritHealRatio.Text = LogParser.CritHealRatio.ToString("0.0%");
+            //Overlay.Value_HealCritRate.Text = LogParser.HealCritRate.ToString("0.0%");
+            //Overlay.Value_TotalHealingDone.Text = LogParser.TotalHealingDone.ToString("N0");
+            //Overlay.Value_TotalHealingRecieved.Text = LogParser.TotalHealingRecieved.ToString("N0");
+            //Overlay.Value_RealmPoints.Text = LogParser.RealmPointsEarned.ToString("N0");
+            //Overlay.Value_DamageAbsorbed.Text = LogParser.DamageDoneAbsorbed.ToString("N0");
+            //Overlay.Value_DamageTakenAbsorbed.Text = LogParser.DamageTakenAbsorbed.ToString("N0");
+            //Overlay.Value_TotalDamageTaken.Text = LogParser.TotalDamageTaken.ToString("N0");
+            //Overlay.Value_DeathBlows.Text = LogParser.DeathBlows.ToString("N0");
+            //Overlay.Value_Deaths.Text = LogParser.Deaths.ToString("N0");
+            //Overlay.Value_DamageDoneBlocked.Text = LogParser.DamageDoneBlocked.ToString("N0");
+            //Overlay.Value_TotalDamageBlocked.Text = LogParser.TotalDamageBlocked.ToString("N0");
+            //Overlay.Value_TotalDamageConverted.Text = LogParser.TotalDamageConverted.ToString("N0");
+            //Overlay.Value_IRS.Text = LogParser.IRS.ToString("N0");
+            //Overlay.Refresh();
         }
 
-
+        /// <summary>
+        /// This is the Timer event for parsing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainForm_TimerHandler(object? sender, EventArgs e)
         {
             if (LogParser.HasUnparsedData())
             {
                 LogParser.Parse();
+                DisplayParseLogStatistics();
             }
-
-            DisplayParseLogStatistics();
         }
 
         private static string DefaultLogPath()
@@ -213,16 +222,16 @@ namespace DAoCToolSuite.LogTool
             return $"{DefaultLogFolder()}\\chat.log";
         }
 
-        private static string GetLastLogFolderPath()
-        {
-            string path = Properties.Settings.Default.LastLogPath;
-            return string.IsNullOrEmpty(path) ? DefaultLogPath() : Properties.Settings.Default.LastLogPath;
-        }
-
         private static string DefaultLogFolder()
         {
             string path = $"{System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Electronic Arts\\Dark Age of Camelot";
             return path;
+        }
+
+        private static string GetLastLogFolderPath()
+        {
+            string path = Properties.Settings.Default.LastLogPath;
+            return string.IsNullOrEmpty(path) ? DefaultLogPath() : Properties.Settings.Default.LastLogPath;
         }
 
         private static string GetLastLogFolder()
@@ -254,8 +263,11 @@ namespace DAoCToolSuite.LogTool
             {
                 Logger.Error(ex);
             }
-            LogParser = new LogParser(LogPath, ParseProgressBar);
-            LogParser.PlayersOnlyFilter = FilterPlayersOnlyCheckBox.Checked;
+            LogParser = new(LogPath, ParseProgressBar)
+            {
+                PlayersOnlyFilter = FilterPlayersOnlyCheckBox.Checked
+            };
+
             AttachLogDates();
             DisplayParseLogStatistics();
             LogDatesComboBox.Enabled = true;
@@ -293,8 +305,11 @@ namespace DAoCToolSuite.LogTool
         private void ResetButton_Click(object sender, EventArgs e)
         {
             ResetButton.Enabled = false;
-            LogParser = new LogParser(LogPath, ParseProgressBar);
-            LogParser.PlayersOnlyFilter = FilterPlayersOnlyCheckBox.Checked;
+            LogParser = new(LogPath, ParseProgressBar)
+            {
+                PlayersOnlyFilter = FilterPlayersOnlyCheckBox.Checked
+            };
+            ParseButton.Text = "Start";
             AttachLogDates();
             DisplayParseLogStatistics();
             LogDatesComboBox.Enabled = true;
@@ -321,7 +336,10 @@ namespace DAoCToolSuite.LogTool
         {
             LockOverlayButton.Enabled = false;
             if (!Overlay.Visible)
+            {
+                LockOverlayButton.Enabled = true;
                 return;
+            }
 
             if (Overlay.MoveLabel.Visible)
             {

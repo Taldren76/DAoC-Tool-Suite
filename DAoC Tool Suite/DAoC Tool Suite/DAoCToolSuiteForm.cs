@@ -16,20 +16,21 @@ namespace DAoCToolSuite
 
         private void ChimpToolButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                ChimpToolForm ??= new();
-                ChimpToolForm.Disposed -= ChimpToolForm_Disposed;
-                ChimpToolForm.Disposed += ChimpToolForm_Disposed;
-                ChimpToolForm.Show();
-                Logger.Debug("ChimpToolForm MainForm Shown");
-                _ = ChimpToolForm.Focus();
-                Logger.Debug("ChimpToolForm MainForm Focused");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
+            System.Diagnostics.Process.Start($"{System.IO.Path.GetDirectoryName(Application.ExecutablePath)}\\ChimpTool.exe");
+            //try
+            //{
+            //    ChimpToolForm ??= new();
+            //    ChimpToolForm.Disposed -= ChimpToolForm_Disposed;
+            //    ChimpToolForm.Disposed += ChimpToolForm_Disposed;
+            //    ChimpToolForm.Show();
+            //    Logger.Debug("ChimpToolForm MainForm Shown");
+            //    _ = ChimpToolForm.Focus();
+            //    Logger.Debug("ChimpToolForm MainForm Focused");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.Error(ex);
+            //}
         }
 
         private void ChimpToolForm_Disposed(object? sender, EventArgs e)
@@ -40,20 +41,21 @@ namespace DAoCToolSuite
 
         private void CharacterToolButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                CharacterToolForm ??= new();
-                CharacterToolForm.Disposed -= CharacterToolForm_Disposed;
-                CharacterToolForm.Disposed += CharacterToolForm_Disposed;
-                CharacterToolForm.Show();
-                Logger.Debug("CharacterTool MainForm Shown");
-                _ = CharacterToolForm.Focus();
-                Logger.Debug("CharacterTool MainForm Focused");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
+            System.Diagnostics.Process.Start($"{System.IO.Path.GetDirectoryName(Application.ExecutablePath)}\\CharacterTool.exe");
+            //try
+            //{
+            //    CharacterToolForm ??= new();
+            //    CharacterToolForm.Disposed -= CharacterToolForm_Disposed;
+            //    CharacterToolForm.Disposed += CharacterToolForm_Disposed;
+            //    CharacterToolForm.Show();
+            //    Logger.Debug("CharacterTool MainForm Shown");
+            //    _ = CharacterToolForm.Focus();
+            //    Logger.Debug("CharacterTool MainForm Focused");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.Error(ex);
+            //}
         }
 
         private void CharacterToolForm_Disposed(object? sender, EventArgs e)
@@ -107,20 +109,21 @@ namespace DAoCToolSuite
 
         private void LogParserButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                LogToolForm ??= new();
-                LogToolForm.Disposed -= LogToolForm_Disposed;
-                LogToolForm.Disposed += LogToolForm_Disposed;
-                LogToolForm.Show();
-                Logger.Debug("LogTool MainForm Shown");
-                _ = LogToolForm.Focus();
-                Logger.Debug("LogToolForm MainForm Focused");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
+            System.Diagnostics.Process.Start($"{System.IO.Path.GetDirectoryName(Application.ExecutablePath)}\\LogTool.exe");
+            //try
+            //{
+            //    LogToolForm ??= new();
+            //    LogToolForm.Disposed -= LogToolForm_Disposed;
+            //    LogToolForm.Disposed += LogToolForm_Disposed;
+            //    LogToolForm.Show();
+            //    Logger.Debug("LogTool MainForm Shown");
+            //    _ = LogToolForm.Focus();
+            //    Logger.Debug("LogToolForm MainForm Focused");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.Error(ex);
+            //}
         }
         private void LogToolForm_Disposed(object? sender, EventArgs e)
         {

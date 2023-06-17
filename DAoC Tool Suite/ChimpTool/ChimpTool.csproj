@@ -12,7 +12,7 @@
 		<RootNamespace>DAoCToolSuite.ChimpTool</RootNamespace>
 		<ApplicationManifest>G:\Repos\DAoCToolSuite\DAoC Tool Suite\CharacterTool\app.manifest</ApplicationManifest>
 		<Platforms>x86</Platforms>
-		<PackageIcon>ChimpTool.png</PackageIcon>
+		<PackageIcon>Icons\ChimpTool.png</PackageIcon>
 		<ApplicationIcon>Icons\ChimpTool.ico</ApplicationIcon>
 		<AssemblyVersion>1.0.3.0</AssemblyVersion>
 		<FileVersion>1.0.3.0</FileVersion>

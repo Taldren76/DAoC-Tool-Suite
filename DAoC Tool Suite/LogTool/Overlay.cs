@@ -46,9 +46,9 @@ namespace DAoCToolSuite.LogTool
         public const int HT_CAPTION = 0x2;
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        internal static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern bool ReleaseCapture();
+        internal static extern bool ReleaseCapture();
 
         private void Overlay_MouseDown(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
@@ -78,7 +78,7 @@ namespace DAoCToolSuite.LogTool
 
         }
 
-        private void FormatLabel(Label label, int column, int row)
+        private static void FormatLabel(Label label, int column, int row)
         {
             int padding = 0;
             int rowStep = 15;

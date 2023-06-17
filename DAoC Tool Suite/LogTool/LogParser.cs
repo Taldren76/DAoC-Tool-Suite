@@ -1,143 +1,209 @@
 ﻿using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Shapes;
 using Logger;
+using Windows.Media.Streaming.Adaptive;
 using static System.Windows.Forms.LinkLabel;
 
 namespace DAoCToolSuite.LogTool
 {
     public class LogParser
     {
-        #region Raw Data
-        //Damage
-        private int DamageDone = 0;
-        private int CritDamageDone = 0;
-        private int DamageTaken = 0;
-
-        //Healing
-        private int HealingDone = 0; // Healing done by spells cast by the player on others.
+        #region Raw Stats
+        private int Bladeturned = 0;
+        private int CritHealHit = 0;
         private int CriticalHealingDone = 0;
-        private int AbilitySelfHealingDone = 0;
-        private int SelfHealingDone = 0; // Healing done by spells cast by the player on self. 
-        private int CriticalSelfHealingDone = 0;
-        private int HealingTaken = 0; // Total healing you have recieved.
-
-        //Your Pets
-        private int PetHealingDone = 0;
-        private int PetDamageDone = 0;
-        private int PetHealingYou = 0;
-        private int HealingDoneByYouToYourPet = 0;
-        private int CriticalHealingDoneByYouToYourPet = 0;
-
-        //Mitigation
-        public int DamageTakenAbsorbed = 0;
-        public int DamageDoneAbsorbed = 0;
-        public int TotalDamageBlocked = 0;
-        public int DamageDoneBlocked = 0;
-        public int TotalDamageConverted = 0;
-
-        //NonPlayer
-        private int NonPlayerDamageDone = 0;
-        private int NonPlayerCriticalDamageDone = 0;
-        private int NonPlayerHealingDone = 0;
+        private int DamageTaken = 0;
+        private int DamageDoneBlocked = 0;
+        private int DamageTakenBlocked = 0;       
+        private int HealHit = 0;
+        private int HealingDone = 0;
+        private int MeleeCritHit = 0;
+        private int MeleeCriticalDamageDone = 0;
+        private int MeleeDamageDone = 0;
+        private int MeleeHit = 0;
+        private int MeleeHitBlocked = 0;
+        private int MeleeHitEvaded = 0;
+        private int MeleeHitParried = 0;
+        private int MeleeMisses = 0;
+        private int NonMeleeCritHit = 0;
+        private int NonMeleeCriticalDamageDone = 0;
+        private int NonMeleeDamageDone = 0;
+        private int NonMeleeHit = 0;
+        private int NonPlayerCritHealHit = 0;
         private int NonPlayerCriticalHealingDone = 0;
-        private int NonPlayerDamageTaken= 0;
-
-        //Misc
-        private int Hit = 0;
-
-        private int CritHit = 0;
-
-        private int PetHit = 0; //TODO: Implement this
-
-        private int CritPetHit = 0; //TODO: Implement this
-
-        private int HealHit = 0;         // Number of individual Heals Done. AE counts as multiple Hits.
-                                         // This counts both HealingDone and HealSelf.
-
-        private int CritHealHit = 0;     // Number of individual Crit Heals Done. AE counts as multiple Hits.
-                                         // This counts both CritHealingDone and CritHealingSelf.    
-
-        #endregion
-
-        #region Heal Stats
-        public int TotalCritHealingDone => CriticalHealingDone + CriticalSelfHealingDone + CriticalHealingDoneByYouToYourPet + NonPlayerCriticalHealingDone;
-        public int TotalHealingDone => TotalCritHealingDone + HealingDone + SelfHealingDone + AbilitySelfHealingDone + PetHealingDone + PetHealingYou + HealingDoneByYouToYourPet + NonPlayerHealingDone;
-        public int TotalHealingToSelf => SelfHealingDone + CriticalSelfHealingDone + AbilitySelfHealingDone + PetHealingYou;
-        public double HealSelfRatio => TotalHealingToSelf / (double)(TotalHealingDone == 0 ? 1 : TotalHealingDone);
-        public int TotalHealingRecieved => HealingTaken + TotalHealingToSelf + PetHealingYou;
-        public int AverageHealingDone => Convert.ToInt32((HealingDone + SelfHealingDone + NonPlayerHealingDone + HealingDoneByYouToYourPet) / (double)(HealHit == 0 ? 1 : HealHit));
-        public int AverageCritHealingDone => Convert.ToInt32((CriticalHealingDone + CriticalSelfHealingDone + NonPlayerCriticalHealingDone + CriticalHealingDoneByYouToYourPet) / (double)(CritHealHit == 0 ? 1 : CritHealHit));
-        private int TotalHeals => CritHealHit + HealHit;
-        public double HealCritRate => CritHealHit / (double)(TotalHeals == 0 ? 1 : TotalHeals);
-        public double CritHealRatio => TotalCritHealingDone / (double)(TotalHealingDone == 0 ? 1 : TotalHealingDone);
-
-        #endregion
-
-        #region Damage Stats
-        public int TotalDamageDone => DamageDone + CritDamageDone + PetDamageDone + NonPlayerDamageDone + NonPlayerCriticalDamageDone;
-        public int TotalCritDamageDone => CritDamageDone + NonPlayerCriticalDamageDone;
-        public int AverageDamageDone => Convert.ToInt32((DamageDone + NonPlayerDamageDone) / (double)(Hit == 0 ? 1 : Hit));
-        public int AverageCritDamageDone => Convert.ToInt32((CritDamageDone + NonPlayerCriticalDamageDone) / (double)(CritHit == 0 ? 1 : CritHit));
-        public int TotalDamageHits => CritHit + Hit;
-        public double DamageCritRate => CritHit / (double)(TotalDamageHits == 0 ? 1 : TotalDamageHits);
-        public double CritDamageRatio => TotalCritDamageDone / (double)(TotalDamageDone == 0 ? 1 : TotalDamageDone);
-        public int TotalDamageTaken => DamageTaken + NonPlayerDamageTaken; //TODO:Add Pet Damage!
+        private int NonPlayerDamageDoneBlocked = 0;
+        private int NonPlayerDamageTaken = 0;
+        private int NonPlayerDamageTakenBlocked = 0;
+        private int NonPlayerHealHit = 0;
+        private int NonPlayerHealingDone = 0;
+        private int NonPlayerMeleeCritHit = 0;
+        private int NonPlayerMeleeCriticalDamageDone = 0;
+        private int NonPlayerMeleeHit = 0;
+        private int NonPlayerMeleeHitBlocked = 0;
+        private int NonPlayerMeleeHitEvaded = 0;
+        private int NonPlayerMeleeHitParried = 0;
+        private int NonPlayerNonMeleeCritHit = 0;
+        private int NonPlayerNonMeleeHit = 0;
+        private int PetNonPlayerMeleeCriticalDamageDone = 0;
+        private int NonPlayerPetNonMeleeDamageDone = 0;
+        private int NonPlayerMeleeDamageDone = 0;
+        private int NonPlayerPetNonMeleeHit = 0;
+        private int NonPlayerNonMeleeCriticalDamageDone = 0;
+        private int NonPlayerNonMeleeDamageDone = 0;
+        private int NonPlayerPetMeleeHit = 0;
+        private int PetNonPlayerMeleeCritHit = 0;
+        private int PetMeleeCriticalDamageDone = 0;
+        private int PetNonMeleeDamageDone = 0;
+        private int PetNonPlayerMeleeDamageDone = 0;
+        private int PetHealHit = 0;
+        private int PetHealingDone = 0;
+        private int PetNonMeleeHit = 0;
+        private int PetMeleeCritHit = 0;
+        private int PetMeleeDamageDone = 0;
+        private int PetMeleeHit = 0;
+        private int YouBlock = 0;
+        private int YouBlockNonPlayer = 0;
+        private int YouEvade = 0;
+        private int YouEvadeNonPlayer = 0;
+        private int YouParry = 0;
+        private int YouParryNonPlayer = 0;
         #endregion
 
         #region Standard Stats
+        public double GoldEarned = 0;
         public int RealmPointsEarned = 0;
-
         public int DeathBlows = 0;
-
         public int Deaths = 0;
-        public double IRS => RealmPointsEarned / (double)(Deaths == 0 ? 1 : Deaths);
-        public double KDR => DeathBlows / (double)(Deaths == 0 ? 1 : Deaths);
+        public double IRS => RealmPointsEarned / (Deaths == 0 ? 1: Deaths);
+        public int TotalDamageTaken => DamageTaken + (PlayersOnlyFilter ? 0 : NonPlayerDamageTaken);
+        public int TotalDamageDone => TotalMeleeDamageDone + TotalNonMeleeDamageDone + TotalPetDamageDone;
+        public int DamageDoneAbsorbed = 0;
+        public int DamageTakenAbsorbed = 0;
+        public int DamageTakenConverted = 0;
+        public int AttackDamageBlocked => DamageDoneBlocked + (PlayersOnlyFilter ? 0 : NonPlayerDamageDoneBlocked);
+        public int TotalDamageTakeBlocked => DamageTakenBlocked + (PlayersOnlyFilter ? 0 : NonPlayerDamageTakenBlocked);
+        #endregion
+
+        #region NonMelee
+        private int TotalNonMeleeHits => NonMeleeHit + (PlayersOnlyFilter ? 0 : NonPlayerNonMeleeHit);
+        private int TotalNonMeleeCritHits => NonMeleeCritHit + (PlayersOnlyFilter ? 0 : NonPlayerNonMeleeCritHit);
+        private int TotalHits => TotalNonMeleeHits + TotalNonMeleeCritHits;
+        private int TotalNonMeleeDamage => NonMeleeDamageDone + (PlayersOnlyFilter ? 0 : NonPlayerNonMeleeDamageDone);
+        private int TotalNonMeleeCritDamage => NonMeleeCriticalDamageDone + (PlayersOnlyFilter ? 0 : NonPlayerNonMeleeCriticalDamageDone);
+        public int TotalNonMeleeDamageDone => TotalNonMeleeDamage + TotalNonMeleeCritDamage;
+        public int AverageNonMeleeCriticalDamageDone => TotalNonMeleeCritDamage / (TotalNonMeleeCritHits == 0 ? 1 : TotalNonMeleeCritHits);
+        public int AverageNonMeleeDamageDone => TotalNonMeleeDamage / (TotalNonMeleeHits == 0 ? 1 : TotalNonMeleeHits);
+        public double NonMeleeCritRate => ((double)TotalNonMeleeCritHits / (double)(TotalHits == 0 ? 1 : TotalHits));
+        #endregion
+
+        #region Melee
+        private int TotalMeleeEvaded => MeleeHitEvaded + (PlayersOnlyFilter ? 0 : NonPlayerMeleeHitEvaded);
+        private int TotalMeleeParried => MeleeHitParried + (PlayersOnlyFilter ? 0 : NonPlayerMeleeHitParried);
+        private int TotalMeleeBlocked => MeleeHitBlocked + (PlayersOnlyFilter ? 0 : NonPlayerMeleeHitBlocked);
+        public double AttacksEvadedRate => ((double)TotalMeleeEvaded / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
+        public double AttacksParriedRate => ((double)TotalMeleeParried / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
+        public double AttacksBlockedRate => ((double)TotalMeleeBlocked / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
+        public double AttacksBladeturnedRate => ((double)Bladeturned / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
+        public double AttackMissRate => ((double)MeleeMisses / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
+        public int Blocks => YouBlock + (PlayersOnlyFilter ? 0 : YouBlockNonPlayer);
+        public int Parries => YouParry + (PlayersOnlyFilter ? 0 : YouParryNonPlayer);
+        public int Evades => YouEvade + (PlayersOnlyFilter ? 0 : YouEvadeNonPlayer);
+        private int MeleeHits => MeleeHit + (PlayersOnlyFilter ? 0 : NonPlayerMeleeHit);
+        private int MeleeCritHits => MeleeCritHit + (PlayersOnlyFilter ? 0 : NonPlayerMeleeCritHit);
+        private int TotalMeleeHits => MeleeHits + MeleeCritHits;
+        private int TotalNonCriticalMeleeDamageDone => MeleeDamageDone + (PlayersOnlyFilter ? 0 : NonPlayerMeleeDamageDone);
+        private int TotalCriticalMeleeDamageDone => MeleeCriticalDamageDone + (PlayersOnlyFilter ? 0 : NonPlayerMeleeCriticalDamageDone);
+        public int AverageMeleeDamageDone => TotalNonCriticalMeleeDamageDone / (MeleeHits == 0 ? 1 : MeleeHits);
+        public int AverageCriticalMeleeDamageDone => TotalNonCriticalMeleeDamageDone / (MeleeCritHits == 0 ? 1 : MeleeCritHits);
+        private int TotalMeleeAttacks => Bladeturned + TotalMeleeEvaded + TotalMeleeParried + TotalMeleeBlocked + MeleeMisses + TotalMeleeHits;
+        public double MeleeCritRate => ((double)MeleeCritHits / (double)(TotalMeleeHits == 0 ? 1 : TotalMeleeHits));
+        public int TotalMeleeDamageDone => TotalNonCriticalMeleeDamageDone + TotalCriticalMeleeDamageDone;
+        #endregion
+
+        #region Healing
+        private int HealHits => HealHit + (PlayersOnlyFilter ? 0 : NonPlayerHealHit);
+        private int CritHealHits => CritHealHit + (PlayersOnlyFilter ? 0 : NonPlayerCritHealHit);
+        private int TotalHealHits => HealHits + CritHealHits;
+        private int TotalNonCritHealingDone => HealingDone + (PlayersOnlyFilter ? 0 : NonPlayerHealingDone);
+        private int TotalCritHealingDone => CriticalHealingDone + (PlayersOnlyFilter ? 0 : NonPlayerCriticalHealingDone);
+        public int TotalHealingDone => TotalCritHealingDone + TotalNonCritHealingDone;
+        public int AverageHealDone => TotalNonCritHealingDone / (HealHits == 0 ? 1 : HealHits);
+        public int AverageCriticalHealingDone => TotalCritHealingDone / (CritHealHits == 0 ? 1 : CritHealHits);
+        public double HealCritRate => ((double)CritHealHits / (double)(TotalHealHits == 0 ? 1 : TotalHealHits));
+        public int HealingTaken = 0;
+        #endregion
+
+        #region Pet
+        private int PetMeleeCritHits => PetMeleeCritHit + (PlayersOnlyFilter ? 0 : PetNonPlayerMeleeCritHit);
+        private int PetMeleeHits => PetMeleeHit + (PlayersOnlyFilter ? 0 : NonPlayerPetMeleeHit);
+        private int TotalPetMeleeHits => PetMeleeCritHits + PetMeleeHits;
+        private int CombinedPetMeleeDamageDone => PetMeleeDamageDone + (PlayersOnlyFilter ? 0 : PetNonPlayerMeleeDamageDone);
+        private int PetCritMeleeDamageDone => PetMeleeCriticalDamageDone + (PlayersOnlyFilter ? 0 : PetNonPlayerMeleeCriticalDamageDone);
+        private int TotalPetMeleeDamageDone => CombinedPetMeleeDamageDone + PetCritMeleeDamageDone;
+        public double PetMeleeCritRate => ((double)PetMeleeCritHits / (double)(TotalPetMeleeHits == 0 ? 1 : TotalPetMeleeHits));
+        private int TotalPetNonMeleeDamageDone => PetNonMeleeDamageDone + (PlayersOnlyFilter ? 0 : NonPlayerPetNonMeleeDamageDone);
+        private int TotalPetNonMeleeDamageHits => PetNonMeleeHit + (PlayersOnlyFilter ? 0 : NonPlayerPetNonMeleeHit);
+        public int AveragePetCriticalMeleeDamageDone => PetCritMeleeDamageDone / (PetMeleeCritHits == 0 ? 1 : PetMeleeCritHits);
+        public int AveragePetMeleeDamageDone => CombinedPetMeleeDamageDone / (TotalPetMeleeHits == 0 ? 1 : TotalPetMeleeHits);
+        public int AveragePetNonMeleeDamage => TotalPetNonMeleeDamageDone / (TotalPetNonMeleeDamageHits ==0?1:TotalPetNonMeleeDamageHits);
+        public int AveragePetHeal => PetHealingDone / (PetHealHit == 0 ? 1 : PetHealHit);
+        public int TotalPetDamageDone => TotalPetNonMeleeDamageDone + TotalPetMeleeDamageDone;
+        public int TotalPetHealingDone => PetHealingDone;
         #endregion
 
         #region RegEx
         //Earnings
-        private static readonly Regex RealmPointsEarnedRegEx = new(@"You earn (\d+).* realm points");
+        private static readonly Regex RealmPointsEarnedRegEx = new(@"You earn (\d+) (?:extra |)realm points"); //G1: RPs Earned
+        private static readonly Regex MoneyEarnedRegEx = new(@"(Your share of the loot is|You pick up) .*");
+        private static readonly Regex MoneyRegEx = new(@"(\d+) (platinum|gold|silver|copper)");
 
         //Damage
-        private static readonly Regex DamageDoneRegEx = new(@"You (attack|hit) ((?!the).+) for (\d+)");
-        private static readonly Regex CritDamageDoneRegEx = new(@"You (attack|hit) ((?!the)\w+).* for (\d+).*\n.*You critical.* (\d+)");
-        private static readonly Regex DamageTakenRegEx = new(@"^(?!The )(\w+) hits you for (\d+)");
+        private static readonly Regex NonMeleeCriticalDamageDoneRegEx = new(@"You hit (the |)(.*)(?:'s|) for (\d+).*\n.*You critical.* (\d+)"); //G1: Non-Player Test, G2: TargetName, G3: DamageDone, G4: Critical DamageDone
+        private static readonly Regex NonMeleeDamageDoneRegEx = new(@"You hit (the |)(.*)(?:'s|) for (\d+)"); //G1: Non-Player Test, G2: TargetName, G3: DamageDone
+        private static readonly Regex DamageTakenRegEx = new(@"(The |)(.*) hits you for (\d+)"); //G1: Non-Player Test, G2: AttackerName, G3: DamageTaken
+
+        //Spell
+        private static readonly Regex ResistedRegEx = new(@"(The |)(.*) resists the effect"); //G1: Non-Player Test, G2: TargetName
+
+        //Melee
+        private static readonly Regex MeleeCriticalDamageDoneRegEx = new(@"You attack (the |)(.*) with .* for (\d+).*\n.*You critical.* (\d+)"); //G1: Non-Player Test, G2: TargetName, G3: MeleeDamage, G4: Critical MeleeDamage
+        private static readonly Regex MeleeDamageDoneRegEx = new(@"You attack (the |)(.*) with .* for (\d+)"); //G1: Non-Player Test, G2: TargetName, G3: MeleeDamage
+        private static readonly Regex NonPlayerMeleeDefenseRegEx = new(@"The (.*) attacks .* (block|parr(?:y|ied)|evade)"); //G1:AttackerName, G2: DefenseType
+        private static readonly Regex PlayerMeleeDefenseRegEx = new(@"You (evade|block|parr(?:y|ied)) (.*)'s attack!"); //G1: DefenseType, G2: AttackerName
+        private static readonly Regex MeleeAttackDefended = new(@"(The |)(\w+) (block(?:s|ed)|parrie(?:s|d)|evade(?:s|d)) your attack!"); //G1: Non-Player Test, G2: TargetName, G3: DefenceType
+        private static readonly Regex MeleeAttackBladeturnedRegEx = new(@"Your (attack|strike) .*absorbed .*\n.*You miss!"); //You strike Bladeturn
+        private static readonly Regex MeleeMissRegEx = new(@"You miss!"); //You miss
 
         //Healing
-        private static readonly Regex HealingDoneRegEx = new(@"You heal ((?!your|.*'s).+) for (\d+)");
-        private static readonly Regex CriticalHealingDoneRegEx = new(@"You critical heal.* (\d+).*\n.*You heal ((?!your|.*'s).+) for (\d+)");
-        private static readonly Regex AbilitySelfHealingRegEx = new(@"Your (.*) ability heals you .* (\d+)");
-        private static readonly Regex HealingBatteryHealRegEx = new(@"(.*) healing battery.* heals (.*) (for |\()(\d+)");
-        private static readonly Regex SelfHealingRegEx = new(@"You heal yourself.*(\d+)");
-        private static readonly Regex CriticalSelfHealingRegEx = new(@"You critical heal.* (\d+).*\n.*You heal yourself.*(\d+)");
-        private static readonly Regex HealingTakenRegEx = new(@"(.*) healed you.*(\d+)");
+        private static readonly Regex CriticalHealingDoneRegEx = new(@"You critical heal.* (\d+).*\n.*You heal (the |)(yourself|\w+) for (\d+)"); //G1: Crit Bonus (ignore), //G2: Non-Player Test, G3: TargetName, G4: Critical Healing Done
+        private static readonly Regex HealingDoneRegEx = new(@"You heal (the |)(yourself|\w+) for (\d+)"); //G1: Non-Player Test, G2: TargetName, G3: Healing Done
+        private static readonly Regex AbilitySelfHealingRegEx = new(@"Your (.*) ability heals you .* (\d+)"); //G1: Ability Name, G2: SelfHealing
+        private static readonly Regex HealingBatteryHealRegEx = new(@"((?:Y|y)our|\w+)(?:'s|) healing battery (?:fully heals|heals) (\w+).* (?:\(|)(\d+)"); //G1: OwnerName, G2: TargetName, G3: Healing
+        private static readonly Regex HealingTakenRegEx = new(@"(.*) healed you.*(\d+)"); //G1: CasterName, G2: HealingTaken
+        private static readonly Regex HealingTaken2RegEx = new(@"You are healed by (\w+)(?:'s|) .* (\d+)"); //G1: CasterName, G2: HealingTaken
 
-        //Your Pets
-        private static readonly Regex PetHealingRegEx = new(@"Your (.*) healed (.*) for (\d+)");
-        private static readonly Regex PetDamageDoneRegEx = new(@"Your (.*) (hits|attacks) (.*) for (\d+)");
-        //TODO: Populate PetCriticalDamageDoneRegEx once I know what a chat log line looks like for that.
-        private static readonly Regex HealingDoneByYouToYourPetRegEx = new(@"You heal your (.+) for (\d+)");
-        private static readonly Regex CriticalHealingDoneByYouToYourPetRegEx = new(@"You heal your (.+) for (\d+).*\n.*You critical .* (\d+)");
-
+        //Pets
+        private static readonly Regex PetCriticalMeleeDamageDoneRegEx = new(@"Your (.*) attacks (the |)(.*) and hits for (\d+).*\n.* criticals .* (\d+)"); //G1: PetName, G2: Non-Player Test, G3: TargetName, G4: Damage, G5: Crit Damage
+        private static readonly Regex PetMeleeDamageDoneRegEx = new(@"Your (.*) attacks (the |)(.*) and hits for (\d+)"); //G1: PetName, G2: Non-Player Test, G3: TargetName, G4: Damage
+        private static readonly Regex PetSpellDamageDoneRegEx = new(@"Your pet's spell hits (the |)(.*) for (\d+)"); //G1: Non-Player Test, G2: TargetName, G3: Damage
+        private static readonly Regex CriticalHealingDoneByYouToYourPetRegEx = new(@"You critical heal.* (\d+).*\n.*You heal your (.+) for (\d+)"); //G1: Critical Healing, G2: PetName, G3: Total Healing Done
+        private static readonly Regex HealingDoneByYouToYourPetRegEx = new(@"You heal your (.+) for (\d+)"); //G1: PetName, G2: Healing
+        private static readonly Regex CriticalHealingDoneByYouToPetsRegEx = new(@"You critical heal.* (\d+).*\n.*You heal (.*)'s (.*) for (\d+)"); //G1: Critical Bonus, G2: PetOwner Name, G3: PetName, G4: Critical Healing Done
+        private static readonly Regex HealingDoneByYouToPetsRegEx = new(@"You heal (.*)'s (.*) for (\d+)");  //G1: PetOwner Name, G2: PetName, G3: Healing Done
+        private static readonly Regex PetHealingRegEx = new(@"Your (.*) healed (the |)(.*) for (\d+)"); //G1: PetName, G2: Non-Player Test, G3: TargetName, G4 Heal
+         
         //Mitigation
-        private static readonly Regex DamageTakenAbsorbedRegEx = new(@"Your .* absorb.* (\d+)");
-        private static readonly Regex DamageDoneAbsorbedRegEx = new(@"absorb.* (\d+).* of your");
-        private static readonly Regex DamageBlockedRegEx = new(@"(\d+) damage was blocked by (your|\w+) .*");
-        private static readonly Regex DamageConvertedRegEx = new(@"(\d+) damage was converted");
-
-        //Non-Player
-        private static readonly Regex NonPlayerDamageTakenRegEx = new(@"The (.*) hits you for (\d+)");
-        private static readonly Regex NonPlayerDamageDoneRegEx = new(@"You hit the (.*) for (\d+)");
-        private static readonly Regex NonPlayerCriticalDamageDoneRegEx = new(@"You hit the (.+) for (\d+).*\n.*You critical .* (\d+)");
-        private static readonly Regex NonPlayerHealingDoneRegEx = new(@"You heal (.*)'s (.*) for (\d+)");
-        private static readonly Regex NonPlayerCriticalHealingDoneRegEx = new(@"You critical heal.* (\d+).*\n.*You heal (.*)'s (.*) for (\d+)");
+        private static readonly Regex DamageDoneAbsorbedRegEx = new(@"(A|Your) .* absorb(?:s|) (\d+).*"); //G1: Owner Test, G2: Damage Absorbed
+        private static readonly Regex DamageBlockedRegEx = new(@"(\d+) damage was blocked by (the |)(your|\w+)(?:'s|)"); //G1: DamageBlocked, G2:Non-Player Test, G3:OwnerName
+        private static readonly Regex DamageConvertedToEnduranceAndPowerRegEx = new(@"(\d+) damage was converted to endurance and power!"); //G1: DamageConverted
+        private static readonly Regex DamageConvertedToHealingRegEx = new(@"Your .* converts (\d+) damage to healing!"); //G1: DamageConverted to SelfHealing
 
         //Misc
         private static readonly Regex ChatLogOpenedRegEx = new(@"Chat\sLog\sOpened:\s(\w+\s(\w+)\s+(\d+)\s(\d+:\d+:\d+)\s(\d+))");
-        private static readonly Regex DeathRegEx = new(@"You have died.*");
+        private static readonly Regex DeathRegEx = new(@"You have died\.");
         private static readonly Regex DeathBlowRegEx = new(@"You just killed (\w+)");
-        //PlayerKillBy: (\w+) was just killed .* by (\w+).*
         #endregion
 
         public Dictionary<DateTime, int> LogOpenEntries = new();
@@ -178,6 +244,10 @@ namespace DAoCToolSuite.LogTool
             ParseLogClosed();
         }
 
+        /// <summary>
+        /// Sets the current read posiiton within the file.
+        /// </summary>
+        /// <param name="index"></param>
         public void SetFileIndex(int index)
         {
             LogFileReadIndex = index;
@@ -198,7 +268,7 @@ namespace DAoCToolSuite.LogTool
         /// </summary>
         public void Parse()
         {
-            if (!HasUnparsedData() || FilteredLog.Count == 0)
+            if (!HasUnparsedData())
             {
                 return;
             }
@@ -214,7 +284,7 @@ namespace DAoCToolSuite.LogTool
             int startIndex = LogFileReadIndex - 2;
             if (startIndex < 0)
             {
-                startIndex = 0;
+                startIndex = 1;
             }
 
             int endIndex = FilteredLog.Count - 2;
@@ -223,7 +293,7 @@ namespace DAoCToolSuite.LogTool
                 endIndex = 1;
             }
 
-            if(ProgressBar != null)
+            if (ProgressBar != null)
             {
                 ProgressBar.Minimum = startIndex;
                 ProgressBar.Maximum = endIndex;
@@ -238,11 +308,12 @@ namespace DAoCToolSuite.LogTool
                 if (ProgressBar != null)
                 {
                     ProgressBar.Value = index;
-                    
+
                 }
-                string line = FilteredLog[index];       
+                string line = FilteredLog[index];
+
                 if (string.IsNullOrEmpty(line) || line[0].Equals('*')) //Checks for empty or Chat Open/Close lines
-                    continue;        
+                    continue;
                 else if (line[0].Equals('[')) //All parsable lines should start with [HH:MM:SS]
                     line = line.Remove(0, 10).Trim();
 
@@ -250,318 +321,618 @@ namespace DAoCToolSuite.LogTool
                 string nextLine = (index + 1 < FilteredLog.Count) ? FilteredLog[index + 1] : "";
                 if (string.IsNullOrEmpty(nextLine) || nextLine[0].Equals('*')) //Checks for empty or Chat/Close lines
                     line = "";
-                else if(nextLine[0].Equals('[')) //All parsable lines should start with [HH:MM:SS]
+                else if (nextLine[0].Equals('[')) //All parsable lines should start with [HH:MM:SS]
                     nextLine = nextLine.Remove(0, 10).Trim();
 
                 //Lines is used to parse crit messages
                 string lines = $"{line}\n{nextLine}";
 
-                #region Death   
-                //new(@"You have died.*");
-                Match deathMatch = DeathRegEx.Match(line);
-                if (deathMatch.Success)
+                #region Earnings  
+                Match realmPointsEarnedMatch = RealmPointsEarnedRegEx.Match(line);
+                if (realmPointsEarnedMatch.Success)
                 {
-                    Deaths += 1;
+                    //G1: RPs Earned
+                    int g1 = Convert.ToInt32(realmPointsEarnedMatch.Groups[1].Value);
+                    RealmPointsEarned += g1;
                     continue;
                 }
 
-                //new(@"You have died.*");
-                Match deathBlow = DeathBlowRegEx.Match(line);
-                if (deathBlow.Success)
+                Match moneyEarnedMatch = MoneyEarnedRegEx.Match(line);
+                if(moneyEarnedMatch.Success)
                 {
-                    DeathBlows += 1;
+                    //(Your share|You pick up) - 1 match
+                    
+                    MatchCollection moneyMatches = MoneyRegEx.Matches(line);
+                    double goldEarned = 0;
+                    foreach(Match match in moneyMatches)
+                    {
+                        //(\d+) (platinum|gold|silver|copper) - 1to4 matches
+                        //G1: Quantity
+                        //G2: Type
+                        int g1 = Convert.ToInt32(match.Groups[1].Value);
+                        string g2 = match.Groups[2].Value.ToString();
+                        switch (g2.ToLower())
+                        {
+                            case "platinum":
+                                goldEarned += g1 * 1000;
+                                continue;
+                            case "gold":
+                                goldEarned += g1;
+                                continue;
+                            case "silver":
+                                goldEarned += (double)g1 / 100;
+                                continue;
+                            case "copper":
+                                goldEarned += (double)g1 / 10000;
+                                continue;
+                        }
+                    }
+                    GoldEarned += goldEarned;
                     continue;
-                }
-
-                #endregion
-
-                #region Earnings
-                Match realmPointsMatch = RealmPointsEarnedRegEx.Match(line);
-                if (realmPointsMatch.Success)
-                {
-                    int rpsEarned = int.TryParse(realmPointsMatch.Groups[1].Value, out rpsEarned) ? rpsEarned : 0;
-                    RealmPointsEarned += rpsEarned;
-                    continue;
-                }
+                }    
                 #endregion
 
                 #region Damage
-                // new Regex(@"You (attack|hit) ((?!the)\w+).* for (\d+).*\n.*You critical.* (\d+)");
-                Match critDamageMatch = CritDamageDoneRegEx.Match(lines);
-                if (critDamageMatch.Success)
+                Match nonMeleeCriticalDamageDone = NonMeleeCriticalDamageDoneRegEx.Match(lines);
+                if (nonMeleeCriticalDamageDone.Success)
                 {
-                    int normalDamageDone = int.TryParse(critDamageMatch.Groups[3].Value, out normalDamageDone) ? normalDamageDone : 0;
-                    int critDamageDone = int.TryParse(critDamageMatch.Groups[4].Value, out critDamageDone) ? critDamageDone : 0;
-                    CritDamageDone += normalDamageDone + critDamageDone;
-                    CritHit += 1;
+                    //G1: Non-Player Test, G2: TargetName, G3: DamageDone, G4: Critical DamageDone
+                    string? g1 = nonMeleeCriticalDamageDone.Groups[1].Value.ToString();
+                    string g2 = nonMeleeCriticalDamageDone.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(nonMeleeCriticalDamageDone.Groups[3].Value);
+                    int g4 = Convert.ToInt32(nonMeleeCriticalDamageDone.Groups[4].Value);
+                    if (string.IsNullOrEmpty(g1))
+                    {
+                        NonMeleeCriticalDamageDone += g3 + g4;
+                        NonMeleeCritHit += 1;
+                    }
+                    else
+                    {
+                        NonPlayerNonMeleeCriticalDamageDone += g3 + g4;
+                        NonPlayerNonMeleeCritHit += 1;
+                    }
+
+                   
                     index += 1;
                     continue;
                 }
 
-                // new Regex(@"You (attack|hit) ((?!the).+) for (\d+)")
-                Match damageDoneMatch = DamageDoneRegEx.Match(line);
-                if (damageDoneMatch.Success)
+                Match nonMeleeDamageDoneMatch = NonMeleeDamageDoneRegEx.Match(line);
+                if (nonMeleeDamageDoneMatch.Success)
                 {
-                    int damageDone = int.TryParse(damageDoneMatch.Groups[3].Value, out damageDone) ? damageDone : 0;
-                    DamageDone += damageDone;
-                    Hit += 1;
+                    //G1: Non-Player Test, G2: TargetName, G3: DamageDone
+                    string? g1 = nonMeleeDamageDoneMatch.Groups[1].Value.ToString();
+                    string g2 = nonMeleeDamageDoneMatch.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(nonMeleeDamageDoneMatch.Groups[3].Value);
+                    if (string.IsNullOrEmpty(g1))
+                    {
+                        NonMeleeDamageDone += g3;
+                        NonMeleeHit += 1;
+                    }
+                    else
+                    {
+                        NonPlayerNonMeleeDamageDone += g3;
+                        NonPlayerNonMeleeHit += 1;
+                    }
                     continue;
                 }
 
-                // new Regex(@"^(?!The )(\w+) hits you for (\d+)")
                 Match damageTakenMatch = DamageTakenRegEx.Match(line);
                 if (damageTakenMatch.Success)
                 {
-                    int damageTaken = int.TryParse(damageTakenMatch.Groups[2].Value, out damageTaken) ? damageTaken : 0;
-                    DamageTaken += damageTaken;
+                    //G1: Non-Player Test, G2: AttackerName, G3: DamageTaken
+                    string? g1 = damageTakenMatch.Groups[1].Value.ToString();
+                    string g2 = damageTakenMatch.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(damageTakenMatch.Groups[3].Value);
+                    if (string.IsNullOrEmpty(g1))
+                        DamageTaken += g3;
+                    else
+                        NonPlayerDamageTaken += g3;
+                    continue;
+                }
+                #endregion
+
+                #region Melee
+                Match meleeCriticalDamageDoneMatch = MeleeCriticalDamageDoneRegEx.Match(lines);
+                if (meleeCriticalDamageDoneMatch.Success)
+                {
+                    //You attack (the |)(.*) with .* for (\d+).*\n.*You critical.* (\d+)
+                    //G1: Non-Player Test, G2: TargetName, G3: MeleeDamage, G4: Critical MeleeDamage
+                    string? g1 = meleeCriticalDamageDoneMatch.Groups[1].Value.ToString();
+                    string g2 = meleeCriticalDamageDoneMatch.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(meleeCriticalDamageDoneMatch.Groups[3].Value);
+                    int g4 = Convert.ToInt32(meleeCriticalDamageDoneMatch.Groups[4].Value);
+                    if (string.IsNullOrEmpty(g1))
+                    {
+                        MeleeCritHit += 1;
+                        MeleeCriticalDamageDone += g3 + g4;
+                    }
+                    else
+                    {
+                        NonPlayerMeleeCritHit += 1;
+                        NonPlayerMeleeCriticalDamageDone += g3 + g4;
+                    }
+                    index += 1;
+                    continue;
+                }
+
+                Match meleeDamageDoneMatch = MeleeDamageDoneRegEx.Match(line);
+                if (meleeDamageDoneMatch.Success)
+                {
+                    //You attack (the |)(.*) with .* for (\d+)
+                    //G1: Non-Player Test, G2: TargetName, G3: MeleeDamage
+                    string? g1 = meleeDamageDoneMatch.Groups[1].Value.ToString();
+                    string g2 = meleeDamageDoneMatch.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(meleeDamageDoneMatch.Groups[3].Value);
+                    if (string.IsNullOrEmpty(g1))
+                    {
+                        MeleeHit += 1;
+                        MeleeDamageDone += g3;
+                    }
+                    else
+                    {
+                        NonPlayerMeleeHit += 1;
+                        NonPlayerMeleeDamageDone += g3;
+                    }
+                    continue;
+                }
+
+                Match nonPlayerMeleeDefenseMatch = NonPlayerMeleeDefenseRegEx.Match(line);
+                if (nonPlayerMeleeDefenseMatch.Success)
+                {
+                    //The (.*) attacks .* (block|parr(?:y|ied)|evade)
+                    //G1:AttackerName, G2: DefenseType
+                    string g1 = nonPlayerMeleeDefenseMatch.Groups[1].Value.ToString();
+                    string g2 = nonPlayerMeleeDefenseMatch.Groups[2].Value.ToString();
+                    switch (g2.ToLower())
+                    {
+                        case "evade":
+                            NonPlayerMeleeHitEvaded += 1;
+                            break;
+                        case "parry":
+                        case "parried":
+                            NonPlayerMeleeHitParried += 1;
+                            break;
+                        case "block":
+                            NonPlayerMeleeHitBlocked += 1;
+                            break;
+                    }
+                    continue;
+                }
+
+                Match playerMeleeDefenseMatch = PlayerMeleeDefenseRegEx.Match(line);
+                if (playerMeleeDefenseMatch.Success)
+                {
+                    //The (.*) attacks .* (block|parr(?:y|ied)|evade)
+                    //G1: DefenseType, G2: AttackerName
+                    string g1 = playerMeleeDefenseMatch.Groups[1].Value.ToString();
+                    string g2 = playerMeleeDefenseMatch.Groups[2].Value.ToString();
+                    switch (g1.ToLower())
+                    {
+                        case "evade":
+                            MeleeHitEvaded += 1;
+                            break;
+                        case "parry":
+                        case "parried":
+                            MeleeHitParried += 1;
+                            break;
+                        case "block":
+                            MeleeHitBlocked += 1;
+                            break;
+                    }
+                    continue;
+                }
+
+                Match meleeAttackDefendedMatch = MeleeAttackDefended.Match(line);
+                if (meleeAttackDefendedMatch.Success)
+                {
+                    //(The |)(\w+) (block(?:s|ed)|parrie(?:s|d)|evade(?:s|d)) your attack!
+                    //G1: Non-Player Test, G2: TargetName, G3: DefenceType
+                    string? g1 = playerMeleeDefenseMatch.Groups[1].Value.ToString();
+                    string g2 = playerMeleeDefenseMatch.Groups[2].Value.ToString();
+                    string g3 = playerMeleeDefenseMatch.Groups[3].Value.ToString();
+                    switch (g3.ToLower())
+                    {
+                        case "evade":
+                        case "evades":
+                        case "evaded":
+                            if (string.IsNullOrEmpty(g1))
+                                YouEvade += 1;
+                            else
+                                YouEvadeNonPlayer += 1;
+                            break;
+                        case "parry":
+                        case "parries":
+                        case "parried":
+                            if (string.IsNullOrEmpty(g1))
+                                YouParry += 1;
+                            else
+                                YouParryNonPlayer += 1;
+                            break;
+                        case "block":
+                        case "blocks":
+                        case "blocked":
+                            if (string.IsNullOrEmpty(g1))
+                                YouBlock += 1;
+                            else
+                                YouBlockNonPlayer += 1;
+                            break;
+                    }
+                    continue;
+                }
+
+                Match meleeAttackBladeturnedMatch = MeleeAttackBladeturnedRegEx.Match(line);
+                if (meleeAttackBladeturnedMatch.Success)
+                {
+                    // Your(attack | strike).* absorbed.*\n.* You miss!
+                    Bladeturned += 1;
+                    continue;
+                }
+
+                Match meleeMissMatch = MeleeMissRegEx.Match(line);
+                if (meleeMissMatch.Success)
+                {
+                    //I have no good way to determine if this is against players or not. 
+                    //I have to assume it is.
+                    MeleeMisses += 1;
                     continue;
                 }
                 #endregion
 
                 #region Healing
-                //new Regex(@"(.*) healing battery.* heals (.*) (for |\()(\d+)");
-                Match healingBatteryHealRegEx = HealingBatteryHealRegEx.Match(line);
-                if (healingBatteryHealRegEx.Success)
+                Match criticalHealingDoneMatch = CriticalHealingDoneRegEx.Match(lines);
+                if (criticalHealingDoneMatch.Success)
                 {
-                    string whosBattery = healingBatteryHealRegEx.Groups[1].Value.ToString();
-                    string whosHealed = healingBatteryHealRegEx.Groups[2].Value.ToString();
-                    int healBattery = int.TryParse(healingBatteryHealRegEx.Groups[4].Value, out healBattery) ? healBattery : 0;
-                    if (whosBattery.Equals("Your") && whosHealed.Equals("you"))
-                    {
-                        HealHit += 1;
-                        SelfHealingDone += healBattery;
-                    }
-                    else if (whosBattery.Equals("Your") && !whosHealed.Equals("you"))
-                    {
-                        HealHit += 1;
-                        HealingDone += healBattery;
-                    }
-                    else if (!whosBattery.Equals("Your") && whosHealed.Equals("you"))
-                    {
-                        HealingTaken += healBattery;
-                    }
+                    //You critical heal.* (\d+).*\n.*You heal (the |)(yourself|\w+) for (\d+)
+                    ////G1: Crit Bonus (ignore), //G2: Non-Player Test, G3: TargetName, G4: Critical Healing Done
+                    int g1 = Convert.ToInt32(criticalHealingDoneMatch.Groups[1].Value);
+                    string? g2 = criticalHealingDoneMatch.Groups[2].Value?.ToString();
+                    string g3 = criticalHealingDoneMatch.Groups[3].Value.ToString();
+                    int g4 = Convert.ToInt32(criticalHealingDoneMatch.Groups[4].Value);
+                    
+                    if (g3.ToLower().Equals("yourself"))
+                        HealingTaken += g4;
 
-                    continue;
-                }
-
-                //new Regex(@"You critical heal.* (\d+).*\n.*You heal yourself.*(\d+)")
-                Match criticalSelfHealingRegEx = CriticalSelfHealingRegEx.Match(lines);
-                if (criticalSelfHealingRegEx.Success)
-                {
-                    int selfCritHeal = int.TryParse(criticalSelfHealingRegEx.Groups[2].Value, out selfCritHeal) ? selfCritHeal : 0;
-                    CriticalSelfHealingDone += selfCritHeal;
-                    CritHealHit += 1;
+                    if (string.IsNullOrEmpty(g2))
+                    {
+                        CriticalHealingDone += g4;
+                        CritHealHit += 1;
+                    }
+                    else
+                    {
+                        NonPlayerCriticalHealingDone += g4;
+                        NonPlayerCritHealHit += g4;
+                    }
                     index += 1;
                     continue;
                 }
 
-                //new Regex(@"You critical heal.* (\d+).*\n.*You heal ((?!your|.*'s).+) for (\d+)");
-                Match criticalHealingDoneRegEx = CriticalHealingDoneRegEx.Match(lines);
-                if (criticalHealingDoneRegEx.Success)
-                {
-                    int healCritDone = int.TryParse(criticalHealingDoneRegEx.Groups[3].Value, out healCritDone) ? healCritDone : 0;
-                    CriticalHealingDone += healCritDone;
-                    CritHealHit += 1;
-                    index += 1;
-                    continue;
-                }
-
-                //new Regex(@"You heal yourself.*(\d+)");
-                Match selfHealingRegEx = SelfHealingRegEx.Match(line);
-                if (selfHealingRegEx.Success)
-                {
-                    int healSelf = int.TryParse(selfHealingRegEx.Groups[1].Value, out healSelf) ? healSelf : 0;
-                    SelfHealingDone += healSelf;
-                    HealHit += 1;
-                    continue;
-                }
-
-                //new Regex(@"Your (.*) ability heals you .* (\d+)");
-                Match abilitySelfHealingRegEx = AbilitySelfHealingRegEx.Match(line);
-                if (abilitySelfHealingRegEx.Success)
-                {
-                    int abilitySelfHealing = int.TryParse(abilitySelfHealingRegEx.Groups[2].Value, out abilitySelfHealing) ? abilitySelfHealing : 0;
-                    AbilitySelfHealingDone += abilitySelfHealing;
-                    continue;
-                }
-
-                //new Regex(@"You heal ((?!your|.*'s).+) for (\d+)");
                 Match healingDoneMatch = HealingDoneRegEx.Match(line);
                 if (healingDoneMatch.Success)
                 {
-                    int healDone = int.TryParse(healingDoneMatch.Groups[2].Value, out healDone) ? healDone : 0;
-                    HealingDone += healDone;
-                    HealHit += 1;
+                    //You heal (the |)(yourself|\w+) for (\d+) 
+                    //G1: Non-Player Test, G2: TargetName, G3: Healing Done
+                    string? g1 = healingDoneMatch.Groups[1].Value?.ToString();
+                    string g2 = healingDoneMatch.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(healingDoneMatch.Groups[3].Value);
+
+                    if (g2.ToLower().Equals("yourself"))
+                        HealingTaken += g3;
+
+                    if (string.IsNullOrEmpty(g1))
+                    {
+                        HealingDone += g3;
+                        HealHit += 1;
+                    }
+                    else
+                    {
+                        NonPlayerHealingDone += g3;
+                        NonPlayerHealHit += 1;
+                    }
                     continue;
                 }
 
-                //new Regex(@"(.*) healed you.*(\d+)");
-                Match healingTakenRegEx = HealingTakenRegEx.Match(line);
-                if (healingTakenRegEx.Success)
+                Match abilitySelfHealingMatch = AbilitySelfHealingRegEx.Match(line);
+                if (abilitySelfHealingMatch.Success)
                 {
-                    int healingTaken = int.TryParse(healingTakenRegEx.Groups[2].Value, out healingTaken) ? healingTaken : 0;
-                    HealingTaken += healingTaken;
+                    //Your (.*) ability heals you .* (\d+) 
+                    //G1: Ability Name, G2: SelfHealing
+                    string g1 = abilitySelfHealingMatch.Groups[1].Value.ToString();
+                    int g2 = Convert.ToInt32(abilitySelfHealingMatch.Groups[2].Value);
+                    HealingDone += g2;
+                    HealingTaken += g2;
+                    continue;
+                }
+
+                Match healingBatteryHealMatch = HealingBatteryHealRegEx.Match(line);
+                if (healingBatteryHealMatch.Success)
+                {
+                    //((?:Y|y)our|\w+)(?:'s|) healing battery (?:fully heals|heals) (\w+).* (?:\(|)(\d+)
+                    //G1: OwnerName, G2: TargetName, G3: Healing
+                    string g1 = healingBatteryHealMatch.Groups[1].Value.ToString();
+                    string g2 = healingBatteryHealMatch.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(healingBatteryHealMatch.Groups[3].Value);
+                    if (g1.ToLower().Equals("your") && g1.ToLower().Equals("you"))
+                    {
+                        HealingTaken += g3;
+                        HealingDone += g3;
+                    }
+                    else if (g1.ToLower().Equals("your"))
+                        HealingDone += g3;
+                    else
+                        HealingTaken += g3;
+                    continue;
+                }
+
+                Match healingTakenMatch = HealingTakenRegEx.Match(line);
+                if (healingTakenMatch.Success)
+                {
+                    //(.*) healed you.*(\d+)
+                    //G1: CasterName, G2: HealingTaken
+                    string g1 = healingTakenMatch.Groups[1].Value.ToString();
+                    int g2 = Convert.ToInt32(healingTakenMatch.Groups[2].Value);
+                    HealingTaken += g2;
+                    continue;
+                }
+
+                Match healingTaken2Match = HealingTaken2RegEx.Match(line);
+                if (healingTaken2Match.Success)
+                {
+                    //(.*) healed you.*(\d+)
+                    //G1: CasterName, G2: HealingTaken
+                    string g1 = healingTaken2Match.Groups[1].Value.ToString();
+                    int g2 = Convert.ToInt32(healingTaken2Match.Groups[2].Value);
+                    HealingTaken += g2;
                     continue;
                 }
                 #endregion
 
                 #region Pets
-                //new Regex(@"You heal your (.+) for (\d+) .*\n.* You critical .* (\d+)");
-                Match criticalHealingDoneByYouToYourPetRegEx = CriticalHealingDoneByYouToYourPetRegEx.Match(lines);
-                if (criticalHealingDoneByYouToYourPetRegEx.Success)
+                Match petCriticalMeleeDamageDoneMatch = PetCriticalMeleeDamageDoneRegEx.Match(lines);
+                if (petCriticalMeleeDamageDoneMatch.Success)
                 {
-                    int healDone = int.TryParse(criticalHealingDoneByYouToYourPetRegEx.Groups[2].Value, out healDone) ? healDone : 0;
-                    int healCritDone = int.TryParse(criticalHealingDoneByYouToYourPetRegEx.Groups[3].Value, out healCritDone) ? healCritDone : 0;
-                    CriticalHealingDoneByYouToYourPet += healDone + healCritDone;
-                    CritHealHit += 1;
-                    index += 1;
-                    continue;
-                }
-
-                //new Regex(@"Your (.*) healed (.*) for (\d+)");
-                Match petHealingRegEx = PetHealingRegEx.Match(line);
-                if (petHealingRegEx.Success)
-                {
-                    string petHealTarget = petHealingRegEx.Groups[2].Value.ToString();
-                    int petHealing = int.TryParse(petHealingRegEx.Groups[3].Value, out petHealing) ? petHealing : 0;
-                    if (petHealTarget.Equals("you"))
+                    //Your (.*) attacks (the |)(.*) and hits for (\d+).*\n.* criticals .* (\d+)"); 
+                    //G1: PetName, G2: Non-Player Test, G3: TargetName, G4: Damage, G5: Crit Damage
+                    string g1 = petCriticalMeleeDamageDoneMatch.Groups[1].Value.ToString();
+                    string? g2 = petCriticalMeleeDamageDoneMatch.Groups[2].Value?.ToString();
+                    string g3 = petCriticalMeleeDamageDoneMatch.Groups[3].Value.ToString();
+                    int g4 = Convert.ToInt32(petCriticalMeleeDamageDoneMatch.Groups[4].Value);
+                    int g5 = Convert.ToInt32(petCriticalMeleeDamageDoneMatch.Groups[5].Value);
+                    if(string.IsNullOrEmpty(g2))
                     {
-                        PetHealingYou += petHealing;
+                        PetMeleeCritHit += 1;
+                        PetMeleeCriticalDamageDone += g4 + g5;
                     }
                     else
                     {
-                        PetHealingDone += petHealing;
+                        PetNonPlayerMeleeCritHit += 1;
+                        PetNonPlayerMeleeCriticalDamageDone += g4 + g5;
                     }
 
+                    index += 1;
                     continue;
                 }
 
-                //new Regex(@"You heal your (.+) for (\d+)");
-                Match healingDoneByYouToYourPetRegEx = HealingDoneByYouToYourPetRegEx.Match(line);
-                if (healingDoneByYouToYourPetRegEx.Success)
+                Match petMeleeDamageDoneMatch = PetMeleeDamageDoneRegEx.Match(line);
+                if (petMeleeDamageDoneMatch.Success)
                 {
-                    int healPet = int.TryParse(healingDoneByYouToYourPetRegEx.Groups[3].Value, out healPet) ? healPet : 0;
-                    HealingDoneByYouToYourPet += healPet;
-                    HealHit += 1;
-                    continue;
-                }
-
-                //new Regex(@"Your (.*) (hits|attacks) (.*) for (\d+)")
-                Match petDamageDoneRegEx = PetDamageDoneRegEx.Match(line);
-                if (petDamageDoneRegEx.Success)
-                {
-                    int petDamage = int.TryParse(petDamageDoneRegEx.Groups[3].Value, out petDamage) ? petDamage : 0;
-                    PetDamageDone += petDamage;
-                    HealHit += 1;
-                    continue;
-                }
-                #endregion
-
-                #region Mitigation
-                // new Regex(@"Your .* absorb.* (\d+)");
-                Match damageTakenAbsorbedRegEx = DamageTakenAbsorbedRegEx.Match(line);
-                if (damageTakenAbsorbedRegEx.Success)
-                {
-                    int damageTakenAbsorbed = int.TryParse(damageTakenAbsorbedRegEx.Groups[1].Value, out damageTakenAbsorbed) ? damageTakenAbsorbed : 0;
-                    DamageTakenAbsorbed += damageTakenAbsorbed;
-                    continue;
-                }
-
-                // new Regex(@"absorb.* (\d+).* of your");
-                Match damageDoneAbsorbedRegEx = DamageDoneAbsorbedRegEx.Match(line);
-                if (damageDoneAbsorbedRegEx.Success)
-                {
-                    int damageDoneAbsorbed = int.TryParse(damageDoneAbsorbedRegEx.Groups[1].Value, out damageDoneAbsorbed) ? damageDoneAbsorbed : 0;
-                    DamageDoneAbsorbed += damageDoneAbsorbed;
-                    continue;
-                }
-
-                //new(@"(\d+) damage was blocked by (your|\w+) .*");
-                Match damageBlockedRegEx = DamageBlockedRegEx.Match(line);
-                if (damageBlockedRegEx.Success)
-                {                    
-                    int damageBlocked = int.TryParse(damageBlockedRegEx.Groups[1].Value, out damageBlocked) ? damageBlocked : 0;
-                    string whoBenefited = damageBlockedRegEx.Groups[2].Value.ToString();
-                    if (whoBenefited.Equals("your"))
+                    //Your (.*) attacks (the |)(.*) and hits for (\d+)"); 
+                    //G1: PetName, G2: Non-Player Test, G3: TargetName, G4: Damage
+                    string g1 = petMeleeDamageDoneMatch.Groups[1].Value.ToString();
+                    string? g2 = petMeleeDamageDoneMatch.Groups[2].Value?.ToString();
+                    string g3 = petMeleeDamageDoneMatch.Groups[3].Value.ToString();
+                    int g4 = Convert.ToInt32(petMeleeDamageDoneMatch.Groups[4].Value);
+                    if (string.IsNullOrEmpty(g2))
                     {
-                        TotalDamageBlocked += damageBlocked;
+                        PetMeleeHit += 1;
+                        PetMeleeDamageDone += g4;
                     }
                     else
                     {
-                        DamageDoneBlocked += damageBlocked;
+                        NonPlayerPetMeleeHit += 1;
+                        PetNonPlayerMeleeDamageDone += g4;
+                    }
+
+                    continue;
+                }
+
+                Match petSpellDamageDoneMatch = PetSpellDamageDoneRegEx.Match(line);
+                if (petSpellDamageDoneMatch.Success)
+                {
+                    //Your pet's spell hits (the |)(.*) for (\d+)"); 
+                    //G1: Non-Player Test, G2: TargetName, G3: Damage
+                    string? g1 = petSpellDamageDoneMatch.Groups[1].Value?.ToString();
+                    string g2 = petSpellDamageDoneMatch.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(petSpellDamageDoneMatch.Groups[3].Value);
+                    if (string.IsNullOrEmpty(g1))
+                    {
+                        PetNonMeleeHit += 1;
+                        PetNonMeleeDamageDone += g3;
+                    }
+                    else
+                    {
+                        NonPlayerPetNonMeleeHit += 1;
+                        NonPlayerPetNonMeleeDamageDone += g3;
+                    }
+
+                    continue;
+                }
+
+                Match criticalHealingDoneByYouToYourPetMatch = CriticalHealingDoneByYouToYourPetRegEx.Match(lines);
+                if (criticalHealingDoneByYouToYourPetMatch.Success)
+                {
+                    //You critical heal.* (\d+).*\n.*You heal your (.+) for (\d+)"); 
+                    //G1: Critical Healing, G2: PetName, G3: Total Healing Done
+                    int g1 = Convert.ToInt32(criticalHealingDoneByYouToYourPetMatch.Groups[1].Value);
+                    string g2 = criticalHealingDoneByYouToYourPetMatch.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(criticalHealingDoneByYouToYourPetMatch.Groups[3].Value);
+
+                    CriticalHealingDone += g3;
+                    CritHealHit += 1;
+
+                    index += 1;
+                    continue;
+                }
+
+                Match healingDoneByYouToYourPetMatch = HealingDoneByYouToYourPetRegEx.Match(line);
+                if (healingDoneByYouToYourPetMatch.Success)
+                {
+                    //You heal your (.+) for (\d+)"); 
+                    //G1: PetName, G2: Healing
+                    string g1 = healingDoneByYouToYourPetMatch.Groups[1].Value.ToString();
+                    int g2 = Convert.ToInt32(healingDoneByYouToYourPetMatch.Groups[2].Value);
+
+                    HealingDone += g2;
+                    HealHit += 1;
+
+                    continue;
+                }
+
+                Match criticalHealingDoneByYouToPetsMatch = CriticalHealingDoneByYouToPetsRegEx.Match(lines);
+                if (criticalHealingDoneByYouToPetsMatch.Success)
+                {
+                    //You critical heal.* (\d+).*\n.*You heal (.*)'s (.*) for (\d+)"); 
+                    //G1: Critical Bonus, G2: PetOwner Name, G3: PetName, G4: Critical Healing Done
+                    int g1 = Convert.ToInt32(criticalHealingDoneByYouToPetsMatch.Groups[1].Value);
+                    string g2 = criticalHealingDoneByYouToPetsMatch.Groups[2].Value.ToString();
+                    string g3 = criticalHealingDoneByYouToPetsMatch.Groups[3].Value.ToString();
+                    int g4 = Convert.ToInt32(criticalHealingDoneByYouToPetsMatch.Groups[4].Value);
+
+                    CriticalHealingDone += g4;
+                    CritHealHit += 1;
+
+                    index += 1;
+                    continue;
+                }
+
+                Match healingDoneByYouToPetsMatch = HealingDoneByYouToPetsRegEx.Match(line);
+                if (healingDoneByYouToPetsMatch.Success)
+                {
+                    //You heal (.*)'s (.*) for (\d+)");  
+                    //G1: PetOwner Name, G2: PetName, G3: Healing Done
+                    string g1 = healingDoneByYouToPetsMatch.Groups[1].Value.ToString();
+                    string g2 = healingDoneByYouToPetsMatch.Groups[2].Value.ToString();
+                    int g3 = Convert.ToInt32(healingDoneByYouToPetsMatch.Groups[3].Value);
+
+                    HealingDone += g3;
+                    HealHit += 1;
+
+                    continue;
+                }
+
+                Match petHealingMatch = PetHealingRegEx.Match(line);
+                if (petHealingMatch.Success)
+                {
+                    //Your (.*) healed (the |)(.*) for (\d+)"); 
+                    //G1: PetName, G2: Non-Player Test, G3: TargetName, G4 Heal
+                    string g1 = petHealingMatch.Groups[1].Value.ToString();
+                    string? g2 = petHealingMatch.Groups[2]?.Value.ToString();
+                    string g3 = petHealingMatch.Groups[3].Value.ToString();
+                    int g4 = Convert.ToInt32(petHealingMatch.Groups[4].Value);
+
+                    if(g3.ToLower().Equals("you"))
+                        HealingTaken += g4;
+                    
+                    PetHealingDone += g4;
+                    PetHealHit += 1;
+
+                    continue;
+                }
+
+                #endregion
+
+                #region Mitigiation
+                Match damageDoneAbsorbedMatch = DamageDoneAbsorbedRegEx.Match(line);
+                if (damageDoneAbsorbedMatch.Success)
+                {
+                    //(A|Your) .* absorb(?:s|) (\d+).*
+                    //G1: Owner Test, G2: Damage Absorbed
+                    string g1 = damageDoneAbsorbedMatch.Groups[1].Value.ToString();
+                    int g2 = Convert.ToInt32(damageDoneAbsorbedMatch.Groups[2].Value);
+
+                    if(g1.ToLower().Equals("your"))
+                    {
+                        DamageTakenAbsorbed += g2;
+                    }   
+                    else
+                    {
+                        DamageDoneAbsorbed += g2;
+                    }
+
+                    continue;
+                }
+
+                Match damageBlockedMatch = DamageBlockedRegEx.Match(line);
+                if (damageBlockedMatch.Success)
+                {
+                    //(\d+) damage was blocked by (the |)(your|\w+)(?:'s|)
+                    //G1: DamageBlocked, G2:Non-Player Test, G3:OwnerName
+                    int g1 = Convert.ToInt32(damageBlockedMatch.Groups[1].Value);
+                    string? g2 = damageBlockedMatch.Groups[2].Value?.ToString();
+                    string g3 = damageBlockedMatch.Groups[3].Value.ToString();
+                    if(string.IsNullOrEmpty(g2))
+                    {
+                        if(g3.ToLower().Equals("your"))
+                        {
+                            DamageTakenBlocked += g1;
+                        }
+                        else
+                        {
+                            DamageDoneBlocked += g1;                           
+                        }               
+                    }
+                    else
+                    {
+                        if (g3.ToLower().Equals("your"))
+                        {
+                            NonPlayerDamageTakenBlocked += g1;
+                        }
+                        else
+                        {
+                            NonPlayerDamageDoneBlocked += g1;
+
+                        }
                     }
                     continue;
                 }
 
-                //new(@"(\d+) damage was converted");
-                Match damageConvertedRegEx = DamageConvertedRegEx.Match(line);
-                if (damageConvertedRegEx.Success)
+                Match damageConvertedToEnduranceAndPowerMatch = DamageConvertedToEnduranceAndPowerRegEx.Match(line);
+                if (damageConvertedToEnduranceAndPowerMatch.Success)
                 {
-                    int damageConverted = int.TryParse(damageConvertedRegEx.Groups[1].Value, out damageConverted) ? damageConverted : 0;
-                    TotalDamageConverted += damageConverted;
+                    //(\d+) damage was converted to endurance and power!"); 
+                    //G1: DamageConverted
+                    int g1 = Convert.ToInt32(damageConvertedToEnduranceAndPowerMatch.Groups[1].Value);
+                    DamageTakenConverted += g1;
+                    continue;
+                }
+
+                Match damageConvertedToHealingMatch = DamageConvertedToHealingRegEx.Match(line);
+                if (damageConvertedToHealingMatch.Success)
+                {
+                    //Your .* converts (\d+) damage to healing!"); 
+                    //G1: DamageConverted to SelfHealing
+                    int g1 = Convert.ToInt32(damageConvertedToHealingMatch.Groups[1].Value);
+                    DamageTakenConverted += g1;
+                    HealingDone += g1;
+                    HealingTaken += g1;
                     continue;
                 }
                 #endregion
 
-                if (PlayersOnlyFilter)
+                #region Misc
+                Match deathMatch = DeathRegEx.Match(line);
+                if (deathMatch.Success)
                 {
-                    continue;
+                    Deaths += 1;
                 }
 
-                #region Non-Player
-
-                Match nonPlayerCriticalDamageDoneRegEx = NonPlayerCriticalDamageDoneRegEx.Match(lines);
-                if (nonPlayerCriticalDamageDoneRegEx.Success)
+                Match deathBlowMatch = DeathBlowRegEx.Match(line);
+                if (deathBlowMatch.Success)
                 {
-                    //new Regex(@"You hit the (.+) for (\d+).*\n.*You critical .* (\d+)");
-                    int nonPlayerDamageDone = int.TryParse(nonPlayerCriticalDamageDoneRegEx.Groups[2].Value, out nonPlayerDamageDone) ? nonPlayerDamageDone : 0;
-                    int nonPlayerCriticalDamageDone = int.TryParse(nonPlayerCriticalDamageDoneRegEx.Groups[3].Value, out nonPlayerCriticalDamageDone) ? nonPlayerCriticalDamageDone : 0;
-                    NonPlayerCriticalDamageDone += nonPlayerCriticalDamageDone + nonPlayerDamageDone;
-                    CritHit += 1;
-                    index += 1;
-                    continue;
-                }
-
-                Match nonPlayerCriticalHealingDoneRegEx = NonPlayerCriticalHealingDoneRegEx.Match(lines);
-                if (nonPlayerCriticalHealingDoneRegEx.Success)
-                {
-                    //new Regex(@"You critical heal.* (\d+).*\n.*You heal (.*)'s (.*) for (\d+)");
-                    int nonPlayerCriticalHealingDone = int.TryParse(nonPlayerCriticalHealingDoneRegEx.Groups[4].Value, out nonPlayerCriticalHealingDone) ? nonPlayerCriticalHealingDone : 0;
-                    NonPlayerCriticalHealingDone += nonPlayerCriticalHealingDone;
-                    CritHealHit += 1;
-                    index += 1;
-                    continue;
-                }
-
-                Match nonPlayerDamageTakenRegEx = NonPlayerDamageTakenRegEx.Match(line);
-                if (nonPlayerDamageTakenRegEx.Success)
-                {
-                    //new Regex(@"The (.*) hits you for (\d+)");
-                    int nonPlayerDamageTaken = int.TryParse(nonPlayerDamageTakenRegEx.Groups[2].Value, out nonPlayerDamageTaken) ? nonPlayerDamageTaken : 0;
-                    NonPlayerDamageTaken += nonPlayerDamageTaken;
-                    continue;
-                }
-
-                Match nonPlayerDamageDoneRegEx = NonPlayerDamageDoneRegEx.Match(line);
-                if (nonPlayerDamageDoneRegEx.Success)
-                {
-                    //new Regex(@"You hit the (.*) for (\d+)");
-                    int nonPlayerDamageDone = int.TryParse(nonPlayerDamageDoneRegEx.Groups[2].Value, out nonPlayerDamageDone) ? nonPlayerDamageDone : 0;
-                    NonPlayerDamageDone += nonPlayerDamageDone;
-                    Hit += 1;
-                    continue;
-                }
-
-                Match nonPlayerHealingDoneRegEx = NonPlayerHealingDoneRegEx.Match(line);
-                if (nonPlayerHealingDoneRegEx.Success)
-                {
-                    //new Regex(@"You heal (.*)'s (.*) for (\d+)");
-                    int nonPlayerHealingDone = int.TryParse(nonPlayerHealingDoneRegEx.Groups[3].Value, out nonPlayerHealingDone) ? nonPlayerHealingDone : 0;
-                    NonPlayerHealingDone += nonPlayerHealingDone;
-                    HealHit += 1;
-                    continue;
+                    DeathBlows += 1;
                 }
                 #endregion
+
             }
             LogFileReadIndex = endIndex;
 
@@ -649,7 +1020,7 @@ namespace DAoCToolSuite.LogTool
             LogOpenEntries = LogOpenEntries.OrderByDescending(x => x.Key).ToDictionary(k => k.Key, v => v.Value);
             if (LogOpenEntries.Count == 0)
             {
-                LogOpenEntries.Add(DateTime.Now, 1);
+                LogOpenEntries.Add(DateTime.Now, 0);
             }
         }
 
@@ -694,19 +1065,23 @@ namespace DAoCToolSuite.LogTool
             {
                 new Regex(@"@@.*"),
                 new Regex(@"##.*"),
-                new Regex(@"You (?!hit|critical|critically|begin|drain|earn|fail|attack|perform|prepare|steal|use|just|heal|have died).*"),
+                new Regex(@"You (?!hit|miss|critical|critically|begin|drain|earn|fail|attack|perform|prepare|steal|use|just|heal|are healed|have died|pick up).*"),
+                new Regex(@"You begin moving .*"),
                 new Regex(@"You prepare to sprint!"),
-                new Regex(@"Your (?!health buffer|magic buffer|health battery).*"),
+                new Regex(@"Your (?!health buffer|magic buffer|health battery|pet|pet's|share of|([\w\s]+) attacks|([\w\s]+) criticals).*"),
                 new Regex(@"You've (?!been awarded).*"),
                 new Regex(@"That target.*"),
                 new Regex(@".*casts a spell!"),
                 new Regex(@".*is dead!"),
                 new Regex(@".*as a follow up!"),
                 new Regex(@"(.*) uses [the ]*(.*)\."),
-                new Regex(@"(.*) doesn't currently.*")
+                new Regex(@"(.*) doesn't currently.*"),
+                new Regex(@"EV (\w+) groups")
             };
             RejectLineContent = rejectLineContent;
         }
+
+        private static Regex QuestFilterRegEx = new(@"\[[\w\s]+\](?!\.)");
 
         /// <summary>
         /// Determines if a string contains a substring from the RejectLineContent list.
@@ -715,6 +1090,8 @@ namespace DAoCToolSuite.LogTool
         /// <returns>Boolean</returns>
         private static bool IsRejectContent(string line)
         {
+           
+
             if (string.IsNullOrEmpty(line.Trim()))
             {
                 return true;
@@ -733,6 +1110,10 @@ namespace DAoCToolSuite.LogTool
 
                 try
                 {
+                    if(QuestFilterRegEx.IsMatch(line))
+                    {
+                        return true;
+                    }
                     string? delimitedLine = line.Remove(0, 10).Trim();
                     if (string.IsNullOrEmpty(delimitedLine) || reject.IsMatch(delimitedLine))
                     {
@@ -766,9 +1147,9 @@ namespace DAoCToolSuite.LogTool
 
                 if (ProgressBar != null)
                 {
-                    ProgressBar.Value = 0;
                     ProgressBar.Minimum = 0;
                     ProgressBar.Maximum = 100;
+                    ProgressBar.Value = 0;
                     ProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
                     ProgressBar.CustomText = "Reading File";
                     ProgressBar.Visible = true;
