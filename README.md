@@ -5,7 +5,7 @@ CharacterTool Changes:
 1. Added the ability to backup all INI files. Please pay attention to the warning next to the Save All button for details.
 2. Added the ability to Edit backup records in the database.
 3. Added the ability to Restore or Delete multiple records at a time.
-4. 
+
 Bug Fixes:
 Yes.
 
