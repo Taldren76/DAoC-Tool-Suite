@@ -15,6 +15,7 @@ DAoC Tool Suite Beta v0.7.0
 Changes:
 1. Completed refactor of the logparser statistics and overlay.
 2. You may now close the launcher and it won't kill the other tools.
+
 Bug Fixes:
 Too many to count.
 
