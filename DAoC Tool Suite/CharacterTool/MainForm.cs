@@ -881,10 +881,22 @@ namespace DAoCToolSuite.CharacterTool
         private void RestoreButton_Click(object sender, EventArgs e)
         {
             Logger.Debug("RestoreButton clicked.");
+            RestoreRestoreSettingsButton.Enabled = false;
             List<string> charNames = new();
-            DataGridViewSelectedRowCollection selected = restoreDataGridView.SelectedRows;
-            foreach (DataGridViewRow row in selected)
+            DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
+            if (selectedRows is null)
+                return;
+
+            RestoreDeleteProgressBar.Minimum = 0;
+            RestoreDeleteProgressBar.Maximum = selectedRows.Count;
+            RestoreDeleteProgressBar.Value = 0;
+            RestoreDeleteProgressBar.CustomText = "Restoring";
+            RestoreDeleteProgressBar.Visible = true;
+            RestoreDeleteProgressBar.Refresh();
+
+            foreach (DataGridViewRow row in selectedRows)
             {
+                RestoreDeleteProgressBar.Value += 1;
                 string? dbIndexStr = row?.Cells["index"]?.Value?.ToString();
                 if (dbIndexStr is not null)
                 {
@@ -898,7 +910,7 @@ namespace DAoCToolSuite.CharacterTool
                             File.WriteAllText($"{settingsBackup.Path}\\{settingsBackup.IGNFileName}", settingsBackup.IGNData);
                         }
 
-                        if (selected.Count > 1 && settingsBackup.FirstName is not null)
+                        if (selectedRows.Count > 1 && settingsBackup.FirstName is not null)
                         {
                             charNames.Add(settingsBackup.FirstName);
                         }
@@ -909,17 +921,23 @@ namespace DAoCToolSuite.CharacterTool
                     }
                 }
             }
-            if (selected.Count > 1)
+            if (selectedRows.Count > 1)
             {
                 _ = MessageBox.Show($"Restored character files for {string.Join(", ", charNames)}", "Restore Character Settings", MessageBoxButtons.OK);
             }
+
+            RestoreDeleteProgressBar.Visible = false;
+            RestoreRestoreSettingsButton.Enabled = true;
         }
 
         private void RestoreDeleteRecordButton_Click(object sender, EventArgs e)
         {
             Logger.Debug("RestoreDeleteRecordButton clicked.");
-
+            RestoreDeleteSettingsButton.Enabled = false;
             DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
+            if (selectedRows is null)
+                return;
+
             List<int> charactersToDelete = new();
             foreach (DataGridViewRow row in selectedRows)
             {
@@ -948,18 +966,29 @@ namespace DAoCToolSuite.CharacterTool
             }
             if (selectedRows.Count > 1)
             {
+                RestoreDeleteProgressBar.Minimum = 0;
+                RestoreDeleteProgressBar.Maximum = charactersToDelete.Count;
+                RestoreDeleteProgressBar.Value = 0;
+                RestoreDeleteProgressBar.CustomText = "Deleting";
+                RestoreDeleteProgressBar.Visible = true;
+                RestoreDeleteProgressBar.Refresh();
+
                 DialogResult del = MessageBox.Show($"Are you sure you want to delete the {charactersToDelete.Count} selected records?", "Delete Setting Backup", MessageBoxButtons.YesNo);
                 if (del == DialogResult.No)
                 {
+                    RestoreDeleteProgressBar.Visible = false;
                     return;
                 }
                 foreach (int index in charactersToDelete)
                 {
+                    RestoreDeleteProgressBar.Value += 1;
                     SqliteDataAccess.DeleteSettingBackupByIndex(index);
                 }
             }
+            RestoreDeleteProgressBar.Visible = false;
             LoadBackups();
             FilterDataSource();
+            RestoreDeleteSettingsButton.Enabled = true;
         }
 
         private void EditDescriptionButton_Click(object sender, EventArgs e)

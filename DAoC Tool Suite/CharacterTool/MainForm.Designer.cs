@@ -91,6 +91,7 @@ namespace DAoCToolSuite.CharacterTool
             WarningLabel = new Label();
             SaveAllButton = new Button();
             restoreCharacterTab = new TabPage();
+            RestoreDeleteProgressBar = new TextProgressBar();
             EditDescriptionButton = new Button();
             RestoreDBButton = new Button();
             BackupDBButton = new Button();
@@ -698,6 +699,7 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // restoreCharacterTab
             // 
+            restoreCharacterTab.Controls.Add(RestoreDeleteProgressBar);
             restoreCharacterTab.Controls.Add(EditDescriptionButton);
             restoreCharacterTab.Controls.Add(RestoreDBButton);
             restoreCharacterTab.Controls.Add(BackupDBButton);
@@ -718,6 +720,21 @@ namespace DAoCToolSuite.CharacterTool
             restoreCharacterTab.TabIndex = 2;
             restoreCharacterTab.Text = "Character Restore";
             restoreCharacterTab.UseVisualStyleBackColor = true;
+            // 
+            // RestoreDeleteProgressBar
+            // 
+            RestoreDeleteProgressBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            RestoreDeleteProgressBar.CustomText = "";
+            RestoreDeleteProgressBar.ForeColor = Color.Lime;
+            RestoreDeleteProgressBar.Location = new Point(168, 300);
+            RestoreDeleteProgressBar.Name = "RestoreDeleteProgressBar";
+            RestoreDeleteProgressBar.ProgressColor = Color.Chartreuse;
+            RestoreDeleteProgressBar.Size = new Size(220, 23);
+            RestoreDeleteProgressBar.TabIndex = 33;
+            RestoreDeleteProgressBar.TextColor = Color.Black;
+            RestoreDeleteProgressBar.TextFont = new Font("Verdana", 9F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            RestoreDeleteProgressBar.Visible = false;
+            RestoreDeleteProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
             // 
             // EditDescriptionButton
             // 
@@ -1015,5 +1032,6 @@ namespace DAoCToolSuite.CharacterTool
         private Label WarningLabel;
         private Button SaveAllButton;
         private TextProgressBar SaveAllProgressBar;
+        private TextProgressBar RestoreDeleteProgressBar;
     }
 }
