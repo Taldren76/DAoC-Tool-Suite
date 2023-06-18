@@ -1,11 +1,13 @@
 using System.Data;
 using System.IO;
+using System.Windows.Controls;
 using DAoCToolSuite.CharacterTool.Files;
 using DAoCToolSuite.CharacterTool.Json;
 using DAoCToolSuite.CharacterTool.Settings;
 using Logger;
 using Newtonsoft.Json;
 using SQLLibrary;
+
 
 namespace DAoCToolSuite.CharacterTool
 {
@@ -79,9 +81,11 @@ namespace DAoCToolSuite.CharacterTool
             _ = BackUpRealmComboBox.Items.Add("Albion");
             _ = BackUpRealmComboBox.Items.Add("Hibernia");
             _ = BackUpRealmComboBox.Items.Add("Midgard");
+            _ = BackUpRealmComboBox.Items.Add("Unknown");
             _ = RestoreRealmComboBox.Items.Add("Albion");
             _ = RestoreRealmComboBox.Items.Add("Hibernia");
             _ = RestoreRealmComboBox.Items.Add("Midgard");
+            _ = RestoreRealmComboBox.Items.Add("Unknown");
             DAoCDirectoryTextBox.Text = DefaultLocation();
             ClearFilterButton.Enabled = false;
             ParseDirectory = new ParseDirectory(DAoCCharacterDataFolder);
@@ -394,7 +398,89 @@ namespace DAoCToolSuite.CharacterTool
             LoadBackups();
             ResetCharacterBackupTab();
         }
-        private void BackUpComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void SaveAll_Click(object sender, EventArgs e)
+        {
+            if (ParseDirectory?.INIFiles is null)
+                return;
+
+            SaveAllButton.Enabled = false;
+
+            try
+            {
+                SaveAllProgressBar.Minimum = 0;
+                SaveAllProgressBar.Maximum = ParseDirectory.INIFiles.Count;
+                SaveAllProgressBar.Value = 0;
+                SaveAllProgressBar.CustomText = "Saving";
+                SaveAllProgressBar.Visible = true;
+                SaveAllProgressBar.Refresh();
+
+                foreach (var file in ParseDirectory.INIFiles)
+                {
+                    SaveAllProgressBar.Value += 1;
+                    if (file is null) continue;
+                    string iniFileName = file.Split('\\').Last();
+                    string characterName = iniFileName.Split('-').First();
+                    string serverStr = iniFileName.Split("-").Last().Split('.').First();
+                    int ServerIndex = int.TryParse(serverStr, out ServerIndex) ? ServerIndex : -1;
+                    List<Server>? Servers = ServerList?.Servers?.Server;
+                    string? serverName = Servers?.Where(x => x.Index == ServerIndex).Select(x => x.Name).FirstOrDefault();
+                    string? ignFileName = ParseDirectory?.FindIgnFileByCharacterName(characterName);
+                    string? directoryPath = DAoCDirectoryTextBox.Text;
+                    if (ignFileName is null || directoryPath is null) continue;
+                    string? iniContents = ParseDirectory?.GetFileContents(file);
+                    string? ignContents = ParseDirectory?.GetFileContents(directoryPath + $"\\{ignFileName}");
+                    string realm;
+                    string className;
+                    CharacterModel? characterModel = SqliteDataAccess.LoadCharacterByFirstName(characterName);
+                    if (characterModel is not null)
+                    {
+                        realm = characterModel.Realm ?? "Unknown";
+                        className = characterModel.Class ?? "Unknown"; ;
+                    }
+                    else
+                    {
+                        realm = "Unknown";
+                        className = "Unknown";
+                    }
+                    SettingsBackUpModel settingsBackup = new()
+                    {
+                        FirstName = characterName,
+                        Realm = realm,
+                        Class = className,
+                        Path = directoryPath,
+                        Description = $"(Server: {serverName ?? "Unknown"}) - Backup created: {DateTime.Now}",
+                    };
+                    if (!string.IsNullOrEmpty(iniContents))
+                    {
+                        settingsBackup.INIFileName = iniFileName;
+                        settingsBackup.INIData = iniContents;
+                        if (!string.IsNullOrEmpty(ignContents))
+                        {
+                            settingsBackup.IGNFileName = ignFileName;
+                            settingsBackup.IGNData = ignContents;
+                        }
+                        try
+                        {
+                            SqliteDataAccess.AddSettingBackup(settingsBackup, DateTime.Now);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            SaveAllProgressBar.Visible = false;
+            LoadBackups();
+            ResetCharacterBackupTab();
+            SaveAllButton.Enabled = true;
+        }
+        private void BackUpNameComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender is not System.Windows.Forms.ComboBox comboBox)
             {
@@ -445,7 +531,11 @@ namespace DAoCToolSuite.CharacterTool
                 case "Midgard":
                     classes = RealmList?.Realm?.Midgard?.Split(",").ToList() ?? new();
                     break;
+                case "Unknown":
+                    classes = new() { "Unknown" };
+                    break;
             }
+
             BackUpClassComboBox.Items.Clear();
             BackUpClassComboBox.ResetText();
             RestoreClassComboBox.Items.Clear();
@@ -791,6 +881,7 @@ namespace DAoCToolSuite.CharacterTool
         private void RestoreButton_Click(object sender, EventArgs e)
         {
             Logger.Debug("RestoreButton clicked.");
+            List<string> charNames = new();
             DataGridViewSelectedRowCollection selected = restoreDataGridView.SelectedRows;
             foreach (DataGridViewRow row in selected)
             {
@@ -807,10 +898,20 @@ namespace DAoCToolSuite.CharacterTool
                             File.WriteAllText($"{settingsBackup.Path}\\{settingsBackup.IGNFileName}", settingsBackup.IGNData);
                         }
 
-                        _ = MessageBox.Show($"Restored character files for {settingsBackup.FirstName}\n{settingsBackup.Description}", "Restore Character Settings", MessageBoxButtons.OK);
+                        if (selected.Count > 1 && settingsBackup.FirstName is not null)
+                        {
+                            charNames.Add(settingsBackup.FirstName);
+                        }
+                        else
+                        {
+                            _ = MessageBox.Show($"Restored character files for {settingsBackup.FirstName}\n{settingsBackup.Description}", "Restore Character Settings", MessageBoxButtons.OK);
+                        }
                     }
                 }
-
+            }
+            if (selected.Count > 1)
+            {
+                _ = MessageBox.Show($"Restored character files for {string.Join(", ", charNames)}", "Restore Character Settings", MessageBoxButtons.OK);
             }
         }
 
@@ -819,6 +920,7 @@ namespace DAoCToolSuite.CharacterTool
             Logger.Debug("RestoreDeleteRecordButton clicked.");
 
             DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
+            List<int> charactersToDelete = new();
             foreach (DataGridViewRow row in selectedRows)
             {
                 string? dbIndexStr = row?.Cells["index"]?.Value?.ToString();
@@ -828,17 +930,78 @@ namespace DAoCToolSuite.CharacterTool
                     if (dbIndex > -1)
                     {
                         SettingsBackUpModel settingsBackup = SqliteDataAccess.LoadSettingByIndex(dbIndex);
-                        DialogResult del = MessageBox.Show($"Delete backup for:{settingsBackup.FirstName}?\n{settingsBackup.Description}", "Delete Setting Backup", MessageBoxButtons.YesNo);
-                        if (del == DialogResult.No)
+                        if (selectedRows.Count > 1 && settingsBackup.FirstName is not null)
                         {
-                            return;
+                            charactersToDelete.Add(dbIndex);
                         }
-                        SqliteDataAccess.DeleteSettingBackupByIndex(dbIndex);
+                        else
+                        {
+                            DialogResult del = MessageBox.Show($"Delete backup for:{settingsBackup.FirstName}?\n{settingsBackup.Description}", "Delete Setting Backup", MessageBoxButtons.YesNo);
+                            if (del == DialogResult.No)
+                            {
+                                return;
+                            }
+                            SqliteDataAccess.DeleteSettingBackupByIndex(dbIndex);
+                        }
                     }
+                }
+            }
+            if (selectedRows.Count > 1)
+            {
+                DialogResult del = MessageBox.Show($"Are you sure you want to delete the {charactersToDelete.Count} selected records?", "Delete Setting Backup", MessageBoxButtons.YesNo);
+                if (del == DialogResult.No)
+                {
+                    return;
+                }
+                foreach (int index in charactersToDelete)
+                {
+                    SqliteDataAccess.DeleteSettingBackupByIndex(index);
                 }
             }
             LoadBackups();
             FilterDataSource();
+        }
+
+        private void EditDescriptionButton_Click(object sender, EventArgs e)
+        {
+            Logger.Debug("EditDescriptionButton clicked.");
+            SettingsBackUpModel? settingsBackup = null;
+            int dbIndex = -1;
+            DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
+            DataGridViewRow row = selectedRows[0];
+            if (row is null)
+                return;
+            string? dbIndexStr = row?.Cells["index"]?.Value?.ToString();
+            if (dbIndexStr is not null)
+            {
+                dbIndex = int.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
+                if (dbIndex > -1)
+                {
+                    settingsBackup = SqliteDataAccess.LoadSettingByIndex(dbIndex);
+                }
+                else
+                    return;
+            }
+            if (settingsBackup is null)
+                return;
+            EditDialog dialog = new EditDialog(row!, DAoCCharacterDataFolder, ServerList!, RealmList!)
+            {
+                Owner = this,
+                StartPosition = FormStartPosition.Manual
+            };
+            dialog.BackUpNameComboBox.Text = settingsBackup.FirstName;
+
+            if (settingsBackup.FirstName is not null && CharacterList.ContainsKey(settingsBackup.FirstName))
+            {
+                dialog.BackUpServerTextBox.Text = GetServerName(CharacterList[settingsBackup.FirstName]);
+
+            }
+            dialog.BackUpRealmComboBox.Text = settingsBackup.Realm;
+            dialog.BackUpClassComboBox.Text = settingsBackup.Class;
+            dialog.BackUpDescriptionTextBox.Text = settingsBackup.Description;
+            dialog.SetLocation();
+            dialog.ShowDialog();
+            LoadBackups();
         }
         #endregion
 
@@ -977,6 +1140,11 @@ namespace DAoCToolSuite.CharacterTool
             Logger.Debug("Restore button has been pressed.");
             if (File.Exists(Settings.JsonBackupFileFullPath))
             {
+                DialogResult del = MessageBox.Show($"WARNING: Restoring DB will delete all existing records.\nContinue?", "Restore Database", MessageBoxButtons.YesNo);
+                if (del == DialogResult.No)
+                {
+                    return;
+                }
                 RestoreDBFromJson();
                 Logger.Debug($"Backup restored from {Settings.JsonBackupFileFullPath}");
                 LoadBackups();

@@ -178,29 +178,41 @@ namespace DAoCToolSuite.LogTool
         private void DisplayParseLogStatistics()
         {
             BindingSource.DataSource = ProduceDataTable();
-            //Overlay.Value_AverageCritDamageDone.Text = LogParser.AverageCritDamageDone.ToString("N0");
-            //Overlay.Value_AverageDamageDone.Text = LogParser.AverageDamageDone.ToString("N0");
-            //Overlay.Value_TotalDamageDone.Text = LogParser.TotalNonMeleeDamageDone.ToString("N0");
-            //Overlay.Value_CritDamageRatio.Text = LogParser.CritDamageRatio.ToString("0.0%");
-            //Overlay.Value_DamageCritRate.Text = LogParser.DamageCritRate.ToString("0.0%");
-            //Overlay.Value_AverageHealingDone.Text = LogParser.AverageHealingDone.ToString("N0");
-            //Overlay.Value_AverageCritHealingDone.Text = LogParser.AverageCritHealingDone.ToString("N0");
-            //Overlay.Value_HealSelfRatio.Text = LogParser.HealSelfRatio.ToString("0.0%");
-            //Overlay.Value_CritHealRatio.Text = LogParser.CritHealRatio.ToString("0.0%");
-            //Overlay.Value_HealCritRate.Text = LogParser.HealCritRate.ToString("0.0%");
-            //Overlay.Value_TotalHealingDone.Text = LogParser.TotalHealingDone.ToString("N0");
-            //Overlay.Value_TotalHealingRecieved.Text = LogParser.TotalHealingRecieved.ToString("N0");
-            //Overlay.Value_RealmPoints.Text = LogParser.RealmPointsEarned.ToString("N0");
-            //Overlay.Value_DamageAbsorbed.Text = LogParser.DamageDoneAbsorbed.ToString("N0");
-            //Overlay.Value_DamageTakenAbsorbed.Text = LogParser.DamageTakenAbsorbed.ToString("N0");
-            //Overlay.Value_TotalDamageTaken.Text = LogParser.TotalDamageTaken.ToString("N0");
-            //Overlay.Value_DeathBlows.Text = LogParser.DeathBlows.ToString("N0");
-            //Overlay.Value_Deaths.Text = LogParser.Deaths.ToString("N0");
-            //Overlay.Value_DamageDoneBlocked.Text = LogParser.DamageDoneBlocked.ToString("N0");
-            //Overlay.Value_TotalDamageBlocked.Text = LogParser.TotalDamageBlocked.ToString("N0");
-            //Overlay.Value_TotalDamageConverted.Text = LogParser.TotalDamageConverted.ToString("N0");
-            //Overlay.Value_IRS.Text = LogParser.IRS.ToString("N0");
-            //Overlay.Refresh();
+
+            #region Column 1 Values
+            Overlay.Value_TotalDamageDone.Text = LogParser.TotalDamageDone.ToString("N0");
+            Overlay.Value_TotalSpellDamage.Text = LogParser.TotalNonMeleeDamageDone.ToString("N0");
+            Overlay.Value_AverageSpellDamageDone.Text = LogParser.AverageNonMeleeDamageDone.ToString("N0");
+            Overlay.Value_AverageSpellCritDamageDone.Text = LogParser.AverageNonMeleeCriticalDamageDone.ToString("N0");
+            Overlay.Value_SpellCritRate.Text = LogParser.NonMeleeCritRate.ToString("0.0%");
+            Overlay.Value_TotalMeleeDamage.Text = LogParser.TotalMeleeDamageDone.ToString("N0");
+            Overlay.Value_AverageMeleeDamageDone.Text = LogParser.AverageMeleeDamageDone.ToString("N0");
+            Overlay.Value_AverageMeleeCritDamageDone.Text = LogParser.AverageCriticalMeleeDamageDone.ToString("N0");
+            Overlay.Value_MeleeCritRate.Text = LogParser.MeleeCritRate.ToString("0.0%");
+            Overlay.Value_TotalDamageTaken.Text = LogParser.TotalDamageTaken.ToString("N0");
+            Overlay.Value_DamageTakenAbsorbed.Text = LogParser.DamageTakenAbsorbed.ToString("N0");
+            Overlay.Value_DamageTakenConverted.Text = LogParser.DamageTakenConverted.ToString("N0");
+            Overlay.Value_DamageTakenBlocked.Text = LogParser.TotalDamageTakeBlocked.ToString("N0");
+            Overlay.Value_DeathBlows.Text = LogParser.DeathBlows.ToString("N0");
+            Overlay.Value_Deaths.Text = LogParser.Deaths.ToString("N0");
+            #endregion
+            #region Column 2 Values
+            Overlay.Value_TotalHealingRecieved.Text = LogParser.HealingTaken.ToString("N0");
+            Overlay.Value_TotalHealingDone.Text = LogParser.TotalHealingDone.ToString("N0");
+            Overlay.Value_AverageHealingDone.Text = LogParser.AverageHealDone.ToString("N0");
+            Overlay.Value_AverageCritHealingDone.Text = LogParser.AverageCriticalHealingDone.ToString("N0");
+            Overlay.Value_HealCritRate.Text = LogParser.HealCritRate.ToString("0.0%");
+            Overlay.Value_BlockRate.Text = LogParser.AttacksBlockedRate.ToString("0.0%");
+            Overlay.Value_EvadeRate.Text = LogParser.AttacksEvadedRate.ToString("0.0%");
+            Overlay.Value_ParryRate.Text = LogParser.AttacksParriedRate.ToString("0.0%");
+            Overlay.Value_MissRate.Text = LogParser.AttackMissRate.ToString("0.0%");
+            Overlay.Value_TotalPetDamage.Text = LogParser.TotalPetDamageDone.ToString("N0");
+            Overlay.Value_PetMeleeCritRate.Text = LogParser.PetMeleeCritRate.ToString("0.0%");
+            Overlay.Value_TotalPetHealing.Text = LogParser.TotalPetHealingDone.ToString("N0");
+            Overlay.Value_GoldEarned.Text = LogParser.GoldEarned.ToString("N4");
+            Overlay.Value_RealmPoints.Text = LogParser.RealmPointsEarned.ToString("N0");
+            Overlay.Value_IRS.Text = LogParser.IRS.ToString("N0");
+            #endregion
         }
 
         /// <summary>
@@ -395,6 +407,7 @@ namespace DAoCToolSuite.LogTool
         {
             CheckBox checkBox = (CheckBox)sender;
             LogParser.PlayersOnlyFilter = checkBox.Checked;
+            DisplayParseLogStatistics();
             Properties.Settings.Default.PlayersOnly = checkBox.Checked;
             Properties.Settings.Default.Save();
 

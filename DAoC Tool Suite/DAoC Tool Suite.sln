@@ -18,7 +18,7 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Inst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logger", "Logger\Logger.csproj", "{DCDA40E5-F5DC-49E8-A104-699D3DE493F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogTool", "LogTool\LogTool.csproj", "{3BF58216-0C1B-43C5-AF83-E3F44D844C89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogTool", "LogTool\LogTool.csproj", "{3BF58216-0C1B-43C5-AF83-E3F44D844C89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

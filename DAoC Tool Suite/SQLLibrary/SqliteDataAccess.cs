@@ -376,10 +376,18 @@ namespace SQLLibrary
             lock (thisLock)
             {
                 string tableName = "SettingsBackup";
-                string deleteAccountQuery = $"Delete From {tableName} Where \"index\" = {index}";
+                string deleteBackupQuery = $"Delete From {tableName} Where \"index\" = {index}";
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-                _ = conn.Query(deleteAccountQuery, new DynamicParameters());
+                _ = conn.Query(deleteBackupQuery, new DynamicParameters());
             }
+        }
+
+        public static void UpdateEntryByIndex(int index, SettingsBackUpModel settingsBackUpModel)
+        {
+            string tableName = "SettingsBackup";
+            string updateBackupQuery = $"UPDATE {tableName} SET Realm = '{settingsBackUpModel.Realm}', Class = '{settingsBackUpModel.Class}', Description = '{settingsBackUpModel.Description}' WHERE \"index\" = {index}";
+            using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+            _ = conn.Query(updateBackupQuery, new DynamicParameters());
         }
         #endregion
 

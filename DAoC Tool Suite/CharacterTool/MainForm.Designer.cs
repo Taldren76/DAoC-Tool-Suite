@@ -30,11 +30,11 @@ namespace DAoCToolSuite.CharacterTool
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             DAoCDirectoryPanel = new Panel();
             DAoCDirectoryButton = new Button();
             DAoCDirectoryTextBox = new TextBox();
@@ -72,19 +72,26 @@ namespace DAoCToolSuite.CharacterTool
             CopyFromComboBox = new ComboBox();
             RefreshButton = new Button();
             backUpCharacterTab = new TabPage();
-            SaveBackUp = new Button();
-            BackUpDescriptionLabel = new Label();
+            panel6 = new Panel();
+            SaveAllProgressBar = new TextProgressBar();
+            panel5 = new Panel();
             BackUpDescriptionTextBox = new TextBox();
-            BackUpServerTextBox = new TextBox();
-            BackUpClassLabel = new Label();
-            BackUpClassComboBox = new ComboBox();
-            BackupRealmLabel = new Label();
-            BackUpRealmComboBox = new ComboBox();
-            BackUpServerLabel = new Label();
             BackupLabel = new Label();
-            BackUpNameComboBox = new ComboBox();
+            SaveBackUp = new Button();
             BackUpCharRefreshButton = new Button();
+            BackUpDescriptionLabel = new Label();
+            BackUpServerTextBox = new TextBox();
+            BackUpNameComboBox = new ComboBox();
+            BackUpClassLabel = new Label();
+            BackUpServerLabel = new Label();
+            BackUpClassComboBox = new ComboBox();
+            BackUpRealmComboBox = new ComboBox();
+            BackupRealmLabel = new Label();
+            panel4 = new Panel();
+            WarningLabel = new Label();
+            SaveAllButton = new Button();
             restoreCharacterTab = new TabPage();
+            EditDescriptionButton = new Button();
             RestoreDBButton = new Button();
             BackupDBButton = new Button();
             RestoreNameFilterComboBox = new ComboBox();
@@ -110,6 +117,9 @@ namespace DAoCToolSuite.CharacterTool
             NewCharacterPanel.SuspendLayout();
             ExistingCharacterPanel.SuspendLayout();
             backUpCharacterTab.SuspendLayout();
+            panel6.SuspendLayout();
+            panel5.SuspendLayout();
+            panel4.SuspendLayout();
             restoreCharacterTab.SuspendLayout();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)restoreDataGridView).BeginInit();
@@ -168,7 +178,7 @@ namespace DAoCToolSuite.CharacterTool
             DAoCTabControl.Controls.Add(copySettingsTab);
             DAoCTabControl.Controls.Add(backUpCharacterTab);
             DAoCTabControl.Controls.Add(restoreCharacterTab);
-            DAoCTabControl.Location = new Point(3, 3);
+            DAoCTabControl.Location = new Point(4, 3);
             DAoCTabControl.Name = "DAoCTabControl";
             DAoCTabControl.SelectedIndex = 0;
             DAoCTabControl.Size = new Size(770, 358);
@@ -189,6 +199,7 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // panel2
             // 
+            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             panel2.BorderStyle = BorderStyle.Fixed3D;
             panel2.Controls.Add(CustomSettingPanel);
             panel2.Controls.Add(CustomSettingsCheckBox);
@@ -245,6 +256,7 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // panel1
             // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             panel1.BorderStyle = BorderStyle.Fixed3D;
             panel1.Controls.Add(AllCharacterPanel);
             panel1.Controls.Add(AllCharactersCheckBox);
@@ -270,7 +282,7 @@ namespace DAoCToolSuite.CharacterTool
             AllCharacterPanel.Enabled = false;
             AllCharacterPanel.Location = new Point(6, 255);
             AllCharacterPanel.Name = "AllCharacterPanel";
-            AllCharacterPanel.Size = new Size(584, 56);
+            AllCharacterPanel.Size = new Size(582, 56);
             AllCharacterPanel.TabIndex = 15;
             // 
             // AllCharactersText
@@ -285,7 +297,7 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // AllCharactersSaveButton
             // 
-            AllCharactersSaveButton.Location = new Point(503, 15);
+            AllCharactersSaveButton.Location = new Point(499, 15);
             AllCharactersSaveButton.Name = "AllCharactersSaveButton";
             AllCharactersSaveButton.Size = new Size(75, 23);
             AllCharactersSaveButton.TabIndex = 5;
@@ -317,12 +329,12 @@ namespace DAoCToolSuite.CharacterTool
             NewCharacterPanel.ForeColor = SystemColors.WindowText;
             NewCharacterPanel.Location = new Point(6, 145);
             NewCharacterPanel.Name = "NewCharacterPanel";
-            NewCharacterPanel.Size = new Size(584, 79);
+            NewCharacterPanel.Size = new Size(582, 79);
             NewCharacterPanel.TabIndex = 13;
             // 
             // NewCharacterSaveButton
             // 
-            NewCharacterSaveButton.Location = new Point(502, 10);
+            NewCharacterSaveButton.Location = new Point(499, 10);
             NewCharacterSaveButton.Name = "NewCharacterSaveButton";
             NewCharacterSaveButton.Size = new Size(75, 23);
             NewCharacterSaveButton.TabIndex = 4;
@@ -397,13 +409,13 @@ namespace DAoCToolSuite.CharacterTool
             ExistingCharacterPanel.Controls.Add(CopyToLabel1);
             ExistingCharacterPanel.Location = new Point(6, 66);
             ExistingCharacterPanel.Name = "ExistingCharacterPanel";
-            ExistingCharacterPanel.Size = new Size(584, 48);
+            ExistingCharacterPanel.Size = new Size(582, 48);
             ExistingCharacterPanel.TabIndex = 10;
             // 
             // CopyToLabel2
             // 
             CopyToLabel2.AutoSize = true;
-            CopyToLabel2.Location = new Point(321, 15);
+            CopyToLabel2.Location = new Point(318, 15);
             CopyToLabel2.Name = "CopyToLabel2";
             CopyToLabel2.Size = new Size(42, 15);
             CopyToLabel2.TabIndex = 12;
@@ -411,7 +423,7 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // CopyToTextBox
             // 
-            CopyToTextBox.Location = new Point(369, 12);
+            CopyToTextBox.Location = new Point(366, 12);
             CopyToTextBox.Name = "CopyToTextBox";
             CopyToTextBox.ReadOnly = true;
             CopyToTextBox.Size = new Size(127, 23);
@@ -419,7 +431,7 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // ExistingCharacterSaveButton
             // 
-            ExistingCharacterSaveButton.Location = new Point(502, 11);
+            ExistingCharacterSaveButton.Location = new Point(499, 11);
             ExistingCharacterSaveButton.Name = "ExistingCharacterSaveButton";
             ExistingCharacterSaveButton.Size = new Size(75, 23);
             ExistingCharacterSaveButton.TabIndex = 10;
@@ -495,18 +507,7 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // backUpCharacterTab
             // 
-            backUpCharacterTab.Controls.Add(SaveBackUp);
-            backUpCharacterTab.Controls.Add(BackUpDescriptionLabel);
-            backUpCharacterTab.Controls.Add(BackUpDescriptionTextBox);
-            backUpCharacterTab.Controls.Add(BackUpServerTextBox);
-            backUpCharacterTab.Controls.Add(BackUpClassLabel);
-            backUpCharacterTab.Controls.Add(BackUpClassComboBox);
-            backUpCharacterTab.Controls.Add(BackupRealmLabel);
-            backUpCharacterTab.Controls.Add(BackUpRealmComboBox);
-            backUpCharacterTab.Controls.Add(BackUpServerLabel);
-            backUpCharacterTab.Controls.Add(BackupLabel);
-            backUpCharacterTab.Controls.Add(BackUpNameComboBox);
-            backUpCharacterTab.Controls.Add(BackUpCharRefreshButton);
+            backUpCharacterTab.Controls.Add(panel6);
             backUpCharacterTab.Location = new Point(4, 24);
             backUpCharacterTab.Name = "backUpCharacterTab";
             backUpCharacterTab.Padding = new Padding(3);
@@ -515,115 +516,189 @@ namespace DAoCToolSuite.CharacterTool
             backUpCharacterTab.Text = "Character Backup";
             backUpCharacterTab.UseVisualStyleBackColor = true;
             // 
-            // SaveBackUp
+            // panel6
             // 
-            SaveBackUp.Location = new Point(639, 103);
-            SaveBackUp.Name = "SaveBackUp";
-            SaveBackUp.Size = new Size(75, 23);
-            SaveBackUp.TabIndex = 21;
-            SaveBackUp.Text = "Save";
-            SaveBackUp.UseVisualStyleBackColor = true;
-            SaveBackUp.Click += SaveBackUp_Click;
+            panel6.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel6.BorderStyle = BorderStyle.Fixed3D;
+            panel6.Controls.Add(SaveAllProgressBar);
+            panel6.Controls.Add(panel5);
+            panel6.Controls.Add(panel4);
+            panel6.Location = new Point(6, 6);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(750, 318);
+            panel6.TabIndex = 24;
             // 
-            // BackUpDescriptionLabel
+            // SaveAllProgressBar
             // 
-            BackUpDescriptionLabel.AutoSize = true;
-            BackUpDescriptionLabel.Location = new Point(6, 85);
-            BackUpDescriptionLabel.Name = "BackUpDescriptionLabel";
-            BackUpDescriptionLabel.Size = new Size(70, 15);
-            BackUpDescriptionLabel.TabIndex = 20;
-            BackUpDescriptionLabel.Text = "Description:";
+            SaveAllProgressBar.CustomText = "";
+            SaveAllProgressBar.ForeColor = Color.Lime;
+            SaveAllProgressBar.Location = new Point(6, 265);
+            SaveAllProgressBar.Name = "SaveAllProgressBar";
+            SaveAllProgressBar.ProgressColor = Color.Chartreuse;
+            SaveAllProgressBar.Size = new Size(737, 23);
+            SaveAllProgressBar.TabIndex = 25;
+            SaveAllProgressBar.TextColor = Color.Black;
+            SaveAllProgressBar.TextFont = new Font("Verdana", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            SaveAllProgressBar.Visible = false;
+            SaveAllProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
+            // 
+            // panel5
+            // 
+            panel5.BorderStyle = BorderStyle.FixedSingle;
+            panel5.Controls.Add(BackUpDescriptionTextBox);
+            panel5.Controls.Add(BackupLabel);
+            panel5.Controls.Add(SaveBackUp);
+            panel5.Controls.Add(BackUpCharRefreshButton);
+            panel5.Controls.Add(BackUpDescriptionLabel);
+            panel5.Controls.Add(BackUpServerTextBox);
+            panel5.Controls.Add(BackUpNameComboBox);
+            panel5.Controls.Add(BackUpClassLabel);
+            panel5.Controls.Add(BackUpServerLabel);
+            panel5.Controls.Add(BackUpClassComboBox);
+            panel5.Controls.Add(BackUpRealmComboBox);
+            panel5.Controls.Add(BackupRealmLabel);
+            panel5.Location = new Point(6, 9);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(737, 165);
+            panel5.TabIndex = 24;
             // 
             // BackUpDescriptionTextBox
             // 
-            BackUpDescriptionTextBox.Location = new Point(6, 103);
+            BackUpDescriptionTextBox.Location = new Point(12, 122);
             BackUpDescriptionTextBox.Name = "BackUpDescriptionTextBox";
-            BackUpDescriptionTextBox.Size = new Size(577, 23);
+            BackUpDescriptionTextBox.Size = new Size(639, 23);
             BackUpDescriptionTextBox.TabIndex = 19;
-            // 
-            // BackUpServerTextBox
-            // 
-            BackUpServerTextBox.Location = new Point(375, 10);
-            BackUpServerTextBox.Name = "BackUpServerTextBox";
-            BackUpServerTextBox.ReadOnly = true;
-            BackUpServerTextBox.Size = new Size(127, 23);
-            BackUpServerTextBox.TabIndex = 13;
-            // 
-            // BackUpClassLabel
-            // 
-            BackUpClassLabel.AutoSize = true;
-            BackUpClassLabel.Location = new Point(332, 48);
-            BackUpClassLabel.Name = "BackUpClassLabel";
-            BackUpClassLabel.Size = new Size(37, 15);
-            BackUpClassLabel.TabIndex = 18;
-            BackUpClassLabel.Text = "Class:";
-            // 
-            // BackUpClassComboBox
-            // 
-            BackUpClassComboBox.FormattingEnabled = true;
-            BackUpClassComboBox.Location = new Point(375, 45);
-            BackUpClassComboBox.Name = "BackUpClassComboBox";
-            BackUpClassComboBox.Size = new Size(208, 23);
-            BackUpClassComboBox.TabIndex = 17;
-            // 
-            // BackupRealmLabel
-            // 
-            BackupRealmLabel.AutoSize = true;
-            BackupRealmLabel.Location = new Point(6, 48);
-            BackupRealmLabel.Name = "BackupRealmLabel";
-            BackupRealmLabel.Size = new Size(43, 15);
-            BackupRealmLabel.TabIndex = 16;
-            BackupRealmLabel.Text = "Realm:";
-            // 
-            // BackUpRealmComboBox
-            // 
-            BackUpRealmComboBox.FormattingEnabled = true;
-            BackUpRealmComboBox.Location = new Point(81, 45);
-            BackUpRealmComboBox.Name = "BackUpRealmComboBox";
-            BackUpRealmComboBox.Size = new Size(240, 23);
-            BackUpRealmComboBox.TabIndex = 15;
-            BackUpRealmComboBox.SelectedIndexChanged += BackUpRealmComboBox_SelectedIndexChanged;
-            // 
-            // BackUpServerLabel
-            // 
-            BackUpServerLabel.AutoSize = true;
-            BackUpServerLabel.Location = new Point(327, 13);
-            BackUpServerLabel.Name = "BackUpServerLabel";
-            BackUpServerLabel.Size = new Size(42, 15);
-            BackUpServerLabel.TabIndex = 14;
-            BackUpServerLabel.Text = "Server:";
             // 
             // BackupLabel
             // 
             BackupLabel.AutoSize = true;
-            BackupLabel.Location = new Point(6, 13);
+            BackupLabel.Location = new Point(12, 12);
             BackupLabel.Name = "BackupLabel";
             BackupLabel.Size = new Size(49, 15);
             BackupLabel.TabIndex = 12;
             BackupLabel.Text = "Backup:";
             // 
-            // BackUpNameComboBox
+            // SaveBackUp
             // 
-            BackUpNameComboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            BackUpNameComboBox.FormattingEnabled = true;
-            BackUpNameComboBox.Location = new Point(81, 10);
-            BackUpNameComboBox.Name = "BackUpNameComboBox";
-            BackUpNameComboBox.Size = new Size(240, 23);
-            BackUpNameComboBox.TabIndex = 11;
-            BackUpNameComboBox.SelectedIndexChanged += BackUpComboBox_SelectedIndexChanged;
+            SaveBackUp.Location = new Point(657, 122);
+            SaveBackUp.Name = "SaveBackUp";
+            SaveBackUp.Size = new Size(75, 23);
+            SaveBackUp.TabIndex = 21;
+            SaveBackUp.Text = "Save";
+            SaveBackUp.UseVisualStyleBackColor = true;
             // 
             // BackUpCharRefreshButton
             // 
-            BackUpCharRefreshButton.Location = new Point(508, 9);
+            BackUpCharRefreshButton.Location = new Point(451, 29);
             BackUpCharRefreshButton.Name = "BackUpCharRefreshButton";
             BackUpCharRefreshButton.Size = new Size(75, 23);
             BackUpCharRefreshButton.TabIndex = 10;
             BackUpCharRefreshButton.Text = "Refresh";
             BackUpCharRefreshButton.UseVisualStyleBackColor = true;
-            BackUpCharRefreshButton.Click += BackUpCharRefreshButton_Click;
+            // 
+            // BackUpDescriptionLabel
+            // 
+            BackUpDescriptionLabel.AutoSize = true;
+            BackUpDescriptionLabel.Location = new Point(12, 104);
+            BackUpDescriptionLabel.Name = "BackUpDescriptionLabel";
+            BackUpDescriptionLabel.Size = new Size(70, 15);
+            BackUpDescriptionLabel.TabIndex = 20;
+            BackUpDescriptionLabel.Text = "Description:";
+            // 
+            // BackUpServerTextBox
+            // 
+            BackUpServerTextBox.Location = new Point(286, 30);
+            BackUpServerTextBox.Name = "BackUpServerTextBox";
+            BackUpServerTextBox.ReadOnly = true;
+            BackUpServerTextBox.Size = new Size(159, 23);
+            BackUpServerTextBox.TabIndex = 13;
+            // 
+            // BackUpNameComboBox
+            // 
+            BackUpNameComboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            BackUpNameComboBox.FormattingEnabled = true;
+            BackUpNameComboBox.Location = new Point(12, 30);
+            BackUpNameComboBox.Name = "BackUpNameComboBox";
+            BackUpNameComboBox.Size = new Size(240, 23);
+            BackUpNameComboBox.TabIndex = 11;
+            BackUpNameComboBox.SelectedIndexChanged += BackUpNameComboBox_SelectedIndexChanged;
+            // 
+            // BackUpClassLabel
+            // 
+            BackUpClassLabel.AutoSize = true;
+            BackUpClassLabel.Location = new Point(286, 56);
+            BackUpClassLabel.Name = "BackUpClassLabel";
+            BackUpClassLabel.Size = new Size(37, 15);
+            BackUpClassLabel.TabIndex = 18;
+            BackUpClassLabel.Text = "Class:";
+            // 
+            // BackUpServerLabel
+            // 
+            BackUpServerLabel.AutoSize = true;
+            BackUpServerLabel.Location = new Point(286, 12);
+            BackUpServerLabel.Name = "BackUpServerLabel";
+            BackUpServerLabel.Size = new Size(42, 15);
+            BackUpServerLabel.TabIndex = 14;
+            BackUpServerLabel.Text = "Server:";
+            // 
+            // BackUpClassComboBox
+            // 
+            BackUpClassComboBox.FormattingEnabled = true;
+            BackUpClassComboBox.Location = new Point(286, 78);
+            BackUpClassComboBox.Name = "BackUpClassComboBox";
+            BackUpClassComboBox.Size = new Size(240, 23);
+            BackUpClassComboBox.TabIndex = 17;
+            // 
+            // BackUpRealmComboBox
+            // 
+            BackUpRealmComboBox.FormattingEnabled = true;
+            BackUpRealmComboBox.Location = new Point(12, 78);
+            BackUpRealmComboBox.Name = "BackUpRealmComboBox";
+            BackUpRealmComboBox.Size = new Size(240, 23);
+            BackUpRealmComboBox.TabIndex = 15;
+            BackUpRealmComboBox.SelectedIndexChanged += BackUpRealmComboBox_SelectedIndexChanged;
+            // 
+            // BackupRealmLabel
+            // 
+            BackupRealmLabel.AutoSize = true;
+            BackupRealmLabel.Location = new Point(12, 56);
+            BackupRealmLabel.Name = "BackupRealmLabel";
+            BackupRealmLabel.Size = new Size(43, 15);
+            BackupRealmLabel.TabIndex = 16;
+            BackupRealmLabel.Text = "Realm:";
+            // 
+            // panel4
+            // 
+            panel4.BorderStyle = BorderStyle.FixedSingle;
+            panel4.Controls.Add(WarningLabel);
+            panel4.Controls.Add(SaveAllButton);
+            panel4.Location = new Point(6, 180);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(737, 79);
+            panel4.TabIndex = 23;
+            // 
+            // WarningLabel
+            // 
+            WarningLabel.ForeColor = Color.Red;
+            WarningLabel.Location = new Point(3, 6);
+            WarningLabel.Name = "WarningLabel";
+            WarningLabel.Size = new Size(654, 66);
+            WarningLabel.TabIndex = 9;
+            WarningLabel.Text = resources.GetString("WarningLabel.Text");
+            // 
+            // SaveAllButton
+            // 
+            SaveAllButton.Location = new Point(657, 6);
+            SaveAllButton.Name = "SaveAllButton";
+            SaveAllButton.Size = new Size(75, 23);
+            SaveAllButton.TabIndex = 7;
+            SaveAllButton.Text = "Save All";
+            SaveAllButton.UseVisualStyleBackColor = true;
+            SaveAllButton.Click += SaveAll_Click;
             // 
             // restoreCharacterTab
             // 
+            restoreCharacterTab.Controls.Add(EditDescriptionButton);
             restoreCharacterTab.Controls.Add(RestoreDBButton);
             restoreCharacterTab.Controls.Add(BackupDBButton);
             restoreCharacterTab.Controls.Add(RestoreNameFilterComboBox);
@@ -644,8 +719,20 @@ namespace DAoCToolSuite.CharacterTool
             restoreCharacterTab.Text = "Character Restore";
             restoreCharacterTab.UseVisualStyleBackColor = true;
             // 
+            // EditDescriptionButton
+            // 
+            EditDescriptionButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            EditDescriptionButton.Location = new Point(525, 300);
+            EditDescriptionButton.Name = "EditDescriptionButton";
+            EditDescriptionButton.Size = new Size(125, 23);
+            EditDescriptionButton.TabIndex = 32;
+            EditDescriptionButton.Text = "Edit Record";
+            EditDescriptionButton.UseVisualStyleBackColor = true;
+            EditDescriptionButton.Click += EditDescriptionButton_Click;
+            // 
             // RestoreDBButton
             // 
+            RestoreDBButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             RestoreDBButton.Location = new Point(87, 300);
             RestoreDBButton.Name = "RestoreDBButton";
             RestoreDBButton.Size = new Size(75, 23);
@@ -656,6 +743,7 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // BackupDBButton
             // 
+            BackupDBButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             BackupDBButton.Location = new Point(6, 300);
             BackupDBButton.Name = "BackupDBButton";
             BackupDBButton.Size = new Size(75, 23);
@@ -722,7 +810,6 @@ namespace DAoCToolSuite.CharacterTool
             restoreDataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             restoreDataGridView.Location = new Point(0, 0);
             restoreDataGridView.Margin = new Padding(4, 3, 4, 3);
-            restoreDataGridView.MultiSelect = false;
             restoreDataGridView.Name = "restoreDataGridView";
             restoreDataGridView.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -757,17 +844,19 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // RestoreDeleteSettingsButton
             // 
-            RestoreDeleteSettingsButton.Location = new Point(498, 300);
+            RestoreDeleteSettingsButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            RestoreDeleteSettingsButton.Location = new Point(656, 300);
             RestoreDeleteSettingsButton.Name = "RestoreDeleteSettingsButton";
-            RestoreDeleteSettingsButton.Size = new Size(125, 23);
+            RestoreDeleteSettingsButton.Size = new Size(100, 23);
             RestoreDeleteSettingsButton.TabIndex = 25;
-            RestoreDeleteSettingsButton.Text = "Delete Settings";
+            RestoreDeleteSettingsButton.Text = "Delete Record";
             RestoreDeleteSettingsButton.UseVisualStyleBackColor = true;
             RestoreDeleteSettingsButton.Click += RestoreDeleteRecordButton_Click;
             // 
             // RestoreRestoreSettingsButton
             // 
-            RestoreRestoreSettingsButton.Location = new Point(629, 300);
+            RestoreRestoreSettingsButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            RestoreRestoreSettingsButton.Location = new Point(394, 300);
             RestoreRestoreSettingsButton.Name = "RestoreRestoreSettingsButton";
             RestoreRestoreSettingsButton.Size = new Size(125, 23);
             RestoreRestoreSettingsButton.TabIndex = 24;
@@ -819,12 +908,11 @@ namespace DAoCToolSuite.CharacterTool
             ClientSize = new Size(800, 450);
             Controls.Add(TabPanel);
             Controls.Add(DAoCDirectoryPanel);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(816, 489);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "CharacterTool v0.6.0";
+            Text = "CharacterTool v0.7.0";
             FormClosing += MainForm_FormClosing;
             DAoCDirectoryPanel.ResumeLayout(false);
             DAoCDirectoryPanel.PerformLayout();
@@ -843,7 +931,10 @@ namespace DAoCToolSuite.CharacterTool
             ExistingCharacterPanel.ResumeLayout(false);
             ExistingCharacterPanel.PerformLayout();
             backUpCharacterTab.ResumeLayout(false);
-            backUpCharacterTab.PerformLayout();
+            panel6.ResumeLayout(false);
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
+            panel4.ResumeLayout(false);
             restoreCharacterTab.ResumeLayout(false);
             restoreCharacterTab.PerformLayout();
             panel3.ResumeLayout(false);
@@ -891,18 +982,6 @@ namespace DAoCToolSuite.CharacterTool
         private ComboBox CopyFromComboBox;
         private Button RefreshButton;
         private TabPage backUpCharacterTab;
-        private Button SaveBackUp;
-        private Label BackUpDescriptionLabel;
-        private TextBox BackUpDescriptionTextBox;
-        private TextBox BackUpServerTextBox;
-        private Label BackUpClassLabel;
-        private ComboBox BackUpClassComboBox;
-        private Label BackupRealmLabel;
-        private ComboBox BackUpRealmComboBox;
-        private Label BackUpServerLabel;
-        private Label BackupLabel;
-        private ComboBox BackUpNameComboBox;
-        private Button BackUpCharRefreshButton;
         private TabPage restoreCharacterTab;
         private Button ClearFilterButton;
         private Button RestoreDeleteSettingsButton;
@@ -917,5 +996,24 @@ namespace DAoCToolSuite.CharacterTool
         private Label RestoreNameFilterLabel;
         private Button RestoreDBButton;
         private Button BackupDBButton;
+        private Button EditDescriptionButton;
+        private Panel panel6;
+        private Panel panel5;
+        private TextBox BackUpDescriptionTextBox;
+        private Label BackupLabel;
+        private Button SaveBackUp;
+        private Button BackUpCharRefreshButton;
+        private Label BackUpDescriptionLabel;
+        private TextBox BackUpServerTextBox;
+        private ComboBox BackUpNameComboBox;
+        private Label BackUpClassLabel;
+        private Label BackUpServerLabel;
+        private ComboBox BackUpClassComboBox;
+        private ComboBox BackUpRealmComboBox;
+        private Label BackupRealmLabel;
+        private Panel panel4;
+        private Label WarningLabel;
+        private Button SaveAllButton;
+        private TextProgressBar SaveAllProgressBar;
     }
 }
