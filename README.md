@@ -45,8 +45,9 @@ Fixes a race condition that could crash the app when closing the ChimpTool or Ch
 Stability improvements.
 Perforamnce improvements.
 
----
+
 DAoC Tool Suite v0.3.0 BETA Release
+---
 This suite includes a new version of ChimpTool that can deal with the Heralds SSL issues and still function. 
 Also included is a newer version of my DAoC Tools application for managing character settings.
 Still in active development is the DAoC Log Parser Tool which did not make the cut for this realse.
