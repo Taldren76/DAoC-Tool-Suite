@@ -22,6 +22,12 @@
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x86</RuntimeIdentifier>
 		<SelfContained Condition="'$(SelfContained)' == ''">false</SelfContained>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Items\**" />
+	  <EmbeddedResource Remove="Items\**" />
+	  <None Remove="Items\**" />
+	  <Page Remove="Items\**" />
+	</ItemGroup>
 
 
   <ItemGroup>
@@ -34,8 +40,6 @@
     <None Remove="Icons\CharacterTool.ico" />
     <None Remove="Icons\DAoCTools.ico" />
     <None Remove="Icons\DAoCTools.png" />
-    <None Remove="RealmClassConfig.json" />
-    <None Remove="ServerConfig.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,6 +63,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>True</Pack>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="DAoC Tools.sln" />
   </ItemGroup>
 
   <ItemGroup>
@@ -91,6 +99,10 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
 </Project>
