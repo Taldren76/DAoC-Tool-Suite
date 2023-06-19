@@ -587,6 +587,7 @@ namespace DAoCToolSuite.CharacterTool
             SaveBackUp.TabIndex = 21;
             SaveBackUp.Text = "Save";
             SaveBackUp.UseVisualStyleBackColor = true;
+            SaveBackUp.Click += SaveBackUp_Click;
             // 
             // BackUpCharRefreshButton
             // 
@@ -929,7 +930,7 @@ namespace DAoCToolSuite.CharacterTool
             MinimumSize = new Size(816, 489);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "CharacterTool v0.7.0";
+            Text = "CharacterTool v1.0.0";
             FormClosing += MainForm_FormClosing;
             DAoCDirectoryPanel.ResumeLayout(false);
             DAoCDirectoryPanel.PerformLayout();

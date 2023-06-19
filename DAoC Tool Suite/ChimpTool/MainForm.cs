@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Xml.Linq;
 using DAoCToolSuite.ChimpTool.Exceptions;
 using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.HeraldAPI;
@@ -153,7 +154,7 @@ namespace DAoCToolSuite.ChimpTool
         private void MainForm_Shown(object? sender, EventArgs e)
         {
             bool check = AlwaysOnTop;
-            OnTopCheckBox.Checked = check;
+            //OnTopCheckBox.Checked = check;
             GridPanel.Visible = true;
             LoadCharacters();
             CalculateRPTotals();
@@ -755,28 +756,62 @@ namespace DAoCToolSuite.ChimpTool
             LoadingTabelLabel.Visible = false;
             SearchGridView.Visible = true;
             GridPanel.Refresh();
+
+            if ((CharactersByAccountLastDateUpdated is null || CharactersByAccountLastDateUpdated.Count == 0) && DateTime.Now > Properties.Settings.Default.NextLoadAll)
+            {
+                LoadAllButton.Visible = true;
+            }
+            else
+            {
+                LoadAllButton.Visible = false;
+            }
         }
 
         private void AttachCharacters()
         {
             BindingSource.DataSource = CharactersByAccountLastDateUpdated?.ToChimpJsonList() ?? new();
-            //if (BindingSource.Count > 0)
-            //{
-            //    if (!RefreshTimer)
-            //    {
-            //        RefreshButton.Enabled = true;
-            //    }
+        }
+        private void LoadAllButton_Click(object sender, EventArgs e)
+        {
+            LoadAllButton.Enabled = false;
+            DialogResult dlg = MessageBox.Show($"WARNING: This can only be used once per 24 hours.\nDo you wish to proceed?", "Load All Characters", MessageBoxButtons.YesNo);
+            if (dlg == DialogResult.No)
+            {
+                LoadAllButton.Enabled = true;
+                return;
+            }
+            Properties.Settings.Default.NextLoadAll = DateTime.Now.AddDays(1);
+            Properties.Settings.Default.Save();
 
-            //    if (!RefreshAllTimer)
-            //    {
-            //        RefreshAllButton.Enabled = true;
-            //    }
-            //}
-            //else
-            //{
-            //    RefreshButton.Enabled = false;
-            //    RefreshAllButton.Enabled = false;
-            //}
+            LoadAllButton.Visible = false;
+
+            SearchProgressBar.Minimum = 0;
+            SearchProgressBar.Maximum = CharacterList.Count;
+            SearchProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
+            SearchProgressBar.Value = 0;
+            SearchProgressBar.CustomText = "Loading Characters";
+            SearchProgressBar.Visible = true;
+            SearchProgressBar.Refresh();
+            var useSelenium = UseSelenium;
+            UseSelenium = false;
+            try
+            {
+                foreach (var character in CharacterList)
+                {
+                    SearchProgressBar.Value += 1;
+                    AddCharacter(character.Key);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            UseSelenium = useSelenium;
+            SearchProgressBar.Visible = false;
+            LoadAllButton.Enabled = false;
+
+            LoadCharacters();
+            CalculateRPTotals();
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
@@ -953,7 +988,30 @@ namespace DAoCToolSuite.ChimpTool
                 Logger.Error(ex);
             }
 
+            RemoveButton.Enabled = true;
 
+        }
+
+        private void AddCharacter(string name)
+        {
+            WaitCursor.Push();
+            try
+            {
+                ChimpJson chimp = new();
+                if (UseAPI)
+                {
+                    chimp = CamelotHeraldAPI.GetChimp(name, ServerCluster.Ywain);
+                }
+                if (chimp.IsValid())
+                {
+                    SqliteDataAccess.AddCharacter(chimp.ConvertToCharacterModel(), DateTime.Now, AccountComboBox.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            WaitCursor.Pop();
         }
 
         private void AddNewCharacter()
@@ -1019,7 +1077,6 @@ namespace DAoCToolSuite.ChimpTool
             SearchButton.Enabled = false;
             AddNewCharacter();
             SearchButton.Enabled = true;
-
         }
 
         private void SearchComboBox_CheckEnterKeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
@@ -1116,6 +1173,16 @@ namespace DAoCToolSuite.ChimpTool
         #endregion
 
         private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LaunchButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SearchGridView_DoubleClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }

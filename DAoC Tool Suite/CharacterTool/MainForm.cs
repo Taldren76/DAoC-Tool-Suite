@@ -364,6 +364,7 @@ namespace DAoCToolSuite.CharacterTool
         #region Backup Tab
         private void SaveBackUp_Click(object sender, EventArgs e)
         {
+
             string iniFileName = ParseDirectory?.FindIniFileByCharacterName(BackUpNameComboBox.Text) ?? $"{BackUpNameComboBox.Text.Split('(').First()}-{GetServerIndex(BackUpServerTextBox.Text)}.ini".Replace(" ", "");
             string ignFileName = ParseDirectory?.FindIgnFileByCharacterName(BackUpNameComboBox.Text) ?? $"{BackUpNameComboBox.Text.Split('(').First()}-143.ign".Replace(" ", "");
             string directoryPath = DAoCDirectoryTextBox.Text;
@@ -1184,5 +1185,6 @@ namespace DAoCToolSuite.CharacterTool
             }
         }
         #endregion
+
     }
 }

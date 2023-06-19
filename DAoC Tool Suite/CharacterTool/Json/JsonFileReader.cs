@@ -13,7 +13,7 @@ namespace DAoCToolSuite.CharacterTool.Json
         }
     }
 
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+
     public class ServerListINI
     {
         public Servers? Servers { get; set; }
@@ -21,6 +21,8 @@ namespace DAoCToolSuite.CharacterTool.Json
 
     public class Server
     {
+        public string? IP { get; set; }
+        public int Port { get; set; }
         public string? Name { get; set; }
         public int Index { get; set; }
     }
@@ -30,7 +32,6 @@ namespace DAoCToolSuite.CharacterTool.Json
         public List<Server>? Server { get; set; }
     }
 
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class Realm
     {
         public string? Hibernia { get; set; }

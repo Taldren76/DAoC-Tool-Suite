@@ -70,5 +70,17 @@ namespace DAoCToolSuite.ChimpTool.Properties {
                 this["NextRefresh"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2001-01-01")]
+        public global::System.DateTime NextLoadAll {
+            get {
+                return ((global::System.DateTime)(this["NextLoadAll"]));
+            }
+            set {
+                this["NextLoadAll"] = value;
+            }
+        }
     }
 }

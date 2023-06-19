@@ -70,6 +70,7 @@
     <ProjectReference Include="..\CharacterTool\CharacterTool.csproj" />
     <ProjectReference Include="..\ChimpTool\ChimpTool.csproj" />
     <ProjectReference Include="..\LogTool\LogTool.csproj" />
+    <ProjectReference Include="..\ResetLocations\ResetLocations.csproj" />
   </ItemGroup>
 
   <ItemGroup>
