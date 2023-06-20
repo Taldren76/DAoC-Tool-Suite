@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Diagnostics;
 using DAoCToolSuite.ChimpTool.Json;
 using DAoCToolSuite.ChimpTool.Settings;
 using Logger;
@@ -118,6 +119,7 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                     {
                         column.Visible = false;
                         column.DisplayIndex = nonVisibleIndex;
+                        Debug.WriteLine($"Column {column.Name}.Visible = false");
                         nonVisibleIndex++;
                     }
                     else
@@ -131,6 +133,8 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                             "MasterLevel_Name" => DataGridViewAutoSizeColumnMode.Fill,
                             _ => DataGridViewAutoSizeColumnMode.AllCells,
                         };
+
+                        Debug.WriteLine($"Column {column.Name}.Visible = true");
                     }
 
                 }

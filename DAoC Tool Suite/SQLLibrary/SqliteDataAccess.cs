@@ -17,6 +17,7 @@ namespace SQLLibrary
         private static readonly object thisLock = new();
         private static readonly string CharactersColumnNames = "Date,Account,WebID,FirstName,Name,Realm,Class,Server,TotalRealmPoints,TotalSoloKills,TotalDeathBlows,TotalKills,TotalDeaths,Level,Race,BountyPoints,MasterLevel_Name,Masterlevel_Level,Guild_WebID,Alchemy,Armorcraft,Fletching,Siegecraft,Spellcrafting,Tailoring,Weaponcraft,Albion_SoloKills,Albion_DeathBlows,Albion_Kills,Albion_Deaths,Hibernia_SoloKills,Hibernia_DeathBlows,Hibernia_Kills,Hibernia_Deaths,Midgard_SoloKills,Midgard_DeathBlows,Midgard_Kills,Midgard_Deaths";
         private static string CharactersColumnValues => $"@{CharactersColumnNames.Replace(",", ",@")}";
+
         public static void TraceLog(string? message)
         {
             string toWrite = $"{DateTime.Now:MM/dd/yyyy HH:mm:ss}: {message ?? ""}";
@@ -27,33 +28,36 @@ namespace SQLLibrary
         public static List<CharacterModel> LoadCharacters()
         {
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-            string characterLoadQuery = $"Select {CharactersColumnNames} from Characters";
+            string characterLoadQuery = $"Select {CharactersColumnNames} from [Characters]";
             List<CharacterModel> characters = conn.Query<CharacterModel>(characterLoadQuery, new DynamicParameters()).ToList();
             return characters;
         }
+
         public static CharacterModel? LoadCharacterByFirstName(string characterName)
         {
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-            string characterLoadQuery = $"Select {CharactersColumnNames} from Characters Where \"FirstName\" = \"{characterName}\"";
+            string characterLoadQuery = $"Select {CharactersColumnNames} from [Characters] Where [FirstName] = '{characterName}'";
             List<CharacterModel> characters = conn.Query<CharacterModel>(characterLoadQuery, new DynamicParameters()).ToList();
             return characters?.OrderByDescending(y => y.DateTime)?.FirstOrDefault();
         }
+
         public static CharacterModel? LoadCharacterByWebID(string webID)
         {
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-            string characterLoadQuery = $"Select {CharactersColumnNames} from Characters Where \"WebID\" = \"{webID}\"";
+            string characterLoadQuery = $"Select {CharactersColumnNames} from [Characters] Where [WebID] = '{webID}'";
             List<CharacterModel> characters = conn.Query<CharacterModel>(characterLoadQuery, new DynamicParameters()).ToList();
             return characters?.OrderByDescending(y => y.DateTime)?.FirstOrDefault();
         }
+
         public static void AddCharacter(CharacterModel character, DateTime date, string accountName)
         {
             lock (thisLock)
             {
                 string tableName = "Characters";
-                string writeQuery = $"Insert into {tableName} ({CharactersColumnNames}) values ({CharactersColumnValues})";
-                string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\" And Name = \"{character.Name}\"";
-                string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\"";
-                string minDateIndexQuery = $"Select \"index\", min(Date) from {tableName} Where WebID = \"{character.WebID}\"";
+                string writeQuery = $"Insert into [{tableName}] ({CharactersColumnNames}) values ({CharactersColumnValues})";
+                string exactCountQuery = $"Select Count([WebID]) from [{tableName}] Where [WebID] = '{character.WebID}' And [Name] = '{character.Name}'";
+                string countQuery = $"Select Count([WebID]) from [{tableName}] Where [WebID] = '{character.WebID}'";
+                string minDateIndexQuery = $"Select [index], min([Date]) from [{tableName}] Where [WebID] = '{character.WebID}'";
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 //Check if character name changed
@@ -62,7 +66,7 @@ namespace SQLLibrary
                 if (exactCount < 1 && count > 0)
                 {
                     //Update existing names before continueing
-                    string updateQuery = $"Update {tableName} Set Name = \"{character.Name}\" Where WebID = \"{character.WebID}\"";
+                    string updateQuery = $"Update [{tableName}] Set [Name] = '{character.Name}' Where [WebID] = '{character.WebID}'";
                     _ = conn.Execute(updateQuery, new DynamicParameters());
                 }
 
@@ -72,7 +76,7 @@ namespace SQLLibrary
                 while (endTime > DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter)
                 {
                     DateQuery minDateQuery = conn.QueryFirst<DateQuery>(minDateIndexQuery, new DynamicParameters());
-                    string deleteQuery = $"Delete From {tableName} Where \"index\" = {minDateQuery.Index}";
+                    string deleteQuery = $"Delete From [{tableName}] Where [index] = '{minDateQuery.Index}'";
                     _ = conn.Query(deleteQuery, new DynamicParameters());
                     count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
                 }
@@ -86,7 +90,7 @@ namespace SQLLibrary
             lock (thisLock)
             {
                 string tableName = "Characters";
-                string writeQuery = $"Insert into {tableName} ({CharactersColumnNames}) values ({CharactersColumnValues})";
+                string writeQuery = $"Insert into [{tableName}] ({CharactersColumnNames}) values ({CharactersColumnValues})";
                 //string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\" And Name = \"{character.Name}\"";
                 //string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\"";
                 //string minDateIndexQuery = $"Select \"index\", min(Date) from {tableName} Where WebID = \"{character.WebID}\"";
@@ -94,16 +98,16 @@ namespace SQLLibrary
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 foreach (CharacterModel character in characters)
                 {
-                    string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\" And Name = \"{character.Name}\"";
-                    string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\"";
-                    string minDateIndexQuery = $"Select \"index\", min(Date) from {tableName} Where WebID = \"{character.WebID}\"";
+                    string exactCountQuery = $"Select Count([WebID]) from [{tableName}] Where [WebID] = '{character.WebID}' And [Name] = '{character.Name}'";
+                    string countQuery = $"Select Count([WebID]) from [{tableName}] Where [WebID] = '{character.WebID}'";
+                    string minDateIndexQuery = $"Select [index], min([Date]) from [{tableName}] Where [WebID] = '{character.WebID}'";
                     //Check if character name changed
                     int exactCount = conn.QueryFirst<int>(exactCountQuery, new DynamicParameters());
                     int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
                     if (exactCount < 1 && count > 0)
                     {
                         //Update existing names before continueing
-                        string updateQuery = $"Update {tableName} Set Name = \"{character.Name}\" Where WebID = \"{character.WebID}\"";
+                        string updateQuery = $"Update [{tableName}] Set [Name] = '{character.Name}' Where [WebID] = '{character.WebID}'";
                         _ = conn.Execute(updateQuery, new DynamicParameters());
                     }
 
@@ -113,7 +117,7 @@ namespace SQLLibrary
                     while (endTime > DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter)
                     {
                         DateQuery minDateQuery = conn.QueryFirst<DateQuery>(minDateIndexQuery, new DynamicParameters());
-                        string deleteQuery = $"Delete From {tableName} Where \"index\" = {minDateQuery.Index}";
+                        string deleteQuery = $"Delete From [{tableName}] Where [index] = {minDateQuery.Index}";
                         _ = conn.Query(deleteQuery, new DynamicParameters());
                         count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
                     }
@@ -129,7 +133,7 @@ namespace SQLLibrary
             lock (thisLock)
             {
                 string tableName = "Characters";
-                string deleteQuery = $"Delete From {tableName} Where WebID = \"{webID}\"";
+                string deleteQuery = $"Delete From [{tableName}] Where [WebID] = '{webID}'";
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 _ = conn.Query(deleteQuery, new DynamicParameters());
@@ -140,8 +144,8 @@ namespace SQLLibrary
             lock (thisLock)
             {
                 string tableName = "Characters";
-                string deleteAccountQuery = $"Delete From {tableName} Where Account = \"{accountName}\"";
-                string countQuery = $"Select Count(Account) from {tableName} Where Account = \"{accountName}\"";
+                string deleteAccountQuery = $"Delete From [{tableName}] Where [Account] = '{accountName}'";
+                string countQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountName}'";
 
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
@@ -160,15 +164,53 @@ namespace SQLLibrary
             try
             {
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-                List<AccountModel> query = conn.Query<AccountModel>("Select * from Accounts", new DynamicParameters()).ToList();
+                string columnNames = "Account";
+                List<AccountModel> query = conn.Query<AccountModel>($"Select ({columnNames}) from [Accounts]", new DynamicParameters()).ToList();
                 return query;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                TraceLog(ex.Message);
+                TraceLog(ex.StackTrace);
                 return new();
             }
         }
+
+        public static List<CredentialModel> LoadAccountCredentials(string accountName)
+        {
+            try
+            {
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+                string columnNames = "[Login], [Password]";
+                string queryString = $"Select {columnNames} from [Accounts] Where [Account] = '{accountName}'";
+                List<CredentialModel> query = conn.Query<CredentialModel>(queryString, new DynamicParameters()).ToList();
+                return query;
+            }
+            catch (Exception ex)
+            {
+                TraceLog(ex.Message);
+                TraceLog(ex.StackTrace);
+                return new();
+            }
+        }
+
+        public static List<CredentialModel> AddAccountCredentials(string accountName, string login, string passWord)
+        {
+            try
+            {
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+                string columnNames = $"[Login] = '{login}', [Password] = '{passWord}'";
+                List<CredentialModel> query = conn.Query<CredentialModel>($"UPDATE [Accounts] SET {columnNames} Where [Account] = '{accountName}'", new DynamicParameters()).ToList();
+                return query;
+            }
+            catch (Exception ex)
+            {
+                TraceLog(ex.Message);
+                TraceLog(ex.StackTrace);
+                return new();
+            }
+        }
+
         public static void AddAccount(string accountName)
         {
             lock (thisLock)
@@ -176,8 +218,8 @@ namespace SQLLibrary
                 string columnNames = "Account";
                 string values = "@Account";
                 string tableName = "Accounts";
-                string writeQuery = $"Insert into {tableName} ({columnNames}) values ({values})";
-                string countQuery = $"Select Count(Account) from {tableName} Where Account = \"{accountName}\"";
+                string writeQuery = $"Insert into [{tableName}] ({columnNames}) values ({values})";
+                string countQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountName}'";
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
 
@@ -204,8 +246,8 @@ namespace SQLLibrary
                 }
 
                 string tableName = "Accounts";
-                string deleteAccountQuery = $"Delete From {tableName} Where Account = \"{accountName}\"";
-                string countQuery = $"Select Count(Account) from {tableName} Where Account = \"{accountName}\"";
+                string deleteAccountQuery = $"Delete From [{tableName}] Where [Account] = '{accountName}'";
+                string countQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountName}'";
 
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
@@ -223,7 +265,7 @@ namespace SQLLibrary
         public static List<GuildModel> LoadGuilds()
         {
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-            List<GuildModel> query = conn.Query<GuildModel>("Select * from Guilds", new DynamicParameters()).ToList();
+            List<GuildModel> query = conn.Query<GuildModel>("Select * from [Guilds]", new DynamicParameters()).ToList();
             return query;
         }
         public static void AddGuild(GuildModel guild)
@@ -238,9 +280,9 @@ namespace SQLLibrary
                 string columnNames = "WebID,Name";
                 string values = "@WebID,@Name";
                 string tableName = "Guilds";
-                string writeQuery = $"Insert into {tableName} ({columnNames}) values ({values})";
-                string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guild.WebID}\" and Name = \"{guild.Name}\"";
-                string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guild.WebID}\"";
+                string writeQuery = $"Insert into [{tableName}] ({columnNames}) values ({values})";
+                string exactCountQuery = $"Select Count([WebID]) from [{tableName}] Where [WebID] = '{guild.WebID}' and [Name] = '{guild.Name}'";
+                string countQuery = $"Select Count([WebID]) from [{tableName}] Where [WebID] = '{guild.WebID}'";
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 //Check if Guild entry is already present.
@@ -254,7 +296,7 @@ namespace SQLLibrary
                 int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
                 if (count > 0)
                 {
-                    string updateQuery = $"Update {tableName} SET Name = {guild.Name} Where WebID = {guild.WebID}";
+                    string updateQuery = $"Update [{tableName}] SET [Name] = '{guild.Name}' Where [WebID] = '{guild.WebID}'";
                     _ = conn.Query(updateQuery, new DynamicParameters());
                     return; //Entry Updated
                 }
@@ -270,7 +312,7 @@ namespace SQLLibrary
                 string columnNames = "WebID,Name";
                 string values = "@WebID,@Name";
                 string tableName = "Guilds";
-                string writeQuery = $"Insert into {tableName} ({columnNames}) values ({values})";
+                string writeQuery = $"Insert into [{tableName}] ({columnNames}) values ({values})";
                 //string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guilds.WebID}\" and Name = \"{guilds.Name}\"";
                 //string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guilds.WebID}\"";
 
@@ -281,8 +323,8 @@ namespace SQLLibrary
                     {
                         continue;
                     }
-                    string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guild.WebID}\" and Name = \"{guild.Name}\"";
-                    string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{guild.WebID}\"";
+                    string exactCountQuery = $"Select Count([WebID]) from [{tableName}] Where [WebID] = '{guild.WebID}' and [Name] = '{guild.Name}'";
+                    string countQuery = $"Select Count([WebID]) from [{tableName}] Where [WebID] = '{guild.WebID}'";
                     //Check if Guild entry is already present.
                     int exactCount = conn.QueryFirst<int>(exactCountQuery, new DynamicParameters());
                     if (exactCount > 0)
@@ -294,7 +336,7 @@ namespace SQLLibrary
                     int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
                     if (count > 0)
                     {
-                        string updateQuery = $"Update {tableName} SET Name = {guild.Name} Where WebID = {guild.WebID}";
+                        string updateQuery = $"Update [{tableName}] SET [Name] = '{guild.Name}' Where [WebID] = '{guild.WebID}'";
                         _ = conn.Query(updateQuery, new DynamicParameters());
                         return; //Entry Updated
                     }
@@ -309,8 +351,8 @@ namespace SQLLibrary
             lock (thisLock)
             {
                 string tableName = "Guilds";
-                string deleteAccountQuery = $"Delete From {tableName} Where WebID = \"{webID}\"";
-                string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{webID}\"";
+                string deleteAccountQuery = $"Delete From [{tableName}] Where [WebID] = '{webID}'";
+                string countQuery = $"Select Count([WebID]) from [{tableName}] Where [WebID] = '{webID}'";
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
@@ -327,19 +369,19 @@ namespace SQLLibrary
         public static List<SettingsBackUpModel> LoadSettingBackUps()
         {
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-            List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>("Select * from SettingsBackup", new DynamicParameters()).ToList();
+            List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>("Select * from [SettingsBackup]", new DynamicParameters()).ToList();
             return query;
         }
         public static List<SettingsBackUpModel> LoadSettingBackUps(string characterFirstName)
         {
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-            List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>($"Select * from SettingsBackup Where \"FirstName\" = \"{characterFirstName}\"", new DynamicParameters()).ToList();
+            List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>($"Select * from [SettingsBackup] Where [FirstName] = '{characterFirstName}'", new DynamicParameters()).ToList();
             return query;
         }
         public static SettingsBackUpModel LoadSettingByIndex(int index)
         {
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-            List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>($"Select * from SettingsBackup Where \"index\" = {index}", new DynamicParameters()).ToList();
+            List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>($"Select * from [SettingsBackup] Where [index] = {index}", new DynamicParameters()).ToList();
             return query.First();
         }
         public static void AddSettingBackup(SettingsBackUpModel settingsBackUpModel, DateTime date)
@@ -349,7 +391,7 @@ namespace SQLLibrary
                 string tableName = "SettingsBackup";
                 string settingsBackupColumnNames = "Date,FirstName,Realm,Class,Description,Path,INIFileName,INIData,IGNFileName,IGNData";
                 string settingsBackupColumnValues = $"@{settingsBackupColumnNames.Replace(",", ",@")}";
-                string writeQuery = $"Insert into {tableName} ({settingsBackupColumnNames}) values ({settingsBackupColumnValues})";
+                string writeQuery = $"Insert into [{tableName}] ({settingsBackupColumnNames}) values ({settingsBackupColumnValues})";
                 settingsBackUpModel.Date = date.ToString("yyyy-MM-ddTHH:mm:ss");
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 _ = conn.Execute(writeQuery, settingsBackUpModel);
@@ -360,8 +402,8 @@ namespace SQLLibrary
             lock (thisLock)
             {
                 string tableName = "SettingsBackup";
-                string deleteAccountQuery = $"Delete From {tableName} Where FirstName = \"{firstName}\"";
-                string countQuery = $"Select Count(FirstName) from {tableName} Where FirstName = \"{firstName}\"";
+                string deleteAccountQuery = $"Delete From [{tableName}] Where [FirstName] = '{firstName}'";
+                string countQuery = $"Select Count(FirstName) from [{tableName}] Where [FirstName] = '{firstName}'";
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
@@ -376,7 +418,7 @@ namespace SQLLibrary
             lock (thisLock)
             {
                 string tableName = "SettingsBackup";
-                string deleteBackupQuery = $"Delete From {tableName} Where \"index\" = {index}";
+                string deleteBackupQuery = $"Delete From [{tableName}] Where [index] = {index}";
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 _ = conn.Query(deleteBackupQuery, new DynamicParameters());
             }
@@ -385,7 +427,7 @@ namespace SQLLibrary
         public static void UpdateEntryByIndex(int index, SettingsBackUpModel settingsBackUpModel)
         {
             string tableName = "SettingsBackup";
-            string updateBackupQuery = $"UPDATE {tableName} SET Realm = '{settingsBackUpModel.Realm}', Class = '{settingsBackUpModel.Class}', Description = '{settingsBackUpModel.Description}' WHERE \"index\" = {index}";
+            string updateBackupQuery = $"UPDATE [{tableName}] SET [Realm] = '{settingsBackUpModel.Realm}', [Class] = '{settingsBackUpModel.Class}', [Description] = '{settingsBackUpModel.Description}' WHERE [index] = {index}";
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
             _ = conn.Query(updateBackupQuery, new DynamicParameters());
         }
@@ -427,7 +469,7 @@ namespace SQLLibrary
                 foreach (string tableName in tables)
                 {
                     string deleteQuery = $"Delete from {tableName}";
-                    string resetSequence = $"Update sqlite_sequence SET seq = 0 WHERE name = \"{tableName}\"";
+                    string resetSequence = $"Update [sqlite_sequence] SET [seq] = 0 WHERE [name] = '{tableName}'";
                     string reindexQuery = $"Reindex {tableName}";
                     _ = conn.Query(deleteQuery, new DynamicParameters());
                     _ = conn.Query(resetSequence, new DynamicParameters());
@@ -445,7 +487,7 @@ namespace SQLLibrary
                 foreach (string tableName in tables)
                 {
                     string deleteQuery = $"Delete from {tableName}";
-                    string resetSequence = $"Update sqlite_sequence SET seq = 0 WHERE name = \"{tableName}\"";
+                    string resetSequence = $"Update [sqlite_sequence] SET [seq] = 0 WHERE [name] = '{tableName}'";
                     string reindexQuery = $"Reindex {tableName}";
                     _ = conn.Query(deleteQuery, new DynamicParameters());
                     _ = conn.Query(resetSequence, new DynamicParameters());

@@ -1177,14 +1177,119 @@ namespace DAoCToolSuite.ChimpTool
 
         }
 
+
+        private CredentialModel? GetCredentials(bool force=false)
+        {
+            List<CredentialModel> credentials = SqliteDataAccess.LoadAccountCredentials(AccountComboBox.Text);
+            if (force || string.IsNullOrEmpty(Properties.Settings.Default.GameDllLocation) || credentials is null || credentials.Count == 0 || string.IsNullOrEmpty(credentials.First().Login) || string.IsNullOrEmpty(credentials.First().Password))
+            {
+                CredentialForm form = new CredentialForm()
+                {
+                    Owner = this,
+                    StartPosition = FormStartPosition.Manual,
+                    AccountName = AccountComboBox.Text
+                };
+                form.SetLocation();
+                form.ShowDialog();
+                credentials = SqliteDataAccess.LoadAccountCredentials(AccountComboBox.Text);
+                if (credentials is null || credentials.Count == 0 || string.IsNullOrEmpty(credentials.First().Login) || string.IsNullOrEmpty(credentials.First().Password))
+                    return null;
+            }
+            return credentials.FirstOrDefault();
+        }
+
+        private static string ReadServerList()
+        {
+            lock (repositoryLock)
+            {
+                try
+                {
+                    string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\ServerConfig.json";
+                    string json = File.ReadAllText(path);
+                    return json;
+                }
+                catch (System.Exception ex)
+                {
+                    Logger.Error(ex);
+                    return "{}";
+                }
+            }
+        }
+
         private void LaunchButton_Click(object sender, EventArgs e)
         {
+            CredentialModel? credentials; 
+            if (ModifierKeys.HasFlag(Keys.Shift))
+            {
+                credentials = GetCredentials(true);
+            }
+            else
+            {
+                credentials = GetCredentials();
+            }
+            
+            if (credentials is null)
+                return;
 
+            var login = credentials.Login;
+            var password = credentials.Password;
+
+            var row = SearchGridView.SelectedRows[0];
+            var charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
+            var serverName = row.Cells["Server"].Value.ToString();
+            var realm = row.Cells["Realm"].Value.ToString();
+
+            int realmIndex = 0;
+            switch (realm)
+            {
+                case "Albion":
+                    realmIndex = 1;
+                    break;
+                case "Midgard":
+                    realmIndex = 2;
+                    break;
+                default: //Hibernia
+                    realmIndex = 3;
+                    break;
+            }
+
+
+            string json = ReadServerList();
+            ServerListINI SLI = JsonConvert.DeserializeObject<ServerListINI>(json) ?? new ServerListINI();
+            Servers? servers = SLI.Servers;
+            List<Server>? serversList = servers?.Server;
+            Server? server = serversList?.Where(x => x is not null && x.Name is not null && x.Name.ToLower().Equals(serverName?.ToLower())).FirstOrDefault();
+            if (server is null) return;
+
+            var index = server.Index;
+            var port = server.Port;
+            var ip = server.IP;
+
+            var path = Properties.Settings.Default.GameDllLocation;
+            if (path == null) return;
+
+            //string connectionString = $"{path}\\game.dll {ip} {port} {index} {login} {password} {charName} {realmIndex}";
+            try
+            {
+                var p = new System.Diagnostics.Process();
+                p.StartInfo.FileName = $"{path}\\game.dll";
+                p.StartInfo.Arguments = $" {ip} {port} {index} {login} {password} {charName} {realmIndex} ";
+                p.StartInfo.WorkingDirectory = path;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
+            }
+            catch(Exception ex)
+            {
+                Logger.Error(ex);
+                SqliteDataAccess.AddAccountCredentials(AccountComboBox.Text, null, null);
+            }
         }
 
         private void SearchGridView_DoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            CredentialModel? credentials = GetCredentials();
         }
     }
 }

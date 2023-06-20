@@ -82,5 +82,17 @@ namespace DAoCToolSuite.ChimpTool.Properties {
                 this["NextLoadAll"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GameDllLocation {
+            get {
+                return ((string)(this["GameDllLocation"]));
+            }
+            set {
+                this["GameDllLocation"] = value;
+            }
+        }
     }
 }

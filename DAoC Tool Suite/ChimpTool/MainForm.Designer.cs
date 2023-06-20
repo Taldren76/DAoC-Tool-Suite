@@ -333,7 +333,6 @@ namespace DAoCToolSuite.ChimpTool
             // 
             // LaunchButton
             // 
-            LaunchButton.Enabled = false;
             LaunchButton.Font = new Font("Verdana", 12F, FontStyle.Bold, GraphicsUnit.Point);
             LaunchButton.Location = new Point(1294, 6);
             LaunchButton.Name = "LaunchButton";
@@ -433,7 +432,7 @@ namespace DAoCToolSuite.ChimpTool
             Name = "MainForm";
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ChimpTool v1.4.0";
+            Text = "ChimpTool v1.5.0";
             FormClosing += MainForm_FormClosing;
             FormClosed += MainForm_FormClosed;
             GridPanel.ResumeLayout(false);

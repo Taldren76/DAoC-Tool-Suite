@@ -42,6 +42,8 @@ namespace DAoCToolSuite.LogTool
             LogDatesComboBox = new ComboBox();
             ParseButton = new Button();
             label1 = new Label();
+            SectionLabel = new Label();
+            ThreeDFontCheckBox = new CheckBox();
             UpdateButton = new Button();
             checkedListBox1 = new CheckedListBox();
             FilterPlayersOnlyCheckBox = new CheckBox();
@@ -56,8 +58,6 @@ namespace DAoCToolSuite.LogTool
             ParseProgressBar = new TextProgressBar();
             Column1 = new DataGridViewTextBoxColumn();
             Column2 = new DataGridViewTextBoxColumn();
-            ThreeDFontCheckBox = new CheckBox();
-            SectionLabel = new Label();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -227,6 +227,28 @@ namespace DAoCToolSuite.LogTool
             label1.TabIndex = 3;
             label1.Text = "Start Location";
             // 
+            // SectionLabel
+            // 
+            SectionLabel.AutoSize = true;
+            SectionLabel.Location = new Point(12, 230);
+            SectionLabel.Name = "SectionLabel";
+            SectionLabel.Size = new Size(117, 14);
+            SectionLabel.TabIndex = 11;
+            SectionLabel.Text = "Overlay Sections:";
+            // 
+            // ThreeDFontCheckBox
+            // 
+            ThreeDFontCheckBox.AutoSize = true;
+            ThreeDFontCheckBox.Checked = true;
+            ThreeDFontCheckBox.CheckState = CheckState.Checked;
+            ThreeDFontCheckBox.Location = new Point(12, 162);
+            ThreeDFontCheckBox.Name = "ThreeDFontCheckBox";
+            ThreeDFontCheckBox.Size = new Size(82, 18);
+            ThreeDFontCheckBox.TabIndex = 10;
+            ThreeDFontCheckBox.Text = "3D Effect";
+            ThreeDFontCheckBox.UseVisualStyleBackColor = true;
+            ThreeDFontCheckBox.CheckedChanged += ThreeDFontCheckBox_CheckedChanged;
+            // 
             // UpdateButton
             // 
             UpdateButton.Location = new Point(53, 359);
@@ -355,28 +377,6 @@ namespace DAoCToolSuite.LogTool
             Column2.ReadOnly = true;
             Column2.Width = 5;
             // 
-            // ThreeDFontCheckBox
-            // 
-            ThreeDFontCheckBox.AutoSize = true;
-            ThreeDFontCheckBox.Checked = true;
-            ThreeDFontCheckBox.CheckState = CheckState.Checked;
-            ThreeDFontCheckBox.Location = new Point(12, 162);
-            ThreeDFontCheckBox.Name = "ThreeDFontCheckBox";
-            ThreeDFontCheckBox.Size = new Size(82, 18);
-            ThreeDFontCheckBox.TabIndex = 10;
-            ThreeDFontCheckBox.Text = "3D Effect";
-            ThreeDFontCheckBox.UseVisualStyleBackColor = true;
-            ThreeDFontCheckBox.CheckedChanged += ThreeDFontCheckBox_CheckedChanged;
-            // 
-            // SectionLabel
-            // 
-            SectionLabel.AutoSize = true;
-            SectionLabel.Location = new Point(12, 230);
-            SectionLabel.Name = "SectionLabel";
-            SectionLabel.Size = new Size(117, 14);
-            SectionLabel.TabIndex = 11;
-            SectionLabel.Text = "Overlay Sections:";
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -393,7 +393,7 @@ namespace DAoCToolSuite.LogTool
             MinimumSize = new Size(720, 540);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "LogTool v0.8.0";
+            Text = "LogTool v1.0.0";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);

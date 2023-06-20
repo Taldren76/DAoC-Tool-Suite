@@ -17,5 +17,8 @@
     <Setting Name="NextLoadAll" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)">2001-01-01</Value>
     </Setting>
+    <Setting Name="GameDllLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

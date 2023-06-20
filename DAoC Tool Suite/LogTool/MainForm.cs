@@ -39,9 +39,6 @@ namespace DAoCToolSuite.LogTool
             FormInitialized = true;
         }
 
-
-
-
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
