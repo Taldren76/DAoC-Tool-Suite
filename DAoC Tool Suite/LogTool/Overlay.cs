@@ -1,11 +1,37 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Drawing.Text;
+using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Forms;
 using Windows.Perception.Spatial;
 
 namespace DAoCToolSuite.LogTool
 {
     public partial class Overlay : Form
     {
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        internal static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        internal static extern bool ReleaseCapture();
+
+        private Bitmap? BTMP { get; set; }
+        private Color myForeColor { get; set; } = Color.White;
+        private Color myBackColor { get; set; } = Color.Black;
+        public bool Transparent { get; set; } = true;
+        public bool ThreeDFont { get; set; } = true;
+        public bool SpellDamageSection { get; set; } = true;
+        public bool MeleeDamageSection { get; set; } = true;
+        public bool MitigationSection { get; set; } = true;
+        public bool HealingSection { get; set; } = true;
+        public bool DefenseSection { get; set; } = true;
+        public bool PetSection { get; set; } = true;
+
+        private List<Label> Labels = new List<Label>();
+        private int RowIndex = 0;
+        private int ColumnIndex = 0;
+        private int SectionIndex = 0;
+
         public Overlay()
         {
             InitializeComponent();
@@ -35,21 +61,6 @@ namespace DAoCToolSuite.LogTool
             LogTool.Properties.Settings.Default.Save();
         }
 
-
-        private void Overlay_OnClosing(object? sender, FormClosingEventArgs e)
-        {
-            Properties.Settings.Default.LastLocationOverlay = this.Location;
-            Properties.Settings.Default.Save();
-        }
-
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
-
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        internal static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        internal static extern bool ReleaseCapture();
-
         private void Overlay_MouseDown(object? sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -78,14 +89,21 @@ namespace DAoCToolSuite.LogTool
 
         }
 
-        private static void FormatLabel(Label label, int column, int row, int breakCount = 0)
+        private void Overlay_OnClosing(object? sender, FormClosingEventArgs e)
         {
-            label.AutoSize = false;
+            Properties.Settings.Default.LastLocationOverlay = this.Location;
+            Properties.Settings.Default.Save();
+        }
+
+        private void FormatLabel(Label label)
+        {
             label.AutoSize = true;
+            label.Visible = false;
             int padding = 0;
             int rowStep = 15;
             int point_X;
-            int point_Y = breakCount * (rowStep / 2);
+            int point_Y = SectionIndex * (rowStep / 2);
+            int column = ColumnIndex;
 
             switch (column)
             {
@@ -103,254 +121,246 @@ namespace DAoCToolSuite.LogTool
             {
 
                 point_X = column - label.Width - padding;
-                point_Y += row * rowStep;
+                point_Y += RowIndex * rowStep;
                 textAlignment = ContentAlignment.MiddleRight;
             }
             else
             {
                 point_X = column + padding;
-                point_Y += row * rowStep;
+                point_Y += RowIndex * rowStep;
                 textAlignment = ContentAlignment.MiddleLeft;
             }
             label.Location = new(point_X, point_Y);
             label.TextAlign = textAlignment;
+            label.ForeColor = myForeColor;
+            label.BackColor = myBackColor;
+            Labels.Add(label);
+            RowIndex++;
+        }
+
+        private void DrawLabels()
+        {
+            BTMP = new Bitmap(this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Graphics grpx = Graphics.FromImage(BTMP);
+            foreach (Label label in Labels)
+            {
+                Color myColor = label.ForeColor;
+                SolidBrush solidBrush = new SolidBrush(myColor);
+                Brush brush = new SolidBrush(Color.Black);
+                grpx.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                if (!Transparent)
+                    grpx.FillRectangle(brush, label.Location.X, label.Location.Y, label.Width, label.Height);
+                if (ThreeDFont)
+                {
+                    System.Drawing.Point shadowLocation = new System.Drawing.Point(label.Location.X - 1, label.Location.Y + 1);
+                    grpx.DrawString(label.Text, label.Font, new SolidBrush(Color.Black), shadowLocation);
+                }
+                grpx.DrawString(label.Text, label.Font, solidBrush, label.Location);
+            }
         }
 
         private void FormatOverlay()
         {
-            //Column 1 Titles
+            Labels.Clear();
+
+            #region Titles
+            ColumnIndex = 0;
+            RowIndex = 0;
+            SectionIndex = 0;
             Title_TotalDamageDone.Text = "Total Damage Done:";
-            FormatLabel(Title_TotalDamageDone, 0, 0, 0);
-            Title_TotalSpellDamage.Text = "Total Spell Dmg:";
-            FormatLabel(Title_TotalSpellDamage, 0, 1, 1);
-            Title_AverageSpellDamageDone.Text = "Avg Spell Dmg:";
-            FormatLabel(Title_AverageSpellDamageDone, 0, 2, 1);
-            Title_AverageSpellCritDamageDone.Text = "Avg Spell Crit Dmg:";
-            FormatLabel(Title_AverageSpellCritDamageDone, 0, 3, 1);
-            Title_SpellCritRate.Text = "Spell Crit Rate:";
-            FormatLabel(Title_SpellCritRate, 0, 4, 1);
-            Title_TotalMeleeDamage.Text = "Total Melee Dmg:";
-            FormatLabel(Title_TotalMeleeDamage, 0, 5, 2);
-            Title_AverageMeleeDamageDone.Text = "Avg Melee Dmg:";
-            FormatLabel(Title_AverageMeleeDamageDone, 0, 6, 2);
-            Title_AverageMeleeCritDamageDone.Text = "Avg Melee Crit Dmg:";
-            FormatLabel(Title_AverageMeleeCritDamageDone, 0, 7, 2);
-            Title_MeleeCritRate.Text = "Melee Crit Rate:";
-            FormatLabel(Title_MeleeCritRate, 0, 8, 2);
+            FormatLabel(Title_TotalDamageDone);
+
+            if (SpellDamageSection)
+            {
+                SectionIndex += 1;
+                Title_TotalSpellDamage.Text = "Total Spell Dmg:";
+                FormatLabel(Title_TotalSpellDamage);
+                Title_AverageSpellDamageDone.Text = "Avg Spell Dmg:";
+                FormatLabel(Title_AverageSpellDamageDone);
+                Title_AverageSpellCritDamageDone.Text = "Avg Spell Crit Dmg:";
+                FormatLabel(Title_AverageSpellCritDamageDone);
+                Title_SpellCritRate.Text = "Spell Crit Rate:";
+                FormatLabel(Title_SpellCritRate);
+            }
+
+            if (MeleeDamageSection)
+            {
+                SectionIndex += 1;
+                Title_TotalMeleeDamage.Text = "Total Melee Dmg:";
+                FormatLabel(Title_TotalMeleeDamage);
+                Title_AverageMeleeDamageDone.Text = "Avg Melee Dmg:";
+                FormatLabel(Title_AverageMeleeDamageDone);
+                Title_AverageMeleeCritDamageDone.Text = "Avg Melee Crit Dmg:";
+                FormatLabel(Title_AverageMeleeCritDamageDone);
+                Title_MeleeCritRate.Text = "Melee Crit Rate:";
+                FormatLabel(Title_MeleeCritRate);
+            }
+
+            SectionIndex += 1;
             Title_TotalDamageTaken.Text = "Total Damage Taken:";
-            FormatLabel(Title_TotalDamageTaken, 0, 9, 3);
-            Title_DamageTakenAbsorbed.Text = "Dmg Absorbed:";
-            FormatLabel(Title_DamageTakenAbsorbed, 0, 10, 3);
-            Title_DamageTakenConverted.Text = "Dmg Converted:";
-            FormatLabel(Title_DamageTakenConverted, 0, 11, 3);
-            Title_DamageTakenBlocked.Text = "Dmg Blocked:";
-            FormatLabel(Title_DamageTakenBlocked, 0, 12, 3);
+            FormatLabel(Title_TotalDamageTaken);
+            if (MitigationSection)
+            {
+                Title_DamageTakenAbsorbed.Text = "Dmg Absorbed:";
+                FormatLabel(Title_DamageTakenAbsorbed);
+                Title_DamageTakenConverted.Text = "Dmg Converted:";
+                FormatLabel(Title_DamageTakenConverted);
+                Title_DamageTakenBlocked.Text = "Dmg Blocked:";
+                FormatLabel(Title_DamageTakenBlocked);
+            }
+
+            SectionIndex += 1;
             Title_DeathBlows.Text = "DeathBlows:";
-            FormatLabel(Title_DeathBlows, 0, 13, 4);
+            FormatLabel(Title_DeathBlows);
             Title_Deaths.Text = "Deaths:";
-            FormatLabel(Title_Deaths, 0, 14, 4);
+            FormatLabel(Title_Deaths);
 
-            //Column 2 Titles
+            ColumnIndex = 1;
+            RowIndex = 0;
+            SectionIndex = 0;
             Title_TotalHealingRecieved.Text = "Total Healing Recieved:";
-            FormatLabel(Title_TotalHealingRecieved, 1, 0, 0);
-            Title_TotalHealingDone.Text = "Total Healing Done:";
-            FormatLabel(Title_TotalHealingDone, 1, 1, 1);
-            Title_AverageHealingDone.Text = "Avg Heal:";
-            FormatLabel(Title_AverageHealingDone, 1, 2, 1);
-            Title_AverageCritHealingDone.Text = "Avg Crit Heal:";
-            FormatLabel(Title_AverageCritHealingDone, 1, 3, 1);
-            Title_HealCritRate.Text = "Heal Crit Rate:";
-            FormatLabel(Title_HealCritRate, 1, 4, 1);
-            Title_BlockRate.Text = "Block Rate:";
-            FormatLabel(Title_BlockRate, 1, 5, 2);
-            Title_EvadeRate.Text = "Evade Rate:";
-            FormatLabel(Title_EvadeRate, 1, 6, 2);
-            Title_ParryRate.Text = "Parry Rate:";
-            FormatLabel(Title_ParryRate, 1, 7, 2);
-            Title_MissRate.Text = "Miss Rate:";
-            FormatLabel(Title_MissRate, 1, 8, 2);
-            Title_TotalPetDamage.Text = "Total Pet Damage:";
-            FormatLabel(Title_TotalPetDamage, 1, 9, 3);
-            Title_PetMeleeCritRate.Text = "Pet Melee Crit Rate:";
-            FormatLabel(Title_PetMeleeCritRate, 1, 10, 3);
-            Title_TotalPetHealing.Text = "Total Pet Healing:";
-            FormatLabel(Title_TotalPetHealing, 1, 11, 3);
+            FormatLabel(Title_TotalHealingRecieved);
+
+            if (HealingSection)
+            {
+                SectionIndex += 1;
+                Title_TotalHealingDone.Text = "Total Healing Done:";
+                FormatLabel(Title_TotalHealingDone);
+                Title_AverageHealingDone.Text = "Avg Heal:";
+                FormatLabel(Title_AverageHealingDone);
+                Title_AverageCritHealingDone.Text = "Avg Crit Heal:";
+                FormatLabel(Title_AverageCritHealingDone);
+                Title_HealCritRate.Text = "Heal Crit Rate:";
+                FormatLabel(Title_HealCritRate);
+            }
+
+            if (DefenseSection)
+            {
+                SectionIndex += 1;
+                Title_BlockRate.Text = "Block Rate:";
+                FormatLabel(Title_BlockRate);
+                Title_EvadeRate.Text = "Evade Rate:";
+                FormatLabel(Title_EvadeRate);
+                Title_ParryRate.Text = "Parry Rate:";
+                FormatLabel(Title_ParryRate);
+                Title_MissRate.Text = "Miss Rate:";
+                FormatLabel(Title_MissRate);
+            }
+
+            if (PetSection)
+            {
+                SectionIndex += 1;
+                Title_TotalPetDamage.Text = "Total Pet Damage:";
+                FormatLabel(Title_TotalPetDamage);
+                Title_PetMeleeCritRate.Text = "Pet Melee Crit Rate:";
+                FormatLabel(Title_PetMeleeCritRate);
+                Title_TotalPetHealing.Text = "Total Pet Healing:";
+                FormatLabel(Title_TotalPetHealing);
+            }
+
+            SectionIndex += 1;
             Title_GoldEarned.Text = "Gold Earned:";
-            FormatLabel(Title_GoldEarned, 1, 12, 4);
+            FormatLabel(Title_GoldEarned);
             Title_RealmPoints.Text = "Realm Points Earned:";
-            FormatLabel(Title_RealmPoints, 1, 13, 4);
+            FormatLabel(Title_RealmPoints);
             Title_IRS.Text = "IRS:";
-            FormatLabel(Title_IRS, 1, 14, 4);
+            FormatLabel(Title_IRS);
+            #endregion
 
-            //Column 1 Values
-            FormatLabel(Value_TotalDamageDone, 0, 0, 0);
-            FormatLabel(Value_TotalSpellDamage, 0, 1, 1);
-            FormatLabel(Value_AverageSpellDamageDone, 0, 2, 1);
-            FormatLabel(Value_AverageSpellCritDamageDone, 0, 3, 1);
-            FormatLabel(Value_SpellCritRate, 0, 4, 1);
-            FormatLabel(Value_TotalMeleeDamage, 0, 5, 2);
-            FormatLabel(Value_AverageMeleeDamageDone, 0, 6, 2);
-            FormatLabel(Value_AverageMeleeCritDamageDone, 0, 7, 2);
-            FormatLabel(Value_MeleeCritRate, 0, 8, 2);
-            FormatLabel(Value_TotalDamageTaken, 0, 9, 3);
-            FormatLabel(Value_DamageTakenAbsorbed, 0, 10, 3);
-            FormatLabel(Value_DamageTakenConverted, 0, 11, 3);
-            FormatLabel(Value_DamageTakenBlocked, 0, 12, 3);
-            FormatLabel(Value_DeathBlows, 0, 13, 4);
-            FormatLabel(Value_Deaths, 0, 14, 4);
+            #region Values
+            ColumnIndex = 0;
+            RowIndex = 0;
+            SectionIndex = 0;
+            FormatLabel(Value_TotalDamageDone);
 
-            //Column 2 Values
-            FormatLabel(Value_TotalHealingRecieved, 1, 0, 0);
-            FormatLabel(Value_TotalHealingDone, 1, 1, 1);
-            FormatLabel(Value_AverageHealingDone, 1, 2, 1);
-            FormatLabel(Value_AverageCritHealingDone, 1, 3, 1);
-            FormatLabel(Value_HealCritRate, 1, 4, 1);
-            FormatLabel(Value_BlockRate, 1, 5, 2);
-            FormatLabel(Value_EvadeRate, 1, 6, 2);
-            FormatLabel(Value_ParryRate, 1, 7, 2);
-            FormatLabel(Value_MissRate, 1, 8, 2);
-            FormatLabel(Value_TotalPetDamage, 1, 9, 3);
-            FormatLabel(Value_PetMeleeCritRate, 1, 10, 3);
-            FormatLabel(Value_TotalPetHealing, 1, 11, 3);
-            FormatLabel(Value_GoldEarned, 1, 12, 4);
-            FormatLabel(Value_RealmPoints, 1, 13, 4);
-            FormatLabel(Value_IRS, 1, 14, 4);
+            if (SpellDamageSection)
+            {
+                SectionIndex += 1;
+                FormatLabel(Value_TotalSpellDamage);
+                FormatLabel(Value_AverageSpellDamageDone);
+                FormatLabel(Value_AverageSpellCritDamageDone);
+                FormatLabel(Value_SpellCritRate);
+            }
+
+            if (MeleeDamageSection)
+            {
+                SectionIndex += 1;
+                FormatLabel(Value_TotalMeleeDamage);
+                FormatLabel(Value_AverageMeleeDamageDone);
+                FormatLabel(Value_AverageMeleeCritDamageDone);
+                FormatLabel(Value_MeleeCritRate);
+            }
+
+            SectionIndex += 1;
+            FormatLabel(Value_TotalDamageTaken);
+            if (MitigationSection)
+            {
+                FormatLabel(Value_DamageTakenAbsorbed);
+                FormatLabel(Value_DamageTakenConverted);
+                FormatLabel(Value_DamageTakenBlocked);
+            }
+
+            SectionIndex += 1;
+            FormatLabel(Value_DeathBlows);
+            FormatLabel(Value_Deaths);
+
+            ColumnIndex = 1;
+            RowIndex = 0;
+            SectionIndex = 0;
+            FormatLabel(Value_TotalHealingRecieved);
+
+            if (HealingSection)
+            {
+                SectionIndex += 1;
+                FormatLabel(Value_TotalHealingDone);
+                FormatLabel(Value_AverageHealingDone);
+                FormatLabel(Value_AverageCritHealingDone);
+                FormatLabel(Value_HealCritRate);
+            }
+
+            if (DefenseSection)
+            {
+                SectionIndex += 1;
+                FormatLabel(Value_BlockRate);
+                FormatLabel(Value_EvadeRate);
+                FormatLabel(Value_ParryRate);
+                FormatLabel(Value_MissRate);
+            }
+
+            if (PetSection)
+            {
+                SectionIndex += 1;
+                FormatLabel(Value_TotalPetDamage);
+                FormatLabel(Value_PetMeleeCritRate);
+                FormatLabel(Value_TotalPetHealing);
+            }
+
+            SectionIndex += 1;
+            FormatLabel(Value_GoldEarned);
+            FormatLabel(Value_RealmPoints);
+            FormatLabel(Value_IRS);
+            #endregion
+
+            DrawLabels();
+            this.BackgroundImage = BTMP;
+        }
+
+        public void Draw()
+        {
+            Labels.Clear();
+            FormatOverlay();
         }
 
         public void SetLabelBackcolor(Color color)
         {
-            Title_AverageSpellCritDamageDone.BackColor = color;
-            Title_AverageCritHealingDone.BackColor = color;
-            Title_AverageSpellDamageDone.BackColor = color;
-            Title_AverageHealingDone.BackColor = color;
-            Title_SpellCritRate.BackColor = color;
-            Title_DamageTakenAbsorbed.BackColor = color;
-            Title_DeathBlows.BackColor = color;
-            Title_Deaths.BackColor = color;
-            Title_HealCritRate.BackColor = color;
-            Title_IRS.BackColor = color;
-            Title_RealmPoints.BackColor = color;
-            Title_DamageTakenBlocked.BackColor = color;
-            Title_DamageTakenConverted.BackColor = color;
-            Title_TotalDamageDone.BackColor = color;
-            Title_TotalDamageTaken.BackColor = color;
-            Title_TotalHealingDone.BackColor = color;
-            Title_TotalHealingRecieved.BackColor = color;
-
-            Title_TotalSpellDamage.BackColor = color;
-            Title_TotalMeleeDamage.BackColor = color;
-            Title_AverageMeleeDamageDone.BackColor = color;
-            Title_AverageMeleeCritDamageDone.BackColor = color;
-            Title_MeleeCritRate.BackColor = color;
-            Title_BlockRate.BackColor = color;
-            Title_EvadeRate.BackColor = color;
-            Title_ParryRate.BackColor = color;
-            Title_MissRate.BackColor = color;
-            Title_TotalPetDamage.BackColor = color;
-            Title_PetMeleeCritRate.BackColor = color;
-            Title_TotalPetHealing.BackColor = color;
-            Title_GoldEarned.BackColor = color;
-
-            Value_AverageSpellCritDamageDone.BackColor = color;
-            Value_AverageCritHealingDone.BackColor = color;
-            Value_AverageSpellDamageDone.BackColor = color;
-            Value_AverageHealingDone.BackColor = color;
-            Value_SpellCritRate.BackColor = color;
-            Value_DamageTakenAbsorbed.BackColor = color;
-            Value_DeathBlows.BackColor = color;
-            Value_Deaths.BackColor = color;
-            Value_HealCritRate.BackColor = color;
-            Value_IRS.BackColor = color;
-            Value_RealmPoints.BackColor = color;
-            Value_DamageTakenBlocked.BackColor = color;
-            Value_DamageTakenConverted.BackColor = color;
-            Value_TotalDamageDone.BackColor = color;
-            Value_TotalDamageTaken.BackColor = color;
-            Value_TotalHealingDone.BackColor = color;
-            Value_TotalHealingRecieved.BackColor = color;
-
-            Value_TotalSpellDamage.BackColor = color;
-            Value_TotalMeleeDamage.BackColor = color;
-            Value_AverageMeleeDamageDone.BackColor = color;
-            Value_AverageMeleeCritDamageDone.BackColor = color;
-            Value_MeleeCritRate.BackColor = color;
-            Value_BlockRate.BackColor = color;
-            Value_EvadeRate.BackColor = color;
-            Value_ParryRate.BackColor = color;
-            Value_MissRate.BackColor = color;
-            Value_TotalPetDamage.BackColor = color;
-            Value_PetMeleeCritRate.BackColor = color;
-            Value_TotalPetHealing.BackColor = color;
-            Value_GoldEarned.BackColor = color;
-
-            Refresh();
+            myBackColor = color;
+            Draw();
         }
 
         public void SetLabelForecolor(Color color)
         {
-            Title_AverageSpellCritDamageDone.ForeColor = color;
-            Title_AverageCritHealingDone.ForeColor = color;
-            Title_AverageSpellDamageDone.ForeColor = color;
-            Title_AverageHealingDone.ForeColor = color;
-            Title_SpellCritRate.ForeColor = color;
-            Title_DamageTakenAbsorbed.ForeColor = color;
-            Title_DeathBlows.ForeColor = color;
-            Title_Deaths.ForeColor = color;
-            Title_HealCritRate.ForeColor = color;
-            Title_IRS.ForeColor = color;
-            Title_RealmPoints.ForeColor = color;
-            Title_DamageTakenBlocked.ForeColor = color;
-            Title_DamageTakenConverted.ForeColor = color;
-            Title_TotalDamageDone.ForeColor = color;
-            Title_TotalDamageTaken.ForeColor = color;
-            Title_TotalHealingDone.ForeColor = color;
-            Title_TotalHealingRecieved.ForeColor = color;
-            Title_TotalSpellDamage.ForeColor = color;
-            Title_TotalMeleeDamage.ForeColor = color;
-            Title_AverageMeleeDamageDone.ForeColor = color;
-            Title_AverageMeleeCritDamageDone.ForeColor = color;
-            Title_MeleeCritRate.ForeColor = color;
-            Title_BlockRate.ForeColor = color;
-            Title_EvadeRate.ForeColor = color;
-            Title_ParryRate.ForeColor = color;
-            Title_MissRate.ForeColor = color;
-            Title_TotalPetDamage.ForeColor = color;
-            Title_PetMeleeCritRate.ForeColor = color;
-            Title_TotalPetHealing.ForeColor = color;
-            Title_GoldEarned.ForeColor = color;
-
-            Value_AverageSpellCritDamageDone.ForeColor = color;
-            Value_AverageCritHealingDone.ForeColor = color;
-            Value_AverageSpellDamageDone.ForeColor = color;
-            Value_AverageHealingDone.ForeColor = color;
-            Value_SpellCritRate.ForeColor = color;
-            Value_DamageTakenAbsorbed.ForeColor = color;
-            Value_DeathBlows.ForeColor = color;
-            Value_Deaths.ForeColor = color;
-            Value_HealCritRate.ForeColor = color;
-            Value_IRS.ForeColor = color;
-            Value_RealmPoints.ForeColor = color;
-            Value_DamageTakenBlocked.ForeColor = color;
-            Value_DamageTakenConverted.ForeColor = color;
-            Value_TotalDamageDone.ForeColor = color;
-            Value_TotalDamageTaken.ForeColor = color;
-            Value_TotalHealingDone.ForeColor = color;
-            Value_TotalHealingRecieved.ForeColor = color;
-            Value_TotalSpellDamage.ForeColor = color;
-            Value_TotalMeleeDamage.ForeColor = color;
-            Value_AverageMeleeDamageDone.ForeColor = color;
-            Value_AverageMeleeCritDamageDone.ForeColor = color;
-            Value_MeleeCritRate.ForeColor = color;
-            Value_BlockRate.ForeColor = color;
-            Value_EvadeRate.ForeColor = color;
-            Value_ParryRate.ForeColor = color;
-            Value_MissRate.ForeColor = color;
-            Value_TotalPetDamage.ForeColor = color;
-            Value_PetMeleeCritRate.ForeColor = color;
-            Value_TotalPetHealing.ForeColor = color;
-            Value_GoldEarned.ForeColor = color;
-
-            Refresh();
+            myForeColor = color;
+            Draw();
         }
     }
 }

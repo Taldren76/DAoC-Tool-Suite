@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Shapes;
@@ -1005,8 +1006,18 @@ namespace DAoCToolSuite.LogTool
                 if (match.Success)
                 {
                     int month = GetMonthFromShortString(match.Groups[2].Value.ToString());
-                    string strDateTime = $"{month}/{match.Groups[3].Value}/{match.Groups[5].Value} {match.Groups[4].Value}";
-                    DateTime dateTime = Convert.ToDateTime(strDateTime);
+                    string strDateTime = $"{month}-{match.Groups[3].Value}-{match.Groups[5].Value} {match.Groups[4].Value}";
+
+                    int Month = month;
+                    int Day = Int32.TryParse(match.Groups[3].Value, out Day)? Day : 1;
+                    int Year = Int32.TryParse(match.Groups[5].Value, out Year) ? Year : 2001;
+                    int Hour = Int32.TryParse(match.Groups[4].Value.Split(':')[0], out Hour) ? Hour : 1;
+                    int Minute = Int32.TryParse(match.Groups[4].Value.Split(':')[1], out Minute) ? Minute : 1;
+                    int Second = Int32.TryParse(match.Groups[4].Value.Split(':')[2], out Second) ? Second : 1;
+
+                    //DateTime test = new DateTime(Year, Month, Day, Hour, Minute, Second);
+
+                    DateTime dateTime = new DateTime(Year, Month, Day, Hour, Minute, Second); // = DateTime.Parse(strDateTime, CultureInfo.GetCultureInfo("en-US")); //Convert.ToDateTime(strDateTime);
                     if (LogOpenEntries.ContainsKey(dateTime))
                     {
                         LogOpenEntries[dateTime] = lineIndex;
@@ -1038,8 +1049,16 @@ namespace DAoCToolSuite.LogTool
                 if (match.Success)
                 {
                     int month = GetMonthFromShortString(match.Groups[2].Value.ToString());
-                    string strDateTime = $"{month}/{match.Groups[3].Value}/{match.Groups[5].Value} {match.Groups[4].Value}";
-                    DateTime dateTime = Convert.ToDateTime(strDateTime);
+                    //string strDateTime = $"{month}/{match.Groups[3].Value}/{match.Groups[5].Value} {match.Groups[4].Value}";
+                    
+                    int Month = month;
+                    int Day = Int32.TryParse(match.Groups[3].Value, out Day) ? Day : 1;
+                    int Year = Int32.TryParse(match.Groups[5].Value, out Year) ? Year : 2001;
+                    int Hour = Int32.TryParse(match.Groups[4].Value.Split(':')[0], out Hour) ? Hour : 1;
+                    int Minute = Int32.TryParse(match.Groups[4].Value.Split(':')[1], out Minute) ? Minute : 1;
+                    int Second = Int32.TryParse(match.Groups[4].Value.Split(':')[2], out Second) ? Second : 1;
+                    DateTime dateTime = new DateTime(Year, Month, Day, Hour, Minute, Second);
+                    //DateTime dateTime = Convert.ToDateTime(strDateTime);
                     if (LogCloseEntries.ContainsKey(dateTime))
                     {
                         LogCloseEntries[dateTime] = lineIndex;

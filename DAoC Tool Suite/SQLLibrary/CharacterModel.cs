@@ -1,8 +1,11 @@
-﻿namespace SQLLibrary
+﻿using System.Diagnostics;
+
+namespace SQLLibrary
 {
     //datetime(Date),Account,WebID,Name,Realm,Class,Server,TotalRealmPoints,TotalSoloKills,TotalDeathBlows,TotalKills,TotalDeaths,Level,Race,Guild_WebID,Alchemy,Armorcraft,Fletching,Siegecraft,Spellcrafting,Tailoring,Weaponcraft
     public class CharacterModel
-    {
+    { 
+
         public string? Date { get; set; }
 
         public string? Account { get; set; } = "Default";
@@ -76,7 +79,8 @@
         //
         // Calculated Values
         //
-        public string RealmRank => CalculateRealmRank(TotalRealmPoints ?? 0).ToString("0.0").Replace(".", "L");
+        private int _RealmRank => CalculateRealmRank(TotalRealmPoints ?? 0);
+        public string RealmRank => _RealmRank.ToString().Insert(_RealmRank.ToString().Length - 1, "L");
         public int IRS => CalculateIRS(TotalRealmPoints ?? 0, TotalDeaths ?? 0);
         public int RPNextRank => RpForNextRealmRank(TotalRealmPoints ?? 0);
         public int RPLastUpdate { get; set; }
@@ -99,7 +103,7 @@
         {
             return Convert.ToInt32(deaths == 0 ? 0.0 : (realmPoints / deaths));
         }
-        private static double CalculateRealmRank(int realmPoints)
+        private static int CalculateRealmRank(int realmPoints)
         {
             Dictionary<int, double> realmRanks = new();
             if (RealmRanks is null)
@@ -146,18 +150,15 @@
             try
             {
                 int realmRank = realmRanks?.Where(x => x.Value <= realmPoints)?.Select(x => x.Key)?.Last() ?? -1;
-                if (realmRank < 0)
-                {
-                    Thread.Sleep(100);
-                }
 
-                double decimalRealmRank = realmRank / 10.0;
+                //double decimalRealmRank = realmRank / 10.0;
 
-                return decimalRealmRank;
+                //return decimalRealmRank;
+                return realmRank;
             }
             catch
             {
-                return -1.0;
+                return -1;
             }
         }
         private static int RpForNextRealmRank(int realmPoints)
@@ -212,14 +213,16 @@
                     return int.MaxValue;
                 }
 
-                double currentRank = CalculateRealmRank(realmPoints) * 10;
+                int currentRank = CalculateRealmRank(realmPoints); //* 10;
                 int nextRank = Convert.ToInt32(currentRank) + 1;
                 int nextRankRP = Convert.ToInt32(realmRanks[nextRank]);
                 int RPNeeded = nextRankRP - realmPoints;
                 return RPNeeded;
             }
-            catch
+            catch(Exception ex) 
             {
+                Trace.WriteLine(ex.Message);
+                Trace.Write(ex.StackTrace);
                 return -1;
             }
         }

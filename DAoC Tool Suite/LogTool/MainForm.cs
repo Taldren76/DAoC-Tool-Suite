@@ -1,4 +1,5 @@
 using System.Data;
+using System.Windows.Forms;
 using Logger;
 
 namespace DAoCToolSuite.LogTool
@@ -34,9 +35,12 @@ namespace DAoCToolSuite.LogTool
 
             OverLayOpacityControl.Maximum = 100;
             OverLayOpacityControl.Minimum = 0;
-
+            FillCheckListBox();
             FormInitialized = true;
         }
+
+
+
 
         protected override void OnLoad(EventArgs e)
         {
@@ -45,7 +49,7 @@ namespace DAoCToolSuite.LogTool
             colorDialog1.Color = Properties.Settings.Default.OverlayFontColor;
             FontColorPanel.BackColor = Properties.Settings.Default.OverlayFontColor;
             Overlay.SetLabelForecolor(Properties.Settings.Default.OverlayFontColor);
-            Overlay.SetLabelBackcolor(Properties.Settings.Default.OverlayTrans ? Color.DimGray : Color.Black);
+            Overlay.Transparent = Properties.Settings.Default.OverlayTrans;
 
             FilterPlayersOnlyCheckBox.Checked = Properties.Settings.Default.PlayersOnly;
             LogParser.PlayersOnlyFilter = Properties.Settings.Default.PlayersOnly;
@@ -213,6 +217,8 @@ namespace DAoCToolSuite.LogTool
             Overlay.Value_RealmPoints.Text = LogParser.RealmPointsEarned.ToString("N0");
             Overlay.Value_IRS.Text = LogParser.IRS.ToString("N0");
             #endregion
+
+            Overlay.Draw();
         }
 
         /// <summary>
@@ -331,6 +337,7 @@ namespace DAoCToolSuite.LogTool
         private void OverlayButton_Click(object sender, EventArgs e)
         {
             OverlayButton.Enabled = false;
+            DisplayParseLogStatistics();
             if (Overlay.Visible)
             {
                 OverlayButton.Text = "Show Overlay";
@@ -341,6 +348,7 @@ namespace DAoCToolSuite.LogTool
                 OverlayButton.Text = "Hide Overlay";
                 Overlay.Show();
             }
+
             OverlayButton.Enabled = true;
         }
 
@@ -391,14 +399,8 @@ namespace DAoCToolSuite.LogTool
         private void OverlayTransparentCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox checkBox = (CheckBox)sender;
-            if (checkBox.Checked)
-            {
-                Overlay.SetLabelBackcolor(Color.DimGray);
-            }
-            else
-            {
-                Overlay.SetLabelBackcolor(Color.Black);
-            }
+            Overlay.Transparent = checkBox.Checked;
+            Overlay.Draw();
             Properties.Settings.Default.OverlayTrans = checkBox.Checked;
             Properties.Settings.Default.Save();
         }
@@ -411,6 +413,56 @@ namespace DAoCToolSuite.LogTool
             Properties.Settings.Default.PlayersOnly = checkBox.Checked;
             Properties.Settings.Default.Save();
 
+        }
+        private void FillCheckListBox()
+        {
+            CheckedListBox checkedListBox = checkedListBox1;
+            for (int index = 0; index < checkedListBox.Items.Count; index++)
+            {
+                checkedListBox.SetItemChecked(index, true);
+            }
+        }
+
+        private void UpdateButton_Click(object sender, EventArgs e)
+        {
+            UpdateButton.Enabled = false;
+            CheckedListBox checkedListBox = checkedListBox1;
+            for (int index = 0; index < checkedListBox.Items.Count; index++)
+            {
+                string? item = checkedListBox.Items[index]?.ToString();
+                if (item is null)
+                    continue;
+                switch (item)
+                {
+                    case "Spell":
+                        Overlay.SpellDamageSection = checkedListBox.GetItemChecked(index);
+                        continue;
+                    case "Melee":
+                        Overlay.MeleeDamageSection = checkedListBox.GetItemChecked(index);
+                        continue;
+                    case "Mitigation":
+                        Overlay.MitigationSection = checkedListBox.GetItemChecked(index);
+                        continue;
+                    case "Defense":
+                        Overlay.DefenseSection = checkedListBox.GetItemChecked(index);
+                        continue;
+                    case "Healing":
+                        Overlay.HealingSection = checkedListBox.GetItemChecked(index);
+                        continue;
+                    case "Pet":
+                        Overlay.PetSection = checkedListBox.GetItemChecked(index);
+                        continue;
+                }
+            }
+            Overlay.Draw();
+            UpdateButton.Enabled = true;
+        }
+
+        private void ThreeDFontCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+            Overlay.ThreeDFont = checkBox.Checked;
+            Overlay.Draw();
         }
     }
 }

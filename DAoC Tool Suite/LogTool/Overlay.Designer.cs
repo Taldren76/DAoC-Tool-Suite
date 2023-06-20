@@ -95,7 +95,7 @@
             // 
             Title_SpellCritRate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_SpellCritRate.AutoSize = true;
-            Title_SpellCritRate.BackColor = Color.DimGray;
+            Title_SpellCritRate.BackColor = Color.FromArgb(4, 244, 4);
             Title_SpellCritRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_SpellCritRate.ForeColor = Color.White;
             Title_SpellCritRate.Location = new Point(340, 110);
@@ -104,23 +104,25 @@
             Title_SpellCritRate.TabIndex = 47;
             Title_SpellCritRate.Text = "Damage Crit Rate:";
             Title_SpellCritRate.TextAlign = ContentAlignment.MiddleRight;
+            Title_SpellCritRate.Visible = false;
             // 
             // Value_SpellCritRate
             // 
             Value_SpellCritRate.AutoSize = true;
-            Value_SpellCritRate.BackColor = Color.DimGray;
+            Value_SpellCritRate.BackColor = Color.FromArgb(4, 244, 4);
             Value_SpellCritRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_SpellCritRate.ForeColor = Color.White;
             Value_SpellCritRate.Location = new Point(475, 110);
             Value_SpellCritRate.Name = "Value_SpellCritRate";
             Value_SpellCritRate.Size = new Size(0, 14);
             Value_SpellCritRate.TabIndex = 46;
+            Value_SpellCritRate.Visible = false;
             // 
             // Title_RealmPoints
             // 
             Title_RealmPoints.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_RealmPoints.AutoSize = true;
-            Title_RealmPoints.BackColor = Color.DimGray;
+            Title_RealmPoints.BackColor = Color.FromArgb(4, 244, 4);
             Title_RealmPoints.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_RealmPoints.ForeColor = Color.White;
             Title_RealmPoints.Location = new Point(370, 210);
@@ -129,23 +131,25 @@
             Title_RealmPoints.TabIndex = 45;
             Title_RealmPoints.Text = "Realm Points:";
             Title_RealmPoints.TextAlign = ContentAlignment.MiddleRight;
+            Title_RealmPoints.Visible = false;
             // 
             // Value_RealmPoints
             // 
             Value_RealmPoints.AutoSize = true;
-            Value_RealmPoints.BackColor = Color.DimGray;
+            Value_RealmPoints.BackColor = Color.FromArgb(4, 244, 4);
             Value_RealmPoints.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_RealmPoints.ForeColor = Color.White;
             Value_RealmPoints.Location = new Point(475, 210);
             Value_RealmPoints.Name = "Value_RealmPoints";
             Value_RealmPoints.Size = new Size(0, 14);
             Value_RealmPoints.TabIndex = 44;
+            Value_RealmPoints.Visible = false;
             // 
             // Title_TotalDamageDone
             // 
             Title_TotalDamageDone.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_TotalDamageDone.AutoSize = true;
-            Title_TotalDamageDone.BackColor = Color.DimGray;
+            Title_TotalDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Title_TotalDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_TotalDamageDone.ForeColor = Color.White;
             Title_TotalDamageDone.Location = new Point(327, 50);
@@ -154,22 +158,24 @@
             Title_TotalDamageDone.TabIndex = 43;
             Title_TotalDamageDone.Text = "Total Damage Done:";
             Title_TotalDamageDone.TextAlign = ContentAlignment.MiddleRight;
+            Title_TotalDamageDone.Visible = false;
             // 
             // Value_TotalDamageDone
             // 
             Value_TotalDamageDone.AutoSize = true;
-            Value_TotalDamageDone.BackColor = Color.DimGray;
+            Value_TotalDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Value_TotalDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_TotalDamageDone.ForeColor = Color.White;
             Value_TotalDamageDone.Location = new Point(475, 50);
             Value_TotalDamageDone.Name = "Value_TotalDamageDone";
             Value_TotalDamageDone.Size = new Size(0, 14);
             Value_TotalDamageDone.TabIndex = 42;
+            Value_TotalDamageDone.Visible = false;
             // 
             // Title_TotalHealingRecieved
             // 
             Title_TotalHealingRecieved.AutoSize = true;
-            Title_TotalHealingRecieved.BackColor = Color.DimGray;
+            Title_TotalHealingRecieved.BackColor = Color.FromArgb(4, 244, 4);
             Title_TotalHealingRecieved.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_TotalHealingRecieved.ForeColor = Color.White;
             Title_TotalHealingRecieved.Location = new Point(15, 140);
@@ -177,22 +183,24 @@
             Title_TotalHealingRecieved.Size = new Size(163, 14);
             Title_TotalHealingRecieved.TabIndex = 41;
             Title_TotalHealingRecieved.Text = "Total Healing Recieved:";
+            Title_TotalHealingRecieved.Visible = false;
             // 
             // Value_TotalHealingRecieved
             // 
             Value_TotalHealingRecieved.AutoSize = true;
-            Value_TotalHealingRecieved.BackColor = Color.DimGray;
+            Value_TotalHealingRecieved.BackColor = Color.FromArgb(4, 244, 4);
             Value_TotalHealingRecieved.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_TotalHealingRecieved.ForeColor = Color.White;
             Value_TotalHealingRecieved.Location = new Point(185, 140);
             Value_TotalHealingRecieved.Name = "Value_TotalHealingRecieved";
             Value_TotalHealingRecieved.Size = new Size(0, 14);
             Value_TotalHealingRecieved.TabIndex = 40;
+            Value_TotalHealingRecieved.Visible = false;
             // 
             // Title_TotalHealingDone
             // 
             Title_TotalHealingDone.AutoSize = true;
-            Title_TotalHealingDone.BackColor = Color.DimGray;
+            Title_TotalHealingDone.BackColor = Color.FromArgb(4, 244, 4);
             Title_TotalHealingDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_TotalHealingDone.ForeColor = Color.White;
             Title_TotalHealingDone.Location = new Point(41, 50);
@@ -200,22 +208,24 @@
             Title_TotalHealingDone.Size = new Size(137, 14);
             Title_TotalHealingDone.TabIndex = 39;
             Title_TotalHealingDone.Text = "Total Healing Done:";
+            Title_TotalHealingDone.Visible = false;
             // 
             // Value_TotalHealingDone
             // 
             Value_TotalHealingDone.AutoSize = true;
-            Value_TotalHealingDone.BackColor = Color.DimGray;
+            Value_TotalHealingDone.BackColor = Color.FromArgb(4, 244, 4);
             Value_TotalHealingDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_TotalHealingDone.ForeColor = Color.White;
             Value_TotalHealingDone.Location = new Point(185, 50);
             Value_TotalHealingDone.Name = "Value_TotalHealingDone";
             Value_TotalHealingDone.Size = new Size(0, 14);
             Value_TotalHealingDone.TabIndex = 38;
+            Value_TotalHealingDone.Visible = false;
             // 
             // Title_HealCritRate
             // 
             Title_HealCritRate.AutoSize = true;
-            Title_HealCritRate.BackColor = Color.DimGray;
+            Title_HealCritRate.BackColor = Color.FromArgb(4, 244, 4);
             Title_HealCritRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_HealCritRate.ForeColor = Color.White;
             Title_HealCritRate.Location = new Point(74, 70);
@@ -223,22 +233,24 @@
             Title_HealCritRate.Size = new Size(104, 14);
             Title_HealCritRate.TabIndex = 33;
             Title_HealCritRate.Text = "Heal Crit Rate:";
+            Title_HealCritRate.Visible = false;
             // 
             // Value_HealCritRate
             // 
             Value_HealCritRate.AutoSize = true;
-            Value_HealCritRate.BackColor = Color.DimGray;
+            Value_HealCritRate.BackColor = Color.FromArgb(4, 244, 4);
             Value_HealCritRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_HealCritRate.ForeColor = Color.White;
             Value_HealCritRate.Location = new Point(185, 70);
             Value_HealCritRate.Name = "Value_HealCritRate";
             Value_HealCritRate.Size = new Size(0, 14);
             Value_HealCritRate.TabIndex = 36;
+            Value_HealCritRate.Visible = false;
             // 
             // Title_AverageCritHealingDone
             // 
             Title_AverageCritHealingDone.AutoSize = true;
-            Title_AverageCritHealingDone.BackColor = Color.DimGray;
+            Title_AverageCritHealingDone.BackColor = Color.FromArgb(4, 244, 4);
             Title_AverageCritHealingDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_AverageCritHealingDone.ForeColor = Color.White;
             Title_AverageCritHealingDone.Location = new Point(49, 30);
@@ -246,22 +258,24 @@
             Title_AverageCritHealingDone.Size = new Size(129, 14);
             Title_AverageCritHealingDone.TabIndex = 31;
             Title_AverageCritHealingDone.Text = "Average Crit Heal:";
+            Title_AverageCritHealingDone.Visible = false;
             // 
             // Value_AverageCritHealingDone
             // 
             Value_AverageCritHealingDone.AutoSize = true;
-            Value_AverageCritHealingDone.BackColor = Color.DimGray;
+            Value_AverageCritHealingDone.BackColor = Color.FromArgb(4, 244, 4);
             Value_AverageCritHealingDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_AverageCritHealingDone.ForeColor = Color.White;
             Value_AverageCritHealingDone.Location = new Point(185, 30);
             Value_AverageCritHealingDone.Name = "Value_AverageCritHealingDone";
             Value_AverageCritHealingDone.Size = new Size(0, 14);
             Value_AverageCritHealingDone.TabIndex = 30;
+            Value_AverageCritHealingDone.Visible = false;
             // 
             // Title_AverageHealingDone
             // 
             Title_AverageHealingDone.AutoSize = true;
-            Title_AverageHealingDone.BackColor = Color.DimGray;
+            Title_AverageHealingDone.BackColor = Color.FromArgb(4, 244, 4);
             Title_AverageHealingDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_AverageHealingDone.ForeColor = Color.White;
             Title_AverageHealingDone.Location = new Point(77, 10);
@@ -269,12 +283,13 @@
             Title_AverageHealingDone.Size = new Size(101, 14);
             Title_AverageHealingDone.TabIndex = 29;
             Title_AverageHealingDone.Text = "Average Heal:";
+            Title_AverageHealingDone.Visible = false;
             // 
             // Title_AverageSpellCritDamageDone
             // 
             Title_AverageSpellCritDamageDone.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_AverageSpellCritDamageDone.AutoSize = true;
-            Title_AverageSpellCritDamageDone.BackColor = Color.DimGray;
+            Title_AverageSpellCritDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Title_AverageSpellCritDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_AverageSpellCritDamageDone.ForeColor = Color.White;
             Title_AverageSpellCritDamageDone.Location = new Point(315, 30);
@@ -283,12 +298,13 @@
             Title_AverageSpellCritDamageDone.TabIndex = 28;
             Title_AverageSpellCritDamageDone.Text = "Average Crit Damage:";
             Title_AverageSpellCritDamageDone.TextAlign = ContentAlignment.MiddleRight;
+            Title_AverageSpellCritDamageDone.Visible = false;
             // 
             // Title_AverageSpellDamageDone
             // 
             Title_AverageSpellDamageDone.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_AverageSpellDamageDone.AutoSize = true;
-            Title_AverageSpellDamageDone.BackColor = Color.DimGray;
+            Title_AverageSpellDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Title_AverageSpellDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_AverageSpellDamageDone.ForeColor = Color.White;
             Title_AverageSpellDamageDone.Location = new Point(343, 10);
@@ -297,39 +313,43 @@
             Title_AverageSpellDamageDone.TabIndex = 27;
             Title_AverageSpellDamageDone.Text = "Average Damage:";
             Title_AverageSpellDamageDone.TextAlign = ContentAlignment.MiddleRight;
+            Title_AverageSpellDamageDone.Visible = false;
             // 
             // Value_AverageHealingDone
             // 
             Value_AverageHealingDone.AutoSize = true;
-            Value_AverageHealingDone.BackColor = Color.DimGray;
+            Value_AverageHealingDone.BackColor = Color.FromArgb(4, 244, 4);
             Value_AverageHealingDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_AverageHealingDone.ForeColor = Color.White;
             Value_AverageHealingDone.Location = new Point(185, 10);
             Value_AverageHealingDone.Name = "Value_AverageHealingDone";
             Value_AverageHealingDone.Size = new Size(0, 14);
             Value_AverageHealingDone.TabIndex = 26;
+            Value_AverageHealingDone.Visible = false;
             // 
             // Value_AverageSpellCritDamageDone
             // 
             Value_AverageSpellCritDamageDone.AutoSize = true;
-            Value_AverageSpellCritDamageDone.BackColor = Color.DimGray;
+            Value_AverageSpellCritDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Value_AverageSpellCritDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_AverageSpellCritDamageDone.ForeColor = Color.White;
             Value_AverageSpellCritDamageDone.Location = new Point(474, 30);
             Value_AverageSpellCritDamageDone.Name = "Value_AverageSpellCritDamageDone";
             Value_AverageSpellCritDamageDone.Size = new Size(0, 14);
             Value_AverageSpellCritDamageDone.TabIndex = 25;
+            Value_AverageSpellCritDamageDone.Visible = false;
             // 
             // Value_AverageSpellDamageDone
             // 
             Value_AverageSpellDamageDone.AutoSize = true;
-            Value_AverageSpellDamageDone.BackColor = Color.DimGray;
+            Value_AverageSpellDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Value_AverageSpellDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_AverageSpellDamageDone.ForeColor = Color.White;
             Value_AverageSpellDamageDone.Location = new Point(475, 10);
             Value_AverageSpellDamageDone.Name = "Value_AverageSpellDamageDone";
             Value_AverageSpellDamageDone.Size = new Size(0, 14);
             Value_AverageSpellDamageDone.TabIndex = 24;
+            Value_AverageSpellDamageDone.Visible = false;
             // 
             // MoveLabel
             // 
@@ -347,18 +367,19 @@
             // Value_DamageTakenAbsorbed
             // 
             Value_DamageTakenAbsorbed.AutoSize = true;
-            Value_DamageTakenAbsorbed.BackColor = Color.DimGray;
+            Value_DamageTakenAbsorbed.BackColor = Color.FromArgb(4, 244, 4);
             Value_DamageTakenAbsorbed.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_DamageTakenAbsorbed.ForeColor = Color.White;
             Value_DamageTakenAbsorbed.Location = new Point(185, 210);
             Value_DamageTakenAbsorbed.Name = "Value_DamageTakenAbsorbed";
             Value_DamageTakenAbsorbed.Size = new Size(0, 14);
             Value_DamageTakenAbsorbed.TabIndex = 55;
+            Value_DamageTakenAbsorbed.Visible = false;
             // 
             // Title_DamageTakenAbsorbed
             // 
             Title_DamageTakenAbsorbed.AutoSize = true;
-            Title_DamageTakenAbsorbed.BackColor = Color.DimGray;
+            Title_DamageTakenAbsorbed.BackColor = Color.FromArgb(4, 244, 4);
             Title_DamageTakenAbsorbed.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_DamageTakenAbsorbed.ForeColor = Color.White;
             Title_DamageTakenAbsorbed.Location = new Point(9, 210);
@@ -366,11 +387,12 @@
             Title_DamageTakenAbsorbed.Size = new Size(169, 14);
             Title_DamageTakenAbsorbed.TabIndex = 53;
             Title_DamageTakenAbsorbed.Text = "Total Damage Absorbed:";
+            Title_DamageTakenAbsorbed.Visible = false;
             // 
             // Title_TotalDamageTaken
             // 
             Title_TotalDamageTaken.AutoSize = true;
-            Title_TotalDamageTaken.BackColor = Color.DimGray;
+            Title_TotalDamageTaken.BackColor = Color.FromArgb(4, 244, 4);
             Title_TotalDamageTaken.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_TotalDamageTaken.ForeColor = Color.White;
             Title_TotalDamageTaken.Location = new Point(31, 170);
@@ -378,23 +400,25 @@
             Title_TotalDamageTaken.Size = new Size(147, 14);
             Title_TotalDamageTaken.TabIndex = 57;
             Title_TotalDamageTaken.Text = "Total Damage Taken:";
+            Title_TotalDamageTaken.Visible = false;
             // 
             // Value_TotalDamageTaken
             // 
             Value_TotalDamageTaken.AutoSize = true;
-            Value_TotalDamageTaken.BackColor = Color.DimGray;
+            Value_TotalDamageTaken.BackColor = Color.FromArgb(4, 244, 4);
             Value_TotalDamageTaken.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_TotalDamageTaken.ForeColor = Color.White;
             Value_TotalDamageTaken.Location = new Point(185, 170);
             Value_TotalDamageTaken.Name = "Value_TotalDamageTaken";
             Value_TotalDamageTaken.Size = new Size(0, 14);
             Value_TotalDamageTaken.TabIndex = 56;
+            Value_TotalDamageTaken.Visible = false;
             // 
             // Title_Deaths
             // 
             Title_Deaths.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_Deaths.AutoSize = true;
-            Title_Deaths.BackColor = Color.DimGray;
+            Title_Deaths.BackColor = Color.FromArgb(4, 244, 4);
             Title_Deaths.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_Deaths.ForeColor = Color.White;
             Title_Deaths.Location = new Point(410, 180);
@@ -403,23 +427,25 @@
             Title_Deaths.TabIndex = 61;
             Title_Deaths.Text = "Deaths:";
             Title_Deaths.TextAlign = ContentAlignment.MiddleRight;
+            Title_Deaths.Visible = false;
             // 
             // Value_Deaths
             // 
             Value_Deaths.AutoSize = true;
-            Value_Deaths.BackColor = Color.DimGray;
+            Value_Deaths.BackColor = Color.FromArgb(4, 244, 4);
             Value_Deaths.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_Deaths.ForeColor = Color.White;
             Value_Deaths.Location = new Point(475, 180);
             Value_Deaths.Name = "Value_Deaths";
             Value_Deaths.Size = new Size(0, 14);
             Value_Deaths.TabIndex = 60;
+            Value_Deaths.Visible = false;
             // 
             // Title_DeathBlows
             // 
             Title_DeathBlows.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_DeathBlows.AutoSize = true;
-            Title_DeathBlows.BackColor = Color.DimGray;
+            Title_DeathBlows.BackColor = Color.FromArgb(4, 244, 4);
             Title_DeathBlows.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_DeathBlows.ForeColor = Color.White;
             Title_DeathBlows.Location = new Point(377, 160);
@@ -428,22 +454,24 @@
             Title_DeathBlows.TabIndex = 59;
             Title_DeathBlows.Text = "DeathBlows:";
             Title_DeathBlows.TextAlign = ContentAlignment.MiddleRight;
+            Title_DeathBlows.Visible = false;
             // 
             // Value_DeathBlows
             // 
             Value_DeathBlows.AutoSize = true;
-            Value_DeathBlows.BackColor = Color.DimGray;
+            Value_DeathBlows.BackColor = Color.FromArgb(4, 244, 4);
             Value_DeathBlows.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_DeathBlows.ForeColor = Color.White;
             Value_DeathBlows.Location = new Point(475, 160);
             Value_DeathBlows.Name = "Value_DeathBlows";
             Value_DeathBlows.Size = new Size(0, 14);
             Value_DeathBlows.TabIndex = 58;
+            Value_DeathBlows.Visible = false;
             // 
             // Title_DamageTakenConverted
             // 
             Title_DamageTakenConverted.AutoSize = true;
-            Title_DamageTakenConverted.BackColor = Color.DimGray;
+            Title_DamageTakenConverted.BackColor = Color.FromArgb(4, 244, 4);
             Title_DamageTakenConverted.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_DamageTakenConverted.ForeColor = Color.White;
             Title_DamageTakenConverted.Location = new Point(3, 190);
@@ -451,22 +479,24 @@
             Title_DamageTakenConverted.Size = new Size(175, 14);
             Title_DamageTakenConverted.TabIndex = 62;
             Title_DamageTakenConverted.Text = "Total Damage Converted:";
+            Title_DamageTakenConverted.Visible = false;
             // 
             // Value_DamageTakenConverted
             // 
             Value_DamageTakenConverted.AutoSize = true;
-            Value_DamageTakenConverted.BackColor = Color.DimGray;
+            Value_DamageTakenConverted.BackColor = Color.FromArgb(4, 244, 4);
             Value_DamageTakenConverted.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_DamageTakenConverted.ForeColor = Color.White;
             Value_DamageTakenConverted.Location = new Point(185, 190);
             Value_DamageTakenConverted.Name = "Value_DamageTakenConverted";
             Value_DamageTakenConverted.Size = new Size(0, 14);
             Value_DamageTakenConverted.TabIndex = 63;
+            Value_DamageTakenConverted.Visible = false;
             // 
             // Title_DamageTakenBlocked
             // 
             Title_DamageTakenBlocked.AutoSize = true;
-            Title_DamageTakenBlocked.BackColor = Color.DimGray;
+            Title_DamageTakenBlocked.BackColor = Color.FromArgb(4, 244, 4);
             Title_DamageTakenBlocked.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_DamageTakenBlocked.ForeColor = Color.White;
             Title_DamageTakenBlocked.Location = new Point(19, 230);
@@ -474,23 +504,25 @@
             Title_DamageTakenBlocked.Size = new Size(159, 14);
             Title_DamageTakenBlocked.TabIndex = 64;
             Title_DamageTakenBlocked.Text = "Total Damage Blocked:";
+            Title_DamageTakenBlocked.Visible = false;
             // 
             // Value_DamageTakenBlocked
             // 
             Value_DamageTakenBlocked.AutoSize = true;
-            Value_DamageTakenBlocked.BackColor = Color.DimGray;
+            Value_DamageTakenBlocked.BackColor = Color.FromArgb(4, 244, 4);
             Value_DamageTakenBlocked.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_DamageTakenBlocked.ForeColor = Color.White;
             Value_DamageTakenBlocked.Location = new Point(185, 230);
             Value_DamageTakenBlocked.Name = "Value_DamageTakenBlocked";
             Value_DamageTakenBlocked.Size = new Size(0, 14);
             Value_DamageTakenBlocked.TabIndex = 65;
+            Value_DamageTakenBlocked.Visible = false;
             // 
             // Title_IRS
             // 
             Title_IRS.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Title_IRS.AutoSize = true;
-            Title_IRS.BackColor = Color.DimGray;
+            Title_IRS.BackColor = Color.FromArgb(4, 244, 4);
             Title_IRS.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_IRS.ForeColor = Color.White;
             Title_IRS.Location = new Point(432, 229);
@@ -499,22 +531,24 @@
             Title_IRS.TabIndex = 69;
             Title_IRS.Text = "IRS:";
             Title_IRS.TextAlign = ContentAlignment.MiddleRight;
+            Title_IRS.Visible = false;
             // 
             // Value_IRS
             // 
             Value_IRS.AutoSize = true;
-            Value_IRS.BackColor = Color.DimGray;
+            Value_IRS.BackColor = Color.FromArgb(4, 244, 4);
             Value_IRS.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_IRS.ForeColor = Color.White;
             Value_IRS.Location = new Point(476, 229);
             Value_IRS.Name = "Value_IRS";
             Value_IRS.Size = new Size(0, 14);
             Value_IRS.TabIndex = 68;
+            Value_IRS.Visible = false;
             // 
             // Title_TotalSpellDamage
             // 
             Title_TotalSpellDamage.AutoSize = true;
-            Title_TotalSpellDamage.BackColor = Color.DimGray;
+            Title_TotalSpellDamage.BackColor = Color.FromArgb(4, 244, 4);
             Title_TotalSpellDamage.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_TotalSpellDamage.ForeColor = Color.White;
             Title_TotalSpellDamage.Location = new Point(70, 90);
@@ -522,11 +556,12 @@
             Title_TotalSpellDamage.Size = new Size(116, 14);
             Title_TotalSpellDamage.TabIndex = 37;
             Title_TotalSpellDamage.Text = "Total Spell Dmg:";
+            Title_TotalSpellDamage.Visible = false;
             // 
             // Title_TotalMeleeDamage
             // 
             Title_TotalMeleeDamage.AutoSize = true;
-            Title_TotalMeleeDamage.BackColor = Color.DimGray;
+            Title_TotalMeleeDamage.BackColor = Color.FromArgb(4, 244, 4);
             Title_TotalMeleeDamage.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_TotalMeleeDamage.ForeColor = Color.White;
             Title_TotalMeleeDamage.Location = new Point(70, 90);
@@ -534,11 +569,12 @@
             Title_TotalMeleeDamage.Size = new Size(122, 14);
             Title_TotalMeleeDamage.TabIndex = 37;
             Title_TotalMeleeDamage.Text = "Total Melee Dmg:";
+            Title_TotalMeleeDamage.Visible = false;
             // 
             // Title_AverageMeleeDamageDone
             // 
             Title_AverageMeleeDamageDone.AutoSize = true;
-            Title_AverageMeleeDamageDone.BackColor = Color.DimGray;
+            Title_AverageMeleeDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Title_AverageMeleeDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_AverageMeleeDamageDone.ForeColor = Color.White;
             Title_AverageMeleeDamageDone.Location = new Point(70, 90);
@@ -546,11 +582,12 @@
             Title_AverageMeleeDamageDone.Size = new Size(108, 14);
             Title_AverageMeleeDamageDone.TabIndex = 37;
             Title_AverageMeleeDamageDone.Text = "Crit Heal Ratio:";
+            Title_AverageMeleeDamageDone.Visible = false;
             // 
             // Title_AverageMeleeCritDamageDone
             // 
             Title_AverageMeleeCritDamageDone.AutoSize = true;
-            Title_AverageMeleeCritDamageDone.BackColor = Color.DimGray;
+            Title_AverageMeleeCritDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Title_AverageMeleeCritDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_AverageMeleeCritDamageDone.ForeColor = Color.White;
             Title_AverageMeleeCritDamageDone.Location = new Point(70, 90);
@@ -558,11 +595,12 @@
             Title_AverageMeleeCritDamageDone.Size = new Size(108, 14);
             Title_AverageMeleeCritDamageDone.TabIndex = 37;
             Title_AverageMeleeCritDamageDone.Text = "Crit Heal Ratio:";
+            Title_AverageMeleeCritDamageDone.Visible = false;
             // 
             // Title_MeleeCritRate
             // 
             Title_MeleeCritRate.AutoSize = true;
-            Title_MeleeCritRate.BackColor = Color.DimGray;
+            Title_MeleeCritRate.BackColor = Color.FromArgb(4, 244, 4);
             Title_MeleeCritRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_MeleeCritRate.ForeColor = Color.White;
             Title_MeleeCritRate.Location = new Point(70, 90);
@@ -570,11 +608,12 @@
             Title_MeleeCritRate.Size = new Size(108, 14);
             Title_MeleeCritRate.TabIndex = 37;
             Title_MeleeCritRate.Text = "Crit Heal Ratio:";
+            Title_MeleeCritRate.Visible = false;
             // 
             // Title_BlockRate
             // 
             Title_BlockRate.AutoSize = true;
-            Title_BlockRate.BackColor = Color.DimGray;
+            Title_BlockRate.BackColor = Color.FromArgb(4, 244, 4);
             Title_BlockRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_BlockRate.ForeColor = Color.White;
             Title_BlockRate.Location = new Point(70, 90);
@@ -582,11 +621,12 @@
             Title_BlockRate.Size = new Size(108, 14);
             Title_BlockRate.TabIndex = 37;
             Title_BlockRate.Text = "Crit Heal Ratio:";
+            Title_BlockRate.Visible = false;
             // 
             // Title_EvadeRate
             // 
             Title_EvadeRate.AutoSize = true;
-            Title_EvadeRate.BackColor = Color.DimGray;
+            Title_EvadeRate.BackColor = Color.FromArgb(4, 244, 4);
             Title_EvadeRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_EvadeRate.ForeColor = Color.White;
             Title_EvadeRate.Location = new Point(70, 90);
@@ -594,11 +634,12 @@
             Title_EvadeRate.Size = new Size(108, 14);
             Title_EvadeRate.TabIndex = 37;
             Title_EvadeRate.Text = "Crit Heal Ratio:";
+            Title_EvadeRate.Visible = false;
             // 
             // Title_ParryRate
             // 
             Title_ParryRate.AutoSize = true;
-            Title_ParryRate.BackColor = Color.DimGray;
+            Title_ParryRate.BackColor = Color.FromArgb(4, 244, 4);
             Title_ParryRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_ParryRate.ForeColor = Color.White;
             Title_ParryRate.Location = new Point(70, 90);
@@ -606,11 +647,12 @@
             Title_ParryRate.Size = new Size(108, 14);
             Title_ParryRate.TabIndex = 37;
             Title_ParryRate.Text = "Crit Heal Ratio:";
+            Title_ParryRate.Visible = false;
             // 
             // Title_MissRate
             // 
             Title_MissRate.AutoSize = true;
-            Title_MissRate.BackColor = Color.DimGray;
+            Title_MissRate.BackColor = Color.FromArgb(4, 244, 4);
             Title_MissRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_MissRate.ForeColor = Color.White;
             Title_MissRate.Location = new Point(70, 90);
@@ -618,11 +660,12 @@
             Title_MissRate.Size = new Size(108, 14);
             Title_MissRate.TabIndex = 37;
             Title_MissRate.Text = "Crit Heal Ratio:";
+            Title_MissRate.Visible = false;
             // 
             // Title_TotalPetDamage
             // 
             Title_TotalPetDamage.AutoSize = true;
-            Title_TotalPetDamage.BackColor = Color.DimGray;
+            Title_TotalPetDamage.BackColor = Color.FromArgb(4, 244, 4);
             Title_TotalPetDamage.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_TotalPetDamage.ForeColor = Color.White;
             Title_TotalPetDamage.Location = new Point(70, 90);
@@ -630,11 +673,12 @@
             Title_TotalPetDamage.Size = new Size(108, 14);
             Title_TotalPetDamage.TabIndex = 37;
             Title_TotalPetDamage.Text = "Crit Heal Ratio:";
+            Title_TotalPetDamage.Visible = false;
             // 
             // Title_PetMeleeCritRate
             // 
             Title_PetMeleeCritRate.AutoSize = true;
-            Title_PetMeleeCritRate.BackColor = Color.DimGray;
+            Title_PetMeleeCritRate.BackColor = Color.FromArgb(4, 244, 4);
             Title_PetMeleeCritRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_PetMeleeCritRate.ForeColor = Color.White;
             Title_PetMeleeCritRate.Location = new Point(70, 90);
@@ -642,11 +686,12 @@
             Title_PetMeleeCritRate.Size = new Size(108, 14);
             Title_PetMeleeCritRate.TabIndex = 37;
             Title_PetMeleeCritRate.Text = "Crit Heal Ratio:";
+            Title_PetMeleeCritRate.Visible = false;
             // 
             // Title_TotalPetHealing
             // 
             Title_TotalPetHealing.AutoSize = true;
-            Title_TotalPetHealing.BackColor = Color.DimGray;
+            Title_TotalPetHealing.BackColor = Color.FromArgb(4, 244, 4);
             Title_TotalPetHealing.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_TotalPetHealing.ForeColor = Color.White;
             Title_TotalPetHealing.Location = new Point(70, 90);
@@ -654,11 +699,12 @@
             Title_TotalPetHealing.Size = new Size(108, 14);
             Title_TotalPetHealing.TabIndex = 37;
             Title_TotalPetHealing.Text = "Crit Heal Ratio:";
+            Title_TotalPetHealing.Visible = false;
             // 
             // Title_GoldEarned
             // 
             Title_GoldEarned.AutoSize = true;
-            Title_GoldEarned.BackColor = Color.DimGray;
+            Title_GoldEarned.BackColor = Color.FromArgb(4, 244, 4);
             Title_GoldEarned.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Title_GoldEarned.ForeColor = Color.White;
             Title_GoldEarned.Location = new Point(70, 90);
@@ -666,155 +712,169 @@
             Title_GoldEarned.Size = new Size(108, 14);
             Title_GoldEarned.TabIndex = 37;
             Title_GoldEarned.Text = "Crit Heal Ratio:";
+            Title_GoldEarned.Visible = false;
             // 
             // Value_TotalSpellDamage
             // 
             Value_TotalSpellDamage.AutoSize = true;
-            Value_TotalSpellDamage.BackColor = Color.DimGray;
+            Value_TotalSpellDamage.BackColor = Color.FromArgb(4, 244, 4);
             Value_TotalSpellDamage.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_TotalSpellDamage.ForeColor = Color.White;
             Value_TotalSpellDamage.Location = new Point(185, 90);
             Value_TotalSpellDamage.Name = "Value_TotalSpellDamage";
             Value_TotalSpellDamage.Size = new Size(0, 14);
             Value_TotalSpellDamage.TabIndex = 34;
+            Value_TotalSpellDamage.Visible = false;
             // 
             // Value_TotalMeleeDamage
             // 
             Value_TotalMeleeDamage.AutoSize = true;
-            Value_TotalMeleeDamage.BackColor = Color.DimGray;
+            Value_TotalMeleeDamage.BackColor = Color.FromArgb(4, 244, 4);
             Value_TotalMeleeDamage.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_TotalMeleeDamage.ForeColor = Color.White;
             Value_TotalMeleeDamage.Location = new Point(185, 90);
             Value_TotalMeleeDamage.Name = "Value_TotalMeleeDamage";
             Value_TotalMeleeDamage.Size = new Size(0, 14);
             Value_TotalMeleeDamage.TabIndex = 34;
+            Value_TotalMeleeDamage.Visible = false;
             // 
             // Value_AverageMeleeDamageDone
             // 
             Value_AverageMeleeDamageDone.AutoSize = true;
-            Value_AverageMeleeDamageDone.BackColor = Color.DimGray;
+            Value_AverageMeleeDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Value_AverageMeleeDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_AverageMeleeDamageDone.ForeColor = Color.White;
             Value_AverageMeleeDamageDone.Location = new Point(185, 90);
             Value_AverageMeleeDamageDone.Name = "Value_AverageMeleeDamageDone";
             Value_AverageMeleeDamageDone.Size = new Size(0, 14);
             Value_AverageMeleeDamageDone.TabIndex = 34;
+            Value_AverageMeleeDamageDone.Visible = false;
             // 
             // Value_AverageMeleeCritDamageDone
             // 
             Value_AverageMeleeCritDamageDone.AutoSize = true;
-            Value_AverageMeleeCritDamageDone.BackColor = Color.DimGray;
+            Value_AverageMeleeCritDamageDone.BackColor = Color.FromArgb(4, 244, 4);
             Value_AverageMeleeCritDamageDone.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_AverageMeleeCritDamageDone.ForeColor = Color.White;
             Value_AverageMeleeCritDamageDone.Location = new Point(185, 90);
             Value_AverageMeleeCritDamageDone.Name = "Value_AverageMeleeCritDamageDone";
             Value_AverageMeleeCritDamageDone.Size = new Size(0, 14);
             Value_AverageMeleeCritDamageDone.TabIndex = 34;
+            Value_AverageMeleeCritDamageDone.Visible = false;
             // 
             // Value_MeleeCritRate
             // 
             Value_MeleeCritRate.AutoSize = true;
-            Value_MeleeCritRate.BackColor = Color.DimGray;
+            Value_MeleeCritRate.BackColor = Color.FromArgb(4, 244, 4);
             Value_MeleeCritRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_MeleeCritRate.ForeColor = Color.White;
             Value_MeleeCritRate.Location = new Point(185, 90);
             Value_MeleeCritRate.Name = "Value_MeleeCritRate";
             Value_MeleeCritRate.Size = new Size(0, 14);
             Value_MeleeCritRate.TabIndex = 34;
+            Value_MeleeCritRate.Visible = false;
             // 
             // Value_BlockRate
             // 
             Value_BlockRate.AutoSize = true;
-            Value_BlockRate.BackColor = Color.DimGray;
+            Value_BlockRate.BackColor = Color.FromArgb(4, 244, 4);
             Value_BlockRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_BlockRate.ForeColor = Color.White;
             Value_BlockRate.Location = new Point(185, 90);
             Value_BlockRate.Name = "Value_BlockRate";
             Value_BlockRate.Size = new Size(0, 14);
             Value_BlockRate.TabIndex = 34;
+            Value_BlockRate.Visible = false;
             // 
             // Value_EvadeRate
             // 
             Value_EvadeRate.AutoSize = true;
-            Value_EvadeRate.BackColor = Color.DimGray;
+            Value_EvadeRate.BackColor = Color.FromArgb(4, 244, 4);
             Value_EvadeRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_EvadeRate.ForeColor = Color.White;
             Value_EvadeRate.Location = new Point(185, 90);
             Value_EvadeRate.Name = "Value_EvadeRate";
             Value_EvadeRate.Size = new Size(0, 14);
             Value_EvadeRate.TabIndex = 34;
+            Value_EvadeRate.Visible = false;
             // 
             // Value_ParryRate
             // 
             Value_ParryRate.AutoSize = true;
-            Value_ParryRate.BackColor = Color.DimGray;
+            Value_ParryRate.BackColor = Color.FromArgb(4, 244, 4);
             Value_ParryRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_ParryRate.ForeColor = Color.White;
             Value_ParryRate.Location = new Point(185, 90);
             Value_ParryRate.Name = "Value_ParryRate";
             Value_ParryRate.Size = new Size(0, 14);
             Value_ParryRate.TabIndex = 34;
+            Value_ParryRate.Visible = false;
             // 
             // Value_MissRate
             // 
             Value_MissRate.AutoSize = true;
-            Value_MissRate.BackColor = Color.DimGray;
+            Value_MissRate.BackColor = Color.FromArgb(4, 244, 4);
             Value_MissRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_MissRate.ForeColor = Color.White;
             Value_MissRate.Location = new Point(185, 90);
             Value_MissRate.Name = "Value_MissRate";
             Value_MissRate.Size = new Size(0, 14);
             Value_MissRate.TabIndex = 34;
+            Value_MissRate.Visible = false;
             // 
             // Value_TotalPetDamage
             // 
             Value_TotalPetDamage.AutoSize = true;
-            Value_TotalPetDamage.BackColor = Color.DimGray;
+            Value_TotalPetDamage.BackColor = Color.FromArgb(4, 244, 4);
             Value_TotalPetDamage.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_TotalPetDamage.ForeColor = Color.White;
             Value_TotalPetDamage.Location = new Point(185, 90);
             Value_TotalPetDamage.Name = "Value_TotalPetDamage";
             Value_TotalPetDamage.Size = new Size(0, 14);
             Value_TotalPetDamage.TabIndex = 34;
+            Value_TotalPetDamage.Visible = false;
             // 
             // Value_PetMeleeCritRate
             // 
             Value_PetMeleeCritRate.AutoSize = true;
-            Value_PetMeleeCritRate.BackColor = Color.DimGray;
+            Value_PetMeleeCritRate.BackColor = Color.FromArgb(4, 244, 4);
             Value_PetMeleeCritRate.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_PetMeleeCritRate.ForeColor = Color.White;
             Value_PetMeleeCritRate.Location = new Point(185, 90);
             Value_PetMeleeCritRate.Name = "Value_PetMeleeCritRate";
             Value_PetMeleeCritRate.Size = new Size(0, 14);
             Value_PetMeleeCritRate.TabIndex = 34;
+            Value_PetMeleeCritRate.Visible = false;
             // 
             // Value_TotalPetHealing
             // 
             Value_TotalPetHealing.AutoSize = true;
-            Value_TotalPetHealing.BackColor = Color.DimGray;
+            Value_TotalPetHealing.BackColor = Color.FromArgb(4, 244, 4);
             Value_TotalPetHealing.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_TotalPetHealing.ForeColor = Color.White;
             Value_TotalPetHealing.Location = new Point(185, 90);
             Value_TotalPetHealing.Name = "Value_TotalPetHealing";
             Value_TotalPetHealing.Size = new Size(0, 14);
             Value_TotalPetHealing.TabIndex = 34;
+            Value_TotalPetHealing.Visible = false;
             // 
             // Value_GoldEarned
             // 
             Value_GoldEarned.AutoSize = true;
-            Value_GoldEarned.BackColor = Color.DimGray;
+            Value_GoldEarned.BackColor = Color.FromArgb(4, 244, 4);
             Value_GoldEarned.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
             Value_GoldEarned.ForeColor = Color.White;
             Value_GoldEarned.Location = new Point(185, 90);
             Value_GoldEarned.Name = "Value_GoldEarned";
             Value_GoldEarned.Size = new Size(0, 14);
             Value_GoldEarned.TabIndex = 34;
+            Value_GoldEarned.Visible = false;
             // 
             // Overlay
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.DimGray;
+            BackColor = Color.FromArgb(4, 244, 4);
             ClientSize = new Size(598, 260);
             Controls.Add(Title_IRS);
             Controls.Add(Value_IRS);
@@ -883,7 +943,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Overlay";
             TopMost = true;
-            TransparencyKey = Color.DimGray;
+            TransparencyKey = Color.FromArgb(4, 244, 4);
             Load += Overlay_Load;
             ResumeLayout(false);
             PerformLayout();
