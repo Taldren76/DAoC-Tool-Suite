@@ -1,3 +1,10 @@
+DAoC Tool Suite BETA 0.9.2
+---
+Changes:
+1. ChimpTool - Fixed the Launch issue. 
+2. ChimpTool - Added the ability to associate an AHK script with a character. You may add one script per character per account. You do not need AHK installed to use the scripts as it is fully integrated into ChimpTool. Just besure the that your script does not contain #Warn and is version 1.1 compatible. Once associated, AHK will be running the script until you quit the game. This means you can't swap scripts without completely leaving the game as logging out to the character select screen will still have the last character selected's AHK script still active.
+3. ChimpTool - Added a menu. Still fleshing out the options so not everything is functional.
+
 DAoC Tool Suite 0.9.1 BETA
 ---
 Changes:
