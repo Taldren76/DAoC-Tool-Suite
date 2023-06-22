@@ -1,3 +1,20 @@
+DAoC Tool Suite 0.9.1 BETA
+---
+Changes:
+1. Users can now launch characters directly into game from ChimpTool via the launch button. Will prompt you for the game.dll directory and your login credentials. These are stored in your local database file and are not backed up to the json file in your documents folder. If you restore the DB you will have to re-enter the credentials. If you mess up your credentials, you can change them by Shift-Clicking the Launch button.
+2. Each account in the ChimpTool has its own DAOC credentials. So you can setup multiple accounts for each of your DAoC accounts.
+3. Vastly improved the clarity of the text in the LogTool Overlay.
+4. Added the ability to customize what statistics are shown in the LogTool Overlay.
+Bug Fixes:
+1. Many localization fixes (Thanks Koxi)
+2. Code cleanup pass.
+
+I recommend uninstalling the previous version before installing the new one. Be sure to create backups of your DBs in ChimpTool and CharacterTool.
+
+Two files are available:
+1. DAoC_Tool_Suite_Beta_0.9.1.zip - Can be unzipped anywhere are run.
+2. DAoC_Tool_Suite_Beta_0.9.1_WinInstaller.zip - Full windows installer.
+
 
 DAoC Tool Suite Beta v0.7.1
 ---
