@@ -1,7 +1,9 @@
 ﻿using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Controls;
 using System.Xml.Linq;
+using AutoHotkey.Interop;
 using DAoCToolSuite.ChimpTool.Exceptions;
 using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.HeraldAPI;
@@ -10,6 +12,7 @@ using DAoCToolSuite.ChimpTool.Selenium;
 using DAoCToolSuite.ChimpTool.Settings;
 using Logger;
 using Logger.Enums;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using SQLLibrary;
 using SQLLibrary.Enums;
@@ -18,6 +21,27 @@ namespace DAoCToolSuite.ChimpTool
 {
     public partial class MainForm : Form
     {
+        private static AutoHotkeyEngine? _AHK = null;
+        public static AutoHotkeyEngine AHK
+        {
+            get
+            {
+                if (_AHK == null)
+                    _AHK = GetAHKEngine();
+                return _AHK;
+            }
+            set
+            {
+                _AHK = value;
+            }
+        }
+        private static AutoHotkeyEngine GetAHKEngine(int version = 1)
+        {
+            //if (version == 2)
+            //    return new AutoHotkeyEngine(AutoHotKeyVersion.v2);
+            //else
+            return new AutoHotkeyEngine(AutoHotKeyVersion.v1);
+        }
         public static System.Windows.Forms.Timer Timer { get; set; } = new();
         internal static WaitCursor WaitCursor { get; set; } = new();
         private static System.Windows.Forms.ToolTip MouseOverTooltip { get; set; } = new();
@@ -94,22 +118,26 @@ namespace DAoCToolSuite.ChimpTool
                 RefreshAllTimer = false;
                 RefreshAllButton.Text = "Refresh All";
                 RefreshAllButton.Enabled = true;
+                refreshAllToolStripMenuItem.Enabled = true;
             }
             else if (RefreshAllTimer && DateTime.Now < Properties.Settings.Default.NextRefreshAll)
             {
                 TimeSpan Diff = Properties.Settings.Default.NextRefreshAll - DateTime.Now;
                 RefreshAllButton.Text = Convert.ToInt32(Diff.TotalSeconds).ToString();
                 RefreshAllButton.Enabled = false;
+                refreshAllToolStripMenuItem.Enabled = false;
             }
             else if (!RefreshAllTimer && BindingSource.Count > 0)
             {
                 RefreshAllButton.Text = "Refresh All";
                 RefreshAllButton.Enabled = true;
+                refreshAllToolStripMenuItem.Enabled = true;
             }
             else if (!RefreshAllTimer && BindingSource.Count < 1)
             {
                 RefreshAllButton.Text = "Refresh All";
                 RefreshAllButton.Enabled = false;
+                refreshAllToolStripMenuItem.Enabled = false;
             }
             #endregion
             #region Refresh Button State
@@ -118,22 +146,26 @@ namespace DAoCToolSuite.ChimpTool
                 RefreshTimer = false;
                 RefreshButton.Text = "Refresh";
                 RefreshButton.Enabled = true;
+                refreshToolStripMenuItem.Enabled = true;
             }
             else if (RefreshTimer && DateTime.Now < Properties.Settings.Default.NextRefresh)
             {
                 TimeSpan Diff = Properties.Settings.Default.NextRefresh - DateTime.Now;
                 RefreshButton.Text = Convert.ToInt32(Diff.TotalSeconds).ToString();
                 RefreshButton.Enabled = false;
+                refreshToolStripMenuItem.Enabled = false;
             }
             else if (!RefreshTimer && BindingSource.Count > 0)
             {
                 RefreshButton.Text = "Refresh";
                 RefreshButton.Enabled = true;
+                refreshToolStripMenuItem.Enabled = true;
             }
             else if (!RefreshTimer && BindingSource.Count < 1)
             {
                 RefreshButton.Text = "Refresh";
                 RefreshButton.Enabled = false;
+                refreshToolStripMenuItem.Enabled = false;
             }
             #endregion
             #region Debug Log Button State
@@ -244,7 +276,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void OnTopCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (sender is not CheckBox checkbox)
+            if (sender is not System.Windows.Forms.CheckBox checkbox)
             {
                 return;
             }
@@ -329,9 +361,8 @@ namespace DAoCToolSuite.ChimpTool
 
         private static readonly object thisLock = new();
 
-        private void DebugLog_Click(object sender, EventArgs e)
+        private void ProduceDebugLog()
         {
-            DebugLogButton.Enabled = false;
             try
             {
                 string contents;
@@ -358,6 +389,12 @@ namespace DAoCToolSuite.ChimpTool
             {
                 Logger.Error(ex);
             }
+        }
+
+        private void DebugLog_Click(object sender, EventArgs e)
+        {
+            DebugLogButton.Enabled = false;
+            ProduceDebugLog();
             DebugLogButton.Enabled = true;
         }
         #endregion
@@ -509,24 +546,54 @@ namespace DAoCToolSuite.ChimpTool
             }
 
         }
+
+        private void backupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BackupButton.Enabled = false;
+            backupToolStripMenuItem.Enabled = false;
+            WaitCursor.Push();
+            Logger.Debug("Backup MenuItem has been pressed.");
+            LoadCharacters();
+            BackupToChimpRepository();
+            Logger.Debug($"Backup created at {BackupRepositoryFullPath}");
+            RestoreButton.Enabled = File.Exists(BackupRepositoryFullPath);
+            restoreToolStripMenuItem.Enabled = File.Exists(BackupRepositoryFullPath);
+            WaitCursor.Pop();
+            BackupButton.Enabled = true;
+            backupToolStripMenuItem.Enabled = false;
+        }
+
+        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RestoreButton.Enabled = false;
+            restoreToolStripMenuItem.Enabled = false;
+            WaitCursor.Push();
+            Logger.Debug("Restore button has been pressed.");
+            PerformDBRestore();
+            WaitCursor.Pop();
+            RestoreButton.Enabled = true;
+            restoreToolStripMenuItem.Enabled = true;
+        }
+
         private void BackupButton_Click(object sender, EventArgs e)
         {
             BackupButton.Enabled = false;
+            backupToolStripMenuItem.Enabled = false;
             WaitCursor.Push();
             Logger.Debug("Backup button has been pressed.");
             LoadCharacters();
             BackupToChimpRepository();
             Logger.Debug($"Backup created at {BackupRepositoryFullPath}");
             RestoreButton.Enabled = File.Exists(BackupRepositoryFullPath);
+            restoreToolStripMenuItem.Enabled = File.Exists(BackupRepositoryFullPath);
             WaitCursor.Pop();
+            restoreToolStripMenuItem.Enabled = true;
             BackupButton.Enabled = true;
 
         }
-        private void RestoreButton_Click(object sender, EventArgs e)
+
+        private void PerformDBRestore()
         {
-            RestoreButton.Enabled = false;
-            WaitCursor.Push();
-            Logger.Debug("Restore button has been pressed.");
             SearchGridView.Visible = false;
             LoadingTabelLabel.Visible = true;
             GridPanel.Refresh();
@@ -545,8 +612,17 @@ namespace DAoCToolSuite.ChimpTool
                 Logger.Debug($"No backup chimp repository found at {BackupRepositoryFullPath}");
                 RestoreButton.Enabled = false;
             }
+        }
+        private void RestoreButton_Click(object sender, EventArgs e)
+        {
+            RestoreButton.Enabled = false;
+            restoreToolStripMenuItem.Enabled = false;
+            WaitCursor.Push();
+            Logger.Debug("Restore button has been pressed.");
+            PerformDBRestore();
             WaitCursor.Pop();
             RestoreButton.Enabled = true;
+            restoreToolStripMenuItem.Enabled = true;
         }
         #endregion
 
@@ -759,11 +835,11 @@ namespace DAoCToolSuite.ChimpTool
 
             if ((CharactersByAccountLastDateUpdated is null || CharactersByAccountLastDateUpdated.Count == 0) && DateTime.Now > Properties.Settings.Default.NextLoadAll)
             {
-                LoadAllButton.Visible = true;
+                addAllCharactersToolStripMenuItem.Enabled = true;
             }
             else
             {
-                LoadAllButton.Visible = false;
+                addAllCharactersToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -773,51 +849,11 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void LoadAllButton_Click(object sender, EventArgs e)
         {
-            LoadAllButton.Enabled = false;
-            DialogResult dlg = MessageBox.Show($"WARNING: This can only be used once per 24 hours.\nDo you wish to proceed?", "Load All Characters", MessageBoxButtons.YesNo);
-            if (dlg == DialogResult.No)
-            {
-                LoadAllButton.Enabled = true;
-                return;
-            }
-            Properties.Settings.Default.NextLoadAll = DateTime.Now.AddDays(1);
-            Properties.Settings.Default.Save();
 
-            LoadAllButton.Visible = false;
-
-            SearchProgressBar.Minimum = 0;
-            SearchProgressBar.Maximum = CharacterList.Count;
-            SearchProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
-            SearchProgressBar.Value = 0;
-            SearchProgressBar.CustomText = "Loading Characters";
-            SearchProgressBar.Visible = true;
-            SearchProgressBar.Refresh();
-            var useSelenium = UseSelenium;
-            UseSelenium = false;
-            try
-            {
-                foreach (var character in CharacterList)
-                {
-                    SearchProgressBar.Value += 1;
-                    AddCharacter(character.Key);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
-            UseSelenium = useSelenium;
-            SearchProgressBar.Visible = false;
-            LoadAllButton.Enabled = false;
-
-            LoadCharacters();
-            CalculateRPTotals();
         }
 
-        private void RefreshButton_Click(object sender, EventArgs e)
+        private void PerformRefresh()
         {
-            RefreshButton.Enabled = false;
-            Logger.Debug("Refresh button clicked.");
             WaitCursor.Push();
             DataGridViewSelectedRowCollection rowsToRefresh = SearchGridView.SelectedRows;
             Logger.Debug($"There are {rowsToRefresh.Count} selected rows.");
@@ -848,6 +884,30 @@ namespace DAoCToolSuite.ChimpTool
             RefreshTimer = true;
             Properties.Settings.Default.NextRefresh = DateTime.Now.AddSeconds(10);
             Properties.Settings.Default.Save();
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem? menuItem = sender as ToolStripMenuItem;
+            if (menuItem is null)
+                return;
+            menuItem.Enabled = false;
+            Logger.Debug("Refresh MenuItem clicked.");
+            if (Properties.Settings.Default.NextRefresh > DateTime.Now)
+            {
+                _ = MessageBox.Show($"Refresh can only be done every 10 seconds.\nPlease try again later.", "Refresh Character", MessageBoxButtons.OK);
+                menuItem.Enabled = true;
+                return;
+            }
+            PerformRefresh();
+            menuItem.Enabled = true;
+        }
+
+        private void RefreshButton_Click(object sender, EventArgs e)
+        {
+            Logger.Debug("Refresh button clicked.");
+            RefreshButton.Enabled = false;
+            PerformRefresh();
         }
 
         private void RefreshChimps(List<ChimpJson> chimpsToBeRefreshed, DateTime date)
@@ -923,9 +983,8 @@ namespace DAoCToolSuite.ChimpTool
             }
         }
 
-        private void RefreshAllButton_Click(object sender, EventArgs e)
+        private void PerformRefreshAll()
         {
-            RefreshAllButton.Enabled = false;
             if (CharactersByAccountLastDateUpdated is null)
             {
                 return;
@@ -942,6 +1001,12 @@ namespace DAoCToolSuite.ChimpTool
             Properties.Settings.Default.NextRefreshAll = DateTime.Now.AddMinutes(1);
             Properties.Settings.Default.Save();
             RefreshAllTimer = true;
+        }
+
+        private void RefreshAllButton_Click(object sender, EventArgs e)
+        {
+            RefreshAllButton.Enabled = false;
+            PerformRefreshAll();
         }
 
         private void RemoveButton_Click(object sender, EventArgs e)
@@ -1178,7 +1243,7 @@ namespace DAoCToolSuite.ChimpTool
         }
 
 
-        private CredentialModel? GetCredentials(bool force=false)
+        private CredentialModel? GetCredentials(bool force = false)
         {
             List<CredentialModel> credentials = SqliteDataAccess.LoadAccountCredentials(AccountComboBox.Text);
             if (force || string.IsNullOrEmpty(Properties.Settings.Default.GameDllLocation) || credentials is null || credentials.Count == 0 || string.IsNullOrEmpty(credentials.First().Login) || string.IsNullOrEmpty(credentials.First().Password))
@@ -1216,20 +1281,49 @@ namespace DAoCToolSuite.ChimpTool
             }
         }
 
-        private void LaunchButton_Click(object sender, EventArgs e)
+        private string HidePassword(string? password)
         {
-            CredentialModel? credentials; 
+            if (password == null)
+                return "null";
+            string hidden = "";
+            for (int index = 0; index < password.Length; index++)
+            {
+                hidden += "*";
+            }
+            return hidden;
+        }
+
+        private string ObscureUserName(string? userName)
+        {
+            if (userName == null)
+                return "null";
+            string obscured = userName.Substring(0, 2);
+            for (int index = 2; index < userName.Length; index++)
+            {
+                obscured += "*";
+            }
+            return obscured;
+        }
+
+        private void PerformLaunch()
+        {
+            CredentialModel? credentials;
             if (ModifierKeys.HasFlag(Keys.Shift))
             {
+                Logger.Debug("Shift key detected.");
                 credentials = GetCredentials(true);
             }
             else
             {
                 credentials = GetCredentials();
             }
-            
+
+
             if (credentials is null)
+            {
+                Logger.Warn("Credentials returned from DB are invalid.");
                 return;
+            }
 
             var login = credentials.Login;
             var password = credentials.Password;
@@ -1238,6 +1332,28 @@ namespace DAoCToolSuite.ChimpTool
             var charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
             var serverName = row.Cells["Server"].Value.ToString();
             var realm = row.Cells["Realm"].Value.ToString();
+            var webID = row.Cells["WebID"].Value.ToString();
+            var account = AccountComboBox.Text;
+            Logger.Debug($"Information read from the selected item Character:{charName ?? "null"} Server:{serverName ?? "null"} Realm:{realm ?? "null"}");
+
+            if (webID is not null)
+            {
+                try
+                {
+                    AHKModel? model = SqliteDataAccess.LoadAHKModelByWebID(webID, account);
+                    if (model is not null)
+                    {
+                        AHK = GetAHKEngine(model.Version ?? 1);
+                        
+                        Logger.Debug($"Loading {model.AHKScriptPath}");
+                        AHK.LoadFile(model.AHKScriptPath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                }
+            }
 
             int realmIndex = 0;
             switch (realm)
@@ -1255,11 +1371,26 @@ namespace DAoCToolSuite.ChimpTool
 
 
             string json = ReadServerList();
+            if (string.IsNullOrEmpty(json) || json.Equals("{}"))
+            {
+                Logger.Error("SeverConfig.json is invalid.");
+                return;
+            }
+
             ServerListINI SLI = JsonConvert.DeserializeObject<ServerListINI>(json) ?? new ServerListINI();
+            if (SLI is null)
+            {
+                Logger.Error("Deserialization of ServerListINI from json is invalid.");
+                return;
+            }
             Servers? servers = SLI.Servers;
             List<Server>? serversList = servers?.Server;
             Server? server = serversList?.Where(x => x is not null && x.Name is not null && x.Name.ToLower().Equals(serverName?.ToLower())).FirstOrDefault();
-            if (server is null) return;
+            if (server is null)
+            {
+                Logger.Error($"Could not find Server {server} in the ServerConfig.json");
+                return;
+            }
 
             var index = server.Index;
             var port = server.Port;
@@ -1268,7 +1399,7 @@ namespace DAoCToolSuite.ChimpTool
             var path = Properties.Settings.Default.GameDllLocation;
             if (path == null) return;
 
-            //string connectionString = $"{path}\\game.dll {ip} {port} {index} {login} {password} {charName} {realmIndex}";
+            Logger.Debug($"Executing: {path}\\game.dll {ip} {port} {index} {ObscureUserName(login)} {HidePassword(password)} {charName} {realmIndex}");
             try
             {
                 var p = new System.Diagnostics.Process();
@@ -1278,18 +1409,164 @@ namespace DAoCToolSuite.ChimpTool
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.CreateNoWindow = true;
+                p.EnableRaisingEvents = true;
+                p.Exited -= GameOver;
+                p.Exited += GameOver;
+                Logger.Debug("Starting game.dll process");
                 p.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error(ex);
                 SqliteDataAccess.AddAccountCredentials(AccountComboBox.Text, null, null);
             }
         }
 
-        private void SearchGridView_DoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void LaunchButton_Click(object sender, EventArgs e)
         {
-            CredentialModel? credentials = GetCredentials();
+            LaunchButton.Enabled = false;
+            launchToolStripMenuItem.Enabled = false;
+            PerformLaunch();
+        }
+
+        private void GameOver(object? sender, EventArgs e)
+        {
+            try
+            {
+                Logger.Debug("game.dll process ended");
+                if (LaunchButton.InvokeRequired)
+                {
+                    LaunchButton.Invoke(LaunchButtonEnable);
+                }
+                else
+                {
+                    Logger.Debug("Invoked Was not Required");
+                    LaunchButton.Enabled = true;
+                    launchToolStripMenuItem.Enabled = true;
+                    AHK.Terminate();
+                    _AHK = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+        }
+
+        private void LaunchButtonEnable()
+        {
+            Logger.Debug("Invoked Was Required");
+            LaunchButton.Enabled = true;
+            launchToolStripMenuItem.Enabled = true;
+            AHK.Terminate();
+            _AHK = null;
+        }
+
+        private void launchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchButton.Enabled = false;
+            launchToolStripMenuItem.Enabled = false;
+            PerformLaunch();
+        }
+
+        private void dAoCCredentialsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CredentialForm form = new CredentialForm()
+            {
+                Owner = this,
+                StartPosition = FormStartPosition.Manual,
+                AccountName = AccountComboBox.Text
+            };
+            form.SetLocation();
+            form.ShowDialog();
+        }
+
+        private void editToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void associateAHKToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var row = SearchGridView.SelectedRows[0];
+            var charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
+            var serverName = row.Cells["Server"].Value.ToString();
+            var realm = row.Cells["Realm"].Value.ToString();
+            var webID = row.Cells["WebID"].Value.ToString();
+            if (string.IsNullOrEmpty(charName) || string.IsNullOrEmpty(serverName) || string.IsNullOrEmpty(realm) || string.IsNullOrEmpty(webID))
+                return;
+            AHKForm form = new AHKForm(charName, realm, serverName, webID, AccountComboBox.Text)
+            {
+                Owner = this,
+                StartPosition = FormStartPosition.Manual
+            };
+            form.SetLocation();
+            form.ShowDialog();
+
+        }
+
+        private void logViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            logViewerToolStripMenuItem.Enabled = false;
+            ProduceDebugLog();
+            logViewerToolStripMenuItem.Enabled = true;
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            About about = new About()
+            {
+                Owner = this,
+                StartPosition = FormStartPosition.Manual
+            };
+            about.SetLocation();
+            about.ShowDialog();
+        }
+
+        private void addAllCharactersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            addAllCharactersToolStripMenuItem.Enabled = false;
+            DialogResult dlg = MessageBox.Show($"WARNING: This can only be used once per 24 hours.\nDo you wish to proceed?", "Load All Characters", MessageBoxButtons.YesNo);
+            if (dlg == DialogResult.No)
+            {
+                addAllCharactersToolStripMenuItem.Enabled = true;
+                return;
+            }
+            Properties.Settings.Default.NextLoadAll = DateTime.Now.AddDays(1);
+            Properties.Settings.Default.Save();
+
+            SearchProgressBar.Minimum = 0;
+            SearchProgressBar.Maximum = CharacterList.Count;
+            SearchProgressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
+            SearchProgressBar.Value = 0;
+            SearchProgressBar.CustomText = "Loading Characters";
+            SearchProgressBar.Visible = true;
+            SearchProgressBar.Refresh();
+            var useSelenium = UseSelenium;
+            UseSelenium = false;
+            try
+            {
+                foreach (var character in CharacterList)
+                {
+                    SearchProgressBar.Value += 1;
+                    AddCharacter(character.Key);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            UseSelenium = useSelenium;
+            SearchProgressBar.Visible = false;
+
+            LoadCharacters();
+            CalculateRPTotals();
+        }
+
+        private void refreshAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            refreshAllToolStripMenuItem.Enabled = false;
+            PerformRefreshAll();
         }
     }
 }

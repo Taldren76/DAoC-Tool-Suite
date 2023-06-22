@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +21,14 @@ namespace DAoCToolSuite.ChimpTool
         {
             InitializeComponent();
             GameLocationTextBox.Text = string.IsNullOrEmpty(Properties.Settings.Default.GameDllLocation) ? "C:\\" : Properties.Settings.Default.GameDllLocation;
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
             if (!string.IsNullOrEmpty(AccountName))
             {
-                CredentialModel? credentialModel = SqliteDataAccess.LoadAccountCredentials(AccountName).FirstOrDefault(); 
+                CredentialModel? credentialModel = SqliteDataAccess.LoadAccountCredentials(AccountName).FirstOrDefault();
                 if (credentialModel != null)
                 {
                     LoginTextBox.Text = credentialModel.Login;
@@ -50,9 +57,16 @@ namespace DAoCToolSuite.ChimpTool
 
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                GameLocationTextBox.Text = folderBrowserDialog1.SelectedPath;
-                Properties.Settings.Default.GameDllLocation = folderBrowserDialog1.SelectedPath;
-                Properties.Settings.Default.Save();
+                if(File.Exists(folderBrowserDialog1.SelectedPath+"\\game.dll"))
+                {
+                    GameLocationTextBox.Text = folderBrowserDialog1.SelectedPath;
+                    Properties.Settings.Default.GameDllLocation = folderBrowserDialog1.SelectedPath;
+                    Properties.Settings.Default.Save();
+                }
+                else
+                {
+                    _ = MessageBox.Show($"Game.dll was not found at {folderBrowserDialog1.SelectedPath}", "File Not Found", MessageBoxButtons.OK);
+                }    
             }
         }
 

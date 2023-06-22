@@ -55,6 +55,7 @@ namespace SQLLibrary
         //
         // Misc
         //
+        public string? AHKScript { get; set; } = null;
 
         public int? MasterLevel_Level { get; set; } = 0;
         public string? MasterLevel_Name { get; set; } = null;

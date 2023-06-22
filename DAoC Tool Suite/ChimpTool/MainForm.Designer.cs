@@ -56,18 +56,35 @@ namespace DAoCToolSuite.ChimpTool
             RefreshAllButton = new Button();
             FooterPanel = new Panel();
             LaunchButton = new Button();
-            LoadAllButton = new Button();
             RestoreButton = new Button();
             BackupButton = new Button();
             TotalRPLabel = new Label();
             TotalRPTextBox = new TextBox();
             SearchProgressBar = new TextProgressBar();
+            menuStrip1 = new MenuStrip();
+            characterToolStripMenuItem = new ToolStripMenuItem();
+            addAllCharactersToolStripMenuItem = new ToolStripMenuItem();
+            refreshAllToolStripMenuItem = new ToolStripMenuItem();
+            refreshToolStripMenuItem = new ToolStripMenuItem();
+            associateAHKToolStripMenuItem = new ToolStripMenuItem();
+            launchToolStripMenuItem = new ToolStripMenuItem();
+            accountToolStripMenuItem = new ToolStripMenuItem();
+            dAoCCredentialsToolStripMenuItem = new ToolStripMenuItem();
+            editToolStripMenuItem = new ToolStripMenuItem();
+            propertiesToolStripMenuItem = new ToolStripMenuItem();
+            backupToolStripMenuItem = new ToolStripMenuItem();
+            restoreToolStripMenuItem = new ToolStripMenuItem();
+            editToolStripMenuItem1 = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            logViewerToolStripMenuItem = new ToolStripMenuItem();
+            aboutToolStripMenuItem = new ToolStripMenuItem();
             GridPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SearchGridView).BeginInit();
             CharacterSearchPanel.SuspendLayout();
             AccountPanel.SuspendLayout();
             RefreshPanel.SuspendLayout();
             FooterPanel.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // GridPanel
@@ -75,20 +92,20 @@ namespace DAoCToolSuite.ChimpTool
             GridPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             GridPanel.Controls.Add(LoadingTabelLabel);
             GridPanel.Controls.Add(SearchGridView);
-            GridPanel.Location = new Point(14, 72);
+            GridPanel.Location = new Point(14, 109);
             GridPanel.Margin = new Padding(4, 3, 4, 3);
             GridPanel.Name = "GridPanel";
-            GridPanel.Size = new Size(1396, 650);
+            GridPanel.Size = new Size(1396, 705);
             GridPanel.TabIndex = 13;
             GridPanel.Visible = false;
             // 
             // LoadingTabelLabel
             // 
             LoadingTabelLabel.Font = new Font("Verdana", 72F, FontStyle.Bold, GraphicsUnit.Point);
-            LoadingTabelLabel.Location = new Point(19, 17);
+            LoadingTabelLabel.Location = new Point(0, 0);
             LoadingTabelLabel.Margin = new Padding(4, 0, 4, 0);
             LoadingTabelLabel.Name = "LoadingTabelLabel";
-            LoadingTabelLabel.Size = new Size(1360, 617);
+            LoadingTabelLabel.Size = new Size(1396, 705);
             LoadingTabelLabel.TabIndex = 14;
             LoadingTabelLabel.Text = "Loading table ...";
             LoadingTabelLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -130,11 +147,10 @@ namespace DAoCToolSuite.ChimpTool
             SearchGridView.ShowCellErrors = false;
             SearchGridView.ShowEditingIcon = false;
             SearchGridView.ShowRowErrors = false;
-            SearchGridView.Size = new Size(1396, 650);
+            SearchGridView.Size = new Size(1396, 705);
             SearchGridView.TabIndex = 15;
             SearchGridView.Visible = false;
             SearchGridView.DataSourceChanged += SearchGridView_DataSourceChanged;
-            SearchGridView.CellDoubleClick += SearchGridView_DoubleClick;
             SearchGridView.CellToolTipTextNeeded += SearchGridView_CellToolTipTextNeeded;
             // 
             // CharacterSearchPanel
@@ -143,7 +159,7 @@ namespace DAoCToolSuite.ChimpTool
             CharacterSearchPanel.Controls.Add(RemoveButton);
             CharacterSearchPanel.Controls.Add(AlbionTotalsTextBox);
             CharacterSearchPanel.Controls.Add(SearchButton);
-            CharacterSearchPanel.Location = new Point(14, 0);
+            CharacterSearchPanel.Location = new Point(14, 31);
             CharacterSearchPanel.Margin = new Padding(4, 3, 4, 3);
             CharacterSearchPanel.Name = "CharacterSearchPanel";
             CharacterSearchPanel.Size = new Size(397, 72);
@@ -203,7 +219,7 @@ namespace DAoCToolSuite.ChimpTool
             AccountPanel.Controls.Add(AddAccountButton);
             AccountPanel.Controls.Add(AccountComboBox);
             AccountPanel.Controls.Add(HiberniaTotalsTextBox);
-            AccountPanel.Location = new Point(523, 0);
+            AccountPanel.Location = new Point(523, 31);
             AccountPanel.Margin = new Padding(4, 3, 4, 3);
             AccountPanel.Name = "AccountPanel";
             AccountPanel.Size = new Size(397, 72);
@@ -262,7 +278,7 @@ namespace DAoCToolSuite.ChimpTool
             RefreshPanel.Controls.Add(RefreshButton);
             RefreshPanel.Controls.Add(MidgardTotalsTextBox);
             RefreshPanel.Controls.Add(RefreshAllButton);
-            RefreshPanel.Location = new Point(1013, 0);
+            RefreshPanel.Location = new Point(1013, 31);
             RefreshPanel.Margin = new Padding(4, 3, 4, 3);
             RefreshPanel.Name = "RefreshPanel";
             RefreshPanel.Size = new Size(397, 72);
@@ -319,13 +335,12 @@ namespace DAoCToolSuite.ChimpTool
             // 
             FooterPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             FooterPanel.Controls.Add(LaunchButton);
-            FooterPanel.Controls.Add(LoadAllButton);
             FooterPanel.Controls.Add(RestoreButton);
             FooterPanel.Controls.Add(BackupButton);
             FooterPanel.Controls.Add(TotalRPLabel);
             FooterPanel.Controls.Add(TotalRPTextBox);
             FooterPanel.Controls.Add(SearchProgressBar);
-            FooterPanel.Location = new Point(0, 722);
+            FooterPanel.Location = new Point(0, 820);
             FooterPanel.Margin = new Padding(4, 3, 4, 3);
             FooterPanel.Name = "FooterPanel";
             FooterPanel.Size = new Size(1424, 37);
@@ -341,16 +356,6 @@ namespace DAoCToolSuite.ChimpTool
             LaunchButton.Text = "LAUNCH";
             LaunchButton.UseVisualStyleBackColor = true;
             LaunchButton.Click += LaunchButton_Click;
-            // 
-            // LoadAllButton
-            // 
-            LoadAllButton.Location = new Point(643, 6);
-            LoadAllButton.Name = "LoadAllButton";
-            LoadAllButton.Size = new Size(136, 25);
-            LoadAllButton.TabIndex = 26;
-            LoadAllButton.Text = "Load All Characters";
-            LoadAllButton.UseVisualStyleBackColor = true;
-            LoadAllButton.Click += LoadAllButton_Click;
             // 
             // RestoreButton
             // 
@@ -401,8 +406,129 @@ namespace DAoCToolSuite.ChimpTool
             TotalRPTextBox.TabIndex = 19;
             TotalRPTextBox.TextAlign = HorizontalAlignment.Center;
             // 
-            // SearchProgressBar
+            // menuStrip1
             // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { characterToolStripMenuItem, accountToolStripMenuItem, editToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1424, 24);
+            menuStrip1.TabIndex = 24;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // characterToolStripMenuItem
+            // 
+            characterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addAllCharactersToolStripMenuItem, refreshAllToolStripMenuItem, refreshToolStripMenuItem, associateAHKToolStripMenuItem, launchToolStripMenuItem });
+            characterToolStripMenuItem.Name = "characterToolStripMenuItem";
+            characterToolStripMenuItem.Size = new Size(70, 20);
+            characterToolStripMenuItem.Text = "Character";
+            // 
+            // addAllCharactersToolStripMenuItem
+            // 
+            addAllCharactersToolStripMenuItem.Name = "addAllCharactersToolStripMenuItem";
+            addAllCharactersToolStripMenuItem.Size = new Size(172, 22);
+            addAllCharactersToolStripMenuItem.Text = "Add All Characters";
+            addAllCharactersToolStripMenuItem.Click += addAllCharactersToolStripMenuItem_Click;
+            // 
+            // refreshAllToolStripMenuItem
+            // 
+            refreshAllToolStripMenuItem.Name = "refreshAllToolStripMenuItem";
+            refreshAllToolStripMenuItem.Size = new Size(172, 22);
+            refreshAllToolStripMenuItem.Text = "Refresh All";
+            refreshAllToolStripMenuItem.Click += refreshAllToolStripMenuItem_Click;
+            // 
+            // refreshToolStripMenuItem
+            // 
+            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            refreshToolStripMenuItem.Size = new Size(172, 22);
+            refreshToolStripMenuItem.Text = "Refresh";
+            refreshToolStripMenuItem.Click += refreshToolStripMenuItem_Click;
+            // 
+            // associateAHKToolStripMenuItem
+            // 
+            associateAHKToolStripMenuItem.Name = "associateAHKToolStripMenuItem";
+            associateAHKToolStripMenuItem.Size = new Size(172, 22);
+            associateAHKToolStripMenuItem.Text = "Associate AHK";
+            associateAHKToolStripMenuItem.Click += associateAHKToolStripMenuItem_Click;
+            // 
+            // launchToolStripMenuItem
+            // 
+            launchToolStripMenuItem.Name = "launchToolStripMenuItem";
+            launchToolStripMenuItem.Size = new Size(172, 22);
+            launchToolStripMenuItem.Text = "Launch";
+            launchToolStripMenuItem.Click += launchToolStripMenuItem_Click;
+            // 
+            // accountToolStripMenuItem
+            // 
+            accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dAoCCredentialsToolStripMenuItem });
+            accountToolStripMenuItem.Name = "accountToolStripMenuItem";
+            accountToolStripMenuItem.Size = new Size(64, 20);
+            accountToolStripMenuItem.Text = "Account";
+            // 
+            // dAoCCredentialsToolStripMenuItem
+            // 
+            dAoCCredentialsToolStripMenuItem.Name = "dAoCCredentialsToolStripMenuItem";
+            dAoCCredentialsToolStripMenuItem.Size = new Size(167, 22);
+            dAoCCredentialsToolStripMenuItem.Text = "DAoC Credentials";
+            dAoCCredentialsToolStripMenuItem.Click += dAoCCredentialsToolStripMenuItem_Click;
+            // 
+            // editToolStripMenuItem
+            // 
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propertiesToolStripMenuItem, editToolStripMenuItem1 });
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new Size(61, 20);
+            editToolStripMenuItem.Text = "Settings";
+            // 
+            // propertiesToolStripMenuItem
+            // 
+            propertiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { backupToolStripMenuItem, restoreToolStripMenuItem });
+            propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
+            propertiesToolStripMenuItem.Size = new Size(148, 22);
+            propertiesToolStripMenuItem.Text = "DataBase";
+            // 
+            // backupToolStripMenuItem
+            // 
+            backupToolStripMenuItem.Name = "backupToolStripMenuItem";
+            backupToolStripMenuItem.Size = new Size(113, 22);
+            backupToolStripMenuItem.Text = "Backup";
+            backupToolStripMenuItem.Click += backupToolStripMenuItem_Click;
+            // 
+            // restoreToolStripMenuItem
+            // 
+            restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
+            restoreToolStripMenuItem.Size = new Size(113, 22);
+            restoreToolStripMenuItem.Text = "Restore";
+            restoreToolStripMenuItem.Click += restoreToolStripMenuItem_Click;
+            // 
+            // editToolStripMenuItem1
+            // 
+            editToolStripMenuItem1.Name = "editToolStripMenuItem1";
+            editToolStripMenuItem1.Size = new Size(148, 22);
+            editToolStripMenuItem1.Text = "Configuration";
+            editToolStripMenuItem1.Click += editToolStripMenuItem1_Click;
+            // 
+            // helpToolStripMenuItem
+            // 
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { logViewerToolStripMenuItem, aboutToolStripMenuItem });
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.Size = new Size(44, 20);
+            helpToolStripMenuItem.Text = "Help";
+            // 
+            // logViewerToolStripMenuItem
+            // 
+            logViewerToolStripMenuItem.Name = "logViewerToolStripMenuItem";
+            logViewerToolStripMenuItem.Size = new Size(132, 22);
+            logViewerToolStripMenuItem.Text = "Log Viewer";
+            logViewerToolStripMenuItem.Click += logViewerToolStripMenuItem_Click;
+            // 
+            // aboutToolStripMenuItem
+            // 
+            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            aboutToolStripMenuItem.Size = new Size(132, 22);
+            aboutToolStripMenuItem.Text = "About";
+            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
+            // 
+            // SearchProgressBar
+            //
             SearchProgressBar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             SearchProgressBar.CustomText = "";
             SearchProgressBar.ForeColor = Color.Lime;
@@ -415,24 +541,26 @@ namespace DAoCToolSuite.ChimpTool
             SearchProgressBar.TextColor = Color.Black;
             SearchProgressBar.TextFont = new Font("Verdana", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
             SearchProgressBar.Visible = false;
-            SearchProgressBar.VisualMode = ProgressBarDisplayMode.Percentage;
+            SearchProgressBar.VisualMode = ProgressBarDisplayMode.Percentage; 
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1424, 761);
+            ClientSize = new Size(1424, 859);
             Controls.Add(FooterPanel);
             Controls.Add(RefreshPanel);
             Controls.Add(AccountPanel);
             Controls.Add(CharacterSearchPanel);
             Controls.Add(GridPanel);
+            Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
             Margin = new Padding(4, 3, 4, 3);
             Name = "MainForm";
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ChimpTool v1.5.0";
+            Text = "ChimpTool v1.6.0";
             FormClosing += MainForm_FormClosing;
             FormClosed += MainForm_FormClosed;
             GridPanel.ResumeLayout(false);
@@ -445,7 +573,10 @@ namespace DAoCToolSuite.ChimpTool
             RefreshPanel.PerformLayout();
             FooterPanel.ResumeLayout(false);
             FooterPanel.PerformLayout();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -474,8 +605,24 @@ namespace DAoCToolSuite.ChimpTool
         public ComboBox SearchComboBox;
         private Label LoadingTabelLabel;
         private Button DebugLogButton;
-        private Button LoadAllButton;
         private Button LaunchButton;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem editToolStripMenuItem;
+        private ToolStripMenuItem propertiesToolStripMenuItem;
+        private ToolStripMenuItem helpToolStripMenuItem;
+        private ToolStripMenuItem backupToolStripMenuItem;
+        private ToolStripMenuItem restoreToolStripMenuItem;
+        private ToolStripMenuItem editToolStripMenuItem1;
+        private ToolStripMenuItem logViewerToolStripMenuItem;
+        private ToolStripMenuItem aboutToolStripMenuItem;
+        private ToolStripMenuItem characterToolStripMenuItem;
+        private ToolStripMenuItem refreshToolStripMenuItem;
+        private ToolStripMenuItem associateAHKToolStripMenuItem;
+        private ToolStripMenuItem launchToolStripMenuItem;
+        private ToolStripMenuItem accountToolStripMenuItem;
+        private ToolStripMenuItem dAoCCredentialsToolStripMenuItem;
+        private ToolStripMenuItem addAllCharactersToolStripMenuItem;
+        private ToolStripMenuItem refreshAllToolStripMenuItem;
     }
 }
 
