@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logger", "Logger\Logger.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogTool", "LogTool\LogTool.csproj", "{3BF58216-0C1B-43C5-AF83-E3F44D844C89}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResetLocations", "ResetLocations\ResetLocations.csproj", "{7D6A153C-5BCC-4AA2-9950-A76AFDBCA9BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAoCToolsResetSettings", "ResetLocations\DAoCToolsResetSettings.csproj", "{7D6A153C-5BCC-4AA2-9950-A76AFDBCA9BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -55,15 +55,22 @@ namespace DAoCToolSuite.ChimpTool
                 }
                 else
                 {
-                    _ = MessageBox.Show($"Game.dll was not found at {folderBrowserDialog1.SelectedPath}", "File Not Found", MessageBoxButtons.OK);
+                    _ = MessageBox.Show($"Game.dll was not found at:\n{folderBrowserDialog1.SelectedPath}", "File Not Found", MessageBoxButtons.OK);
                 }
             }
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)
         {
-            SqliteDataAccess.AddAccountCredentials(AccountName, LoginTextBox.Text, PasswordTextBox.Text);
-            Close();
+            if (File.Exists(folderBrowserDialog1.SelectedPath + "\\game.dll"))
+            {
+                SqliteDataAccess.AddAccountCredentials(AccountName, LoginTextBox.Text, PasswordTextBox.Text);
+                Close();
+            }
+            else
+            {
+                _ = MessageBox.Show($"Game.dll was not found at:\n{GameLocationTextBox.Text}", "File Not Found", MessageBoxButtons.OK);
+            }
         }
     }
 }

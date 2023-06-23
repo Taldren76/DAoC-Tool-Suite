@@ -55,7 +55,8 @@ namespace DAoCToolSuite.ChimpTool
             MidgardTotalsTextBox = new TextBox();
             RefreshAllButton = new Button();
             FooterPanel = new Panel();
-            TimerLabel = new Label();
+            TimerLabel0 = new Label();
+            TimerLabel1 = new Label();
             LaunchButton = new Button();
             TotalRPLabel = new Label();
             TotalRPTextBox = new TextBox();
@@ -63,8 +64,8 @@ namespace DAoCToolSuite.ChimpTool
             menuStrip1 = new MenuStrip();
             characterToolStripMenuItem = new ToolStripMenuItem();
             addAllCharactersToolStripMenuItem = new ToolStripMenuItem();
-            refreshAllToolStripMenuItem = new ToolStripMenuItem();
-            refreshToolStripMenuItem = new ToolStripMenuItem();
+            RefreshAllToolStripMenuItem = new ToolStripMenuItem();
+            RefreshToolStripMenuItem = new ToolStripMenuItem();
             associateAHKToolStripMenuItem = new ToolStripMenuItem();
             launchToolStripMenuItem = new ToolStripMenuItem();
             accountToolStripMenuItem = new ToolStripMenuItem();
@@ -73,10 +74,14 @@ namespace DAoCToolSuite.ChimpTool
             propertiesToolStripMenuItem = new ToolStripMenuItem();
             backupToolStripMenuItem = new ToolStripMenuItem();
             restoreToolStripMenuItem = new ToolStripMenuItem();
+            importJsonToolStripMenuItem = new ToolStripMenuItem();
+            exportJsonToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem1 = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             logViewerToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
+            saveFileDialog1 = new SaveFileDialog();
+            openFileDialog1 = new OpenFileDialog();
             GridPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SearchGridView).BeginInit();
             CharacterSearchPanel.SuspendLayout();
@@ -150,6 +155,7 @@ namespace DAoCToolSuite.ChimpTool
             SearchGridView.TabIndex = 15;
             SearchGridView.Visible = false;
             SearchGridView.DataSourceChanged += SearchGridView_DataSourceChanged;
+            SearchGridView.CellDoubleClick += SearchGridView_CellDoubleClick;
             SearchGridView.CellToolTipTextNeeded += SearchGridView_CellToolTipTextNeeded;
             // 
             // CharacterSearchPanel
@@ -333,7 +339,8 @@ namespace DAoCToolSuite.ChimpTool
             // FooterPanel
             // 
             FooterPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            FooterPanel.Controls.Add(TimerLabel);
+            FooterPanel.Controls.Add(TimerLabel0);
+            FooterPanel.Controls.Add(TimerLabel1);
             FooterPanel.Controls.Add(LaunchButton);
             FooterPanel.Controls.Add(TotalRPLabel);
             FooterPanel.Controls.Add(TotalRPTextBox);
@@ -344,31 +351,50 @@ namespace DAoCToolSuite.ChimpTool
             FooterPanel.Size = new Size(1424, 37);
             FooterPanel.TabIndex = 23;
             // 
-            // TimerLabel
+            // TimerLabel0
             // 
-            TimerLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            TimerLabel.AutoSize = true;
-            TimerLabel.BackColor = SystemColors.Control;
-            TimerLabel.Font = new Font("LCD", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            TimerLabel.ForeColor = SystemColors.ControlText;
-            TimerLabel.ImageAlign = ContentAlignment.MiddleRight;
-            TimerLabel.Location = new Point(1194, 6);
-            TimerLabel.Name = "TimerLabel";
-            TimerLabel.Size = new Size(94, 30);
-            TimerLabel.TabIndex = 28;
-            TimerLabel.Text = "00:00";
-            TimerLabel.TextAlign = ContentAlignment.MiddleRight;
+            TimerLabel0.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            TimerLabel0.AutoSize = true;
+            TimerLabel0.BackColor = SystemColors.Control;
+            TimerLabel0.Font = new Font("LCD", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            TimerLabel0.ForeColor = Color.IndianRed;
+            TimerLabel0.ImageAlign = ContentAlignment.MiddleRight;
+            TimerLabel0.Location = new Point(1104, 7);
+            TimerLabel0.Name = "TimerLabel0";
+            TimerLabel0.Size = new Size(94, 30);
+            TimerLabel0.TabIndex = 29;
+            TimerLabel0.Text = "00:00";
+            TimerLabel0.TextAlign = ContentAlignment.MiddleRight;
+            TimerLabel0.Visible = false;
+            // 
+            // TimerLabel1
+            // 
+            TimerLabel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            TimerLabel1.AutoSize = true;
+            TimerLabel1.BackColor = SystemColors.Control;
+            TimerLabel1.Font = new Font("LCD", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            TimerLabel1.ForeColor = Color.CornflowerBlue;
+            TimerLabel1.ImageAlign = ContentAlignment.MiddleRight;
+            TimerLabel1.Location = new Point(1194, 7);
+            TimerLabel1.Name = "TimerLabel1";
+            TimerLabel1.Size = new Size(94, 30);
+            TimerLabel1.TabIndex = 28;
+            TimerLabel1.Text = "00:00";
+            TimerLabel1.TextAlign = ContentAlignment.MiddleRight;
+            TimerLabel1.Visible = false;
             // 
             // LaunchButton
             // 
-            LaunchButton.FlatStyle = FlatStyle.Popup;
-            LaunchButton.Font = new Font("Verdana", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            LaunchButton.Location = new Point(1294, 6);
+            LaunchButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            LaunchButton.BackColor = SystemColors.ControlLightLight;
+            LaunchButton.Font = new Font("Verdana", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            LaunchButton.ForeColor = Color.DarkSlateGray;
+            LaunchButton.Location = new Point(1294, 3);
             LaunchButton.Name = "LaunchButton";
-            LaunchButton.Size = new Size(116, 25);
+            LaunchButton.Size = new Size(116, 34);
             LaunchButton.TabIndex = 27;
             LaunchButton.Text = "LAUNCH";
-            LaunchButton.UseVisualStyleBackColor = true;
+            LaunchButton.UseVisualStyleBackColor = false;
             LaunchButton.Click += LaunchButton_Click;
             // 
             // TotalRPLabel
@@ -422,7 +448,7 @@ namespace DAoCToolSuite.ChimpTool
             // 
             // characterToolStripMenuItem
             // 
-            characterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addAllCharactersToolStripMenuItem, refreshAllToolStripMenuItem, refreshToolStripMenuItem, associateAHKToolStripMenuItem, launchToolStripMenuItem });
+            characterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addAllCharactersToolStripMenuItem, RefreshAllToolStripMenuItem, RefreshToolStripMenuItem, associateAHKToolStripMenuItem, launchToolStripMenuItem });
             characterToolStripMenuItem.Name = "characterToolStripMenuItem";
             characterToolStripMenuItem.Size = new Size(70, 20);
             characterToolStripMenuItem.Text = "Character";
@@ -436,17 +462,17 @@ namespace DAoCToolSuite.ChimpTool
             // 
             // refreshAllToolStripMenuItem
             // 
-            refreshAllToolStripMenuItem.Name = "refreshAllToolStripMenuItem";
-            refreshAllToolStripMenuItem.Size = new Size(172, 22);
-            refreshAllToolStripMenuItem.Text = "Refresh All";
-            refreshAllToolStripMenuItem.Click += RefreshAllToolStripMenuItem_Click;
+            RefreshAllToolStripMenuItem.Name = "refreshAllToolStripMenuItem";
+            RefreshAllToolStripMenuItem.Size = new Size(172, 22);
+            RefreshAllToolStripMenuItem.Text = "Refresh All";
+            RefreshAllToolStripMenuItem.Click += RefreshAllToolStripMenuItem_Click;
             // 
             // refreshToolStripMenuItem
             // 
-            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            refreshToolStripMenuItem.Size = new Size(172, 22);
-            refreshToolStripMenuItem.Text = "Refresh";
-            refreshToolStripMenuItem.Click += RefreshToolStripMenuItem_Click;
+            RefreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            RefreshToolStripMenuItem.Size = new Size(172, 22);
+            RefreshToolStripMenuItem.Text = "Refresh";
+            RefreshToolStripMenuItem.Click += RefreshToolStripMenuItem_Click;
             // 
             // associateAHKToolStripMenuItem
             // 
@@ -485,7 +511,7 @@ namespace DAoCToolSuite.ChimpTool
             // 
             // propertiesToolStripMenuItem
             // 
-            propertiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { backupToolStripMenuItem, restoreToolStripMenuItem });
+            propertiesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { backupToolStripMenuItem, restoreToolStripMenuItem, importJsonToolStripMenuItem, exportJsonToolStripMenuItem });
             propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
             propertiesToolStripMenuItem.Size = new Size(148, 22);
             propertiesToolStripMenuItem.Text = "DataBase";
@@ -493,16 +519,30 @@ namespace DAoCToolSuite.ChimpTool
             // backupToolStripMenuItem
             // 
             backupToolStripMenuItem.Name = "backupToolStripMenuItem";
-            backupToolStripMenuItem.Size = new Size(113, 22);
-            backupToolStripMenuItem.Text = "Backup";
+            backupToolStripMenuItem.Size = new Size(153, 22);
+            backupToolStripMenuItem.Text = "Full DB Backup";
             backupToolStripMenuItem.Click += BackupToolStripMenuItem_Click;
             // 
             // restoreToolStripMenuItem
             // 
             restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            restoreToolStripMenuItem.Size = new Size(113, 22);
-            restoreToolStripMenuItem.Text = "Restore";
+            restoreToolStripMenuItem.Size = new Size(153, 22);
+            restoreToolStripMenuItem.Text = "Full DB Restore";
             restoreToolStripMenuItem.Click += RestoreToolStripMenuItem_Click;
+            // 
+            // importJsonToolStripMenuItem
+            // 
+            importJsonToolStripMenuItem.Name = "importJsonToolStripMenuItem";
+            importJsonToolStripMenuItem.Size = new Size(153, 22);
+            importJsonToolStripMenuItem.Text = "Import Json";
+            importJsonToolStripMenuItem.Click += ImportJsonToolStripMenuItem_Click;
+            // 
+            // exportJsonToolStripMenuItem
+            // 
+            exportJsonToolStripMenuItem.Name = "exportJsonToolStripMenuItem";
+            exportJsonToolStripMenuItem.Size = new Size(153, 22);
+            exportJsonToolStripMenuItem.Text = "Export Json";
+            exportJsonToolStripMenuItem.Click += ExportJsonToolStripMenuItem_Click;
             // 
             // editToolStripMenuItem1
             // 
@@ -532,6 +572,10 @@ namespace DAoCToolSuite.ChimpTool
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
             // 
+            // openFileDialog1
+            // 
+            openFileDialog1.FileName = "openFileDialog1";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -549,7 +593,7 @@ namespace DAoCToolSuite.ChimpTool
             Name = "MainForm";
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ChimpTool v1.6.0";
+            Text = "ChimpTool v2.0.0";
             FormClosing += MainForm_FormClosing;
             FormClosed += MainForm_FormClosed;
             GridPanel.ResumeLayout(false);
@@ -587,7 +631,7 @@ namespace DAoCToolSuite.ChimpTool
         private Panel FooterPanel;
         private Label TotalRPLabel;
         private TextBox TotalRPTextBox;
-        internal TextProgressBar SearchProgressBar;
+        private TextProgressBar SearchProgressBar;
         public ComboBox AccountComboBox;
         public ComboBox SearchComboBox;
         private Label LoadingTabelLabel;
@@ -603,14 +647,19 @@ namespace DAoCToolSuite.ChimpTool
         private ToolStripMenuItem logViewerToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
         private ToolStripMenuItem characterToolStripMenuItem;
-        private ToolStripMenuItem refreshToolStripMenuItem;
+        private ToolStripMenuItem RefreshToolStripMenuItem;
         private ToolStripMenuItem associateAHKToolStripMenuItem;
         private ToolStripMenuItem launchToolStripMenuItem;
         private ToolStripMenuItem accountToolStripMenuItem;
         private ToolStripMenuItem dAoCCredentialsToolStripMenuItem;
         private ToolStripMenuItem addAllCharactersToolStripMenuItem;
-        private ToolStripMenuItem refreshAllToolStripMenuItem;
-        private Label TimerLabel;
+        private ToolStripMenuItem RefreshAllToolStripMenuItem;
+        private Label TimerLabel1;
+        private ToolStripMenuItem importJsonToolStripMenuItem;
+        private ToolStripMenuItem exportJsonToolStripMenuItem;
+        private SaveFileDialog saveFileDialog1;
+        private OpenFileDialog openFileDialog1;
+        private Label TimerLabel0;
     }
 }
 

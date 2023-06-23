@@ -3,7 +3,7 @@
 	<assemblyIdentity
         type="win32"
         name="DAoC Tool Suite"
-        version="0.9.3.0"
+        version="0.9.5.0"
         processorArchitecture="x86"
     />
 	<description>DAoC Character Tool.</description>

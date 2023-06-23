@@ -84,7 +84,6 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             result.IsValid = true;
             return result;
         }
-
         public static CharacterInfoResult CharacterInfoWorkAround(string webID)
         {
             if (webID == null)
@@ -135,7 +134,6 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             result.IsValid = true;
             return result;
         }
-
         public static CharacterSearchResult CharacterSearch(string characterName, ServerCluster cluster)
         {
             string urlParameters = $"?name={characterName}&cluster={cluster}";
@@ -183,7 +181,6 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             result.IsValid = true;
             return result;
         }
-
         public static ChimpJson GetChimp(string name, ServerCluster cluster)
         {
             CharacterSearchResult? searchResult = CharacterSearch(name, cluster);
@@ -231,37 +228,37 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                         Server = result?.ServerName,
                         Realm = new List<string>() { "Albion", "Midgard", "Hibernia", "NewJersey" }[realm],
 
-                        MasterLevel_Level = result?.MasterLevel?.Level.ToString("N0") ?? "0",
+                        MasterLevel_Level = result?.MasterLevel?.Level.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
                         MasterLevel_Name = result?.MasterLevel?.Path ?? "",
 
-                        BountyPoints = result?.RealmWarStats?.Current?.BountyPoints.ToString("N0") ?? "0",
+                        BountyPoints = result?.RealmWarStats?.Current?.BountyPoints.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
 
-                        Alchemy = result?.Crafting?.Alchemy.ToString("N0") ?? "0",
-                        Armorcraft = result?.Crafting?.Armorcraft.ToString("N0") ?? "0",
-                        Fletching = result?.Crafting?.Fletching.ToString("N0") ?? "0",
-                        Siegecraft = result?.Crafting?.Siegecraft.ToString("N0") ?? "0",
-                        Spellcrafting = result?.Crafting?.Spellcraft.ToString("N0") ?? "0",
-                        Tailoring = result?.Crafting?.Tailoring.ToString("N0") ?? "0",
-                        Weaponcraft = result?.Crafting?.Weaponcraft.ToString("N0") ?? "0",
+                        Alchemy = result?.Crafting?.Alchemy.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Armorcraft = result?.Crafting?.Armorcraft.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Fletching = result?.Crafting?.Fletching.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Siegecraft = result?.Crafting?.Siegecraft.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Spellcrafting = result?.Crafting?.Spellcraft.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Tailoring = result?.Crafting?.Tailoring.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Weaponcraft = result?.Crafting?.Weaponcraft.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
 
-                        TotalKills = result?.RealmWarStats?.Current?.PlayerKills?.Total?.Kills.ToString("N0") ?? "0",
-                        TotalSoloKills = result?.RealmWarStats?.Current?.PlayerKills?.Total?.SoloKills.ToString("N0") ?? "0",
-                        TotalDeathBlows = result?.RealmWarStats?.Current?.PlayerKills?.Total?.DeathBlows.ToString("N0") ?? "0",
-                        TotalDeaths = deaths.ToString("N0") ?? "0",
-                        Albion_SoloKills = result?.RealmWarStats?.Current?.PlayerKills?.Albion?.SoloKills.ToString("N0") ?? "0",
-                        Albion_DeathBlows = result?.RealmWarStats?.Current?.PlayerKills?.Albion?.DeathBlows.ToString("N0") ?? "0",
-                        Albion_Kills = result?.RealmWarStats?.Current?.PlayerKills?.Albion?.Kills.ToString("N0") ?? "0",
-                        Albion_Deaths = result?.RealmWarStats?.Current?.PlayerKills?.Albion?.Deaths.ToString("N0") ?? "0",
-                        Hibernia_SoloKills = result?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.SoloKills.ToString("N0") ?? "0",
-                        Hibernia_DeathBlows = result?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.DeathBlows.ToString("N0") ?? "0",
-                        Hibernia_Kills = result?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.Kills.ToString("N0") ?? "0",
-                        Hibernia_Deaths = result?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.Deaths.ToString("N0") ?? "0",
-                        Midgard_SoloKills = result?.RealmWarStats?.Current?.PlayerKills?.Midgard?.SoloKills.ToString("N0") ?? "0",
-                        Midgard_DeathBlows = result?.RealmWarStats?.Current?.PlayerKills?.Midgard?.DeathBlows.ToString("N0") ?? "0",
-                        Midgard_Kills = result?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Kills.ToString("N0") ?? "0",
-                        Midgard_Deaths = result?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Deaths.ToString("N0") ?? "0",
-                        TotalRealmPoints = rps.ToString("N0") ?? "0",
-                        IRS = irs.ToString("N0") ?? "0",
+                        TotalKills = result?.RealmWarStats?.Current?.PlayerKills?.Total?.Kills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        TotalSoloKills = result?.RealmWarStats?.Current?.PlayerKills?.Total?.SoloKills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        TotalDeathBlows = result?.RealmWarStats?.Current?.PlayerKills?.Total?.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        TotalDeaths = deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Albion_SoloKills = result?.RealmWarStats?.Current?.PlayerKills?.Albion?.SoloKills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Albion_DeathBlows = result?.RealmWarStats?.Current?.PlayerKills?.Albion?.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Albion_Kills = result?.RealmWarStats?.Current?.PlayerKills?.Albion?.Kills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Albion_Deaths = result?.RealmWarStats?.Current?.PlayerKills?.Albion?.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Hibernia_SoloKills = result?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.SoloKills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Hibernia_DeathBlows = result?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Hibernia_Kills = result?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.Kills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Hibernia_Deaths = result?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Midgard_SoloKills = result?.RealmWarStats?.Current?.PlayerKills?.Midgard?.SoloKills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Midgard_DeathBlows = result?.RealmWarStats?.Current?.PlayerKills?.Midgard?.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Midgard_Kills = result?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Kills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        Midgard_Deaths = result?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        TotalRealmPoints = rps.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                        IRS = irs.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
 
                         RealmRank = CalculateRealmRank(rps).ToString("0.0").Replace('.', 'L')
                     };
@@ -285,7 +282,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
 
             progressBar.Visible = true;
             progressBar.Value = 0;
-            progressBar.Maximum = chimps.Count;
+            progressBar.Maximum = chimps.Count > 0 ? chimps.Count : 1;
             progressBar.Minimum = 0;
             progressBar.CustomText = "Retrieving Character Data";
             progressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
@@ -295,8 +292,15 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             foreach (ChimpJson chimp in chimps)
             {
                 #region ProgressBar
-                progressBar.Value += 1;
-                progressBar.Update();
+                if (progressBar.Value != progressBar.Maximum)
+                {
+                    progressBar.Value += 1;
+                    progressBar.Update();
+                }
+                else
+                {
+                    Logger.Warn("ProgressBar exceeded Maximum Value");
+                }
                 #endregion
 
                 if (chimp?.WebID is null)
@@ -328,39 +332,39 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                             Server = infoResult?.ServerName,
                             Realm = new List<string>() { "Albion", "Midgard", "Hibernia", "NewJersey" }[realm],
 
-                            MasterLevel_Level = infoResult?.MasterLevel?.Level.ToString("N0") ?? "0",
+                            MasterLevel_Level = infoResult?.MasterLevel?.Level.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
                             MasterLevel_Name = infoResult?.MasterLevel?.Path ?? "",
 
-                            BountyPoints = infoResult?.RealmWarStats?.Current?.BountyPoints.ToString("N0") ?? "0",
+                            BountyPoints = infoResult?.RealmWarStats?.Current?.BountyPoints.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
 
-                            Alchemy = infoResult?.Crafting?.Alchemy.ToString("N0") ?? "0",
-                            Armorcraft = infoResult?.Crafting?.Armorcraft.ToString("N0") ?? "0",
-                            Fletching = infoResult?.Crafting?.Fletching.ToString("N0") ?? "0",
-                            Siegecraft = infoResult?.Crafting?.Siegecraft.ToString("N0") ?? "0",
-                            Spellcrafting = infoResult?.Crafting?.Spellcraft.ToString("N0") ?? "0",
-                            Tailoring = infoResult?.Crafting?.Tailoring.ToString("N0") ?? "0",
-                            Weaponcraft = infoResult?.Crafting?.Weaponcraft.ToString("N0") ?? "0",
+                            Alchemy = infoResult?.Crafting?.Alchemy.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Armorcraft = infoResult?.Crafting?.Armorcraft.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Fletching = infoResult?.Crafting?.Fletching.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Siegecraft = infoResult?.Crafting?.Siegecraft.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Spellcrafting = infoResult?.Crafting?.Spellcraft.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Tailoring = infoResult?.Crafting?.Tailoring.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Weaponcraft = infoResult?.Crafting?.Weaponcraft.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
 
-                            TotalKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Total?.Kills.ToString("N0") ?? "0",
-                            TotalSoloKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Total?.SoloKills.ToString("N0") ?? "0",
-                            TotalDeathBlows = infoResult?.RealmWarStats?.Current?.PlayerKills?.Total?.DeathBlows.ToString("N0") ?? "0",
-                            TotalDeaths = deaths.ToString("N0") ?? "0",
-                            Albion_SoloKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Albion?.SoloKills.ToString("N0") ?? "0",
-                            Albion_DeathBlows = infoResult?.RealmWarStats?.Current?.PlayerKills?.Albion?.DeathBlows.ToString("N0") ?? "0",
-                            Albion_Kills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Albion?.Kills.ToString("N0") ?? "0",
-                            Albion_Deaths = infoResult?.RealmWarStats?.Current?.PlayerKills?.Albion?.Deaths.ToString("N0") ?? "0",
-                            Hibernia_SoloKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.SoloKills.ToString("N0") ?? "0",
-                            Hibernia_DeathBlows = infoResult?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.DeathBlows.ToString("N0") ?? "0",
-                            Hibernia_Kills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.Kills.ToString("N0") ?? "0",
-                            Hibernia_Deaths = infoResult?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.Deaths.ToString("N0") ?? "0",
-                            Midgard_SoloKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Midgard?.SoloKills.ToString("N0") ?? "0",
-                            Midgard_DeathBlows = infoResult?.RealmWarStats?.Current?.PlayerKills?.Midgard?.DeathBlows.ToString("N0") ?? "0",
-                            Midgard_Kills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Kills.ToString("N0") ?? "0",
-                            Midgard_Deaths = infoResult?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Deaths.ToString("N0") ?? "0",
-                            TotalRealmPoints = rps.ToString("N0") ?? "0",
-                            IRS = irs.ToString("N0") ?? "0",
+                            TotalKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Total?.Kills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            TotalSoloKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Total?.SoloKills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            TotalDeathBlows = infoResult?.RealmWarStats?.Current?.PlayerKills?.Total?.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            TotalDeaths = deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Albion_SoloKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Albion?.SoloKills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Albion_DeathBlows = infoResult?.RealmWarStats?.Current?.PlayerKills?.Albion?.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Albion_Kills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Albion?.Kills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Albion_Deaths = infoResult?.RealmWarStats?.Current?.PlayerKills?.Albion?.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Hibernia_SoloKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.SoloKills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Hibernia_DeathBlows = infoResult?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Hibernia_Kills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.Kills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Hibernia_Deaths = infoResult?.RealmWarStats?.Current?.PlayerKills?.Hibernia?.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Midgard_SoloKills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Midgard?.SoloKills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Midgard_DeathBlows = infoResult?.RealmWarStats?.Current?.PlayerKills?.Midgard?.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Midgard_Kills = infoResult?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Kills.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            Midgard_Deaths = infoResult?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            TotalRealmPoints = rps.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
+                            IRS = irs.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
 
-                            RealmRank = CalculateRealmRank(rps).ToString("0.0").Replace('.', 'L')
+                            RealmRank = CalculateRealmRank(rps).ToString().Insert(CalculateRealmRank(rps).ToString().Length - 1, "L")
                         };
                         results.Add(result);
                     }
@@ -383,7 +387,6 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             progressBar.Refresh();
             return results;
         }
-
         public static double CalculateRealmRank(int realmPoints)
         {
             Dictionary<int, double> realmRanks = new();
@@ -435,12 +438,5 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             }
 
         }
-
-        //public static GuildInfo GetGuildInfo(string webID)
-        //{
-
-        //}
     }
-
-
 }

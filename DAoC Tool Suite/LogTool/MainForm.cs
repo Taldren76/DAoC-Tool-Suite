@@ -140,25 +140,25 @@ namespace DAoCToolSuite.LogTool
             dt.Columns.Add();
             dt.Columns.Add();
             dt.Columns.Add();
-            AddRow("Total Damage Done:", LogParser.TotalDamageDone.ToString("N0"), "Total Healing Recieved:", LogParser.HealingTaken.ToString("N0"));
+            AddRow("Total Damage Done:", LogParser.TotalDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Total Healing Recieved:", LogParser.HealingTaken.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
             AddRow("", "", "", "");
-            AddRow("Total Spell Dmg:", LogParser.TotalNonMeleeDamageDone.ToString("N0"), "Total Healing Done:", LogParser.TotalHealingDone.ToString("N0"));
-            AddRow("Avg Spell Damage:", LogParser.AverageNonMeleeDamageDone.ToString("N0"), "Avg Heal:", LogParser.AverageHealDone.ToString("N0"));
-            AddRow("Avg Spell Crit Dmg:", LogParser.AverageNonMeleeCriticalDamageDone.ToString("N0"), "Avg Crit Heal:", LogParser.AverageCriticalHealingDone.ToString("N0"));
+            AddRow("Total Spell Dmg:", LogParser.TotalNonMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Total Healing Done:", LogParser.TotalHealingDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
+            AddRow("Avg Spell Damage:", LogParser.AverageNonMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Avg Heal:", LogParser.AverageHealDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
+            AddRow("Avg Spell Crit Dmg:", LogParser.AverageNonMeleeCriticalDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Avg Crit Heal:", LogParser.AverageCriticalHealingDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
             AddRow("Spell Crit Rate:", LogParser.NonMeleeCritRate.ToString("0.0%"), "Heal Crit Rate:", LogParser.HealCritRate.ToString("0.0%"));
             AddRow("", "", "", "");
-            AddRow("Total Melee Dmg:", LogParser.TotalMeleeDamageDone.ToString("N0"), "Block Rate:", LogParser.AttacksBlockedRate.ToString("0.0%"));
-            AddRow("Avg Melee Dmg:", LogParser.AverageMeleeDamageDone.ToString("N0"), "Evade Rate:", LogParser.AttacksEvadedRate.ToString("0.0%"));
-            AddRow("Avg Melee Crit Dmg:", LogParser.AverageCriticalMeleeDamageDone.ToString("N0"), "Parry Rate:", LogParser.AttacksParriedRate.ToString("0.0%"));
+            AddRow("Total Melee Dmg:", LogParser.TotalMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Block Rate:", LogParser.AttacksBlockedRate.ToString("0.0%"));
+            AddRow("Avg Melee Dmg:", LogParser.AverageMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Evade Rate:", LogParser.AttacksEvadedRate.ToString("0.0%"));
+            AddRow("Avg Melee Crit Dmg:", LogParser.AverageCriticalMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Parry Rate:", LogParser.AttacksParriedRate.ToString("0.0%"));
             AddRow("Melee Crit Rate:", LogParser.MeleeCritRate.ToString("0.0%"), "Miss Rate:", LogParser.AttackMissRate.ToString("0.0%"));
             AddRow("", "", "", "");
-            AddRow("Total Dmg Taken:", LogParser.TotalDamageTaken.ToString("N0"), "Total Pet Damage:", LogParser.TotalPetDamageDone.ToString("N0"));
-            AddRow("Dmg Absorbed:", LogParser.DamageTakenAbsorbed.ToString("N0"), "Pet Melee Crit Rate:", LogParser.PetMeleeCritRate.ToString("0.0%"));
-            AddRow("Dmg Converted:", LogParser.DamageTakenConverted.ToString("N0"), "Total Pet Healing:", LogParser.TotalPetHealingDone.ToString("N0"));
-            AddRow("Dmg Blocked:", LogParser.TotalDamageTakeBlocked.ToString("N0"), "", "");
+            AddRow("Total Dmg Taken:", LogParser.TotalDamageTaken.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Total Pet Damage:", LogParser.TotalPetDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
+            AddRow("Dmg Absorbed:", LogParser.DamageTakenAbsorbed.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Pet Melee Crit Rate:", LogParser.PetMeleeCritRate.ToString("0.0%"));
+            AddRow("Dmg Converted:", LogParser.DamageTakenConverted.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Total Pet Healing:", LogParser.TotalPetHealingDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
+            AddRow("Dmg Blocked:", LogParser.TotalDamageTakeBlocked.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "", "");
             AddRow("", "", "Gold Earned:", LogParser.GoldEarned.ToString("N4"));
-            AddRow("DeathBlows:", LogParser.DeathBlows.ToString("N0"), "Realm Points Earned:", LogParser.RealmPointsEarned.ToString("N0"));
-            AddRow("Deaths:", LogParser.Deaths.ToString("N0"), "IRS:", LogParser.IRS.ToString("N0"));
+            AddRow("DeathBlows:", LogParser.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Realm Points Earned:", LogParser.RealmPointsEarned.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
+            AddRow("Deaths:", LogParser.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "IRS:", LogParser.IRS.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
             return dt;
 
             void AddRow(string title1 = "", string value1 = "", string title2 = "", string value2 = "")
@@ -180,38 +180,38 @@ namespace DAoCToolSuite.LogTool
             BindingSource.DataSource = ProduceDataTable();
 
             #region Column 1 Values
-            Overlay.Value_TotalDamageDone.Text = LogParser.TotalDamageDone.ToString("N0");
-            Overlay.Value_TotalSpellDamage.Text = LogParser.TotalNonMeleeDamageDone.ToString("N0");
-            Overlay.Value_AverageSpellDamageDone.Text = LogParser.AverageNonMeleeDamageDone.ToString("N0");
-            Overlay.Value_AverageSpellCritDamageDone.Text = LogParser.AverageNonMeleeCriticalDamageDone.ToString("N0");
+            Overlay.Value_TotalDamageDone.Text = LogParser.TotalDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_TotalSpellDamage.Text = LogParser.TotalNonMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_AverageSpellDamageDone.Text = LogParser.AverageNonMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_AverageSpellCritDamageDone.Text = LogParser.AverageNonMeleeCriticalDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
             Overlay.Value_SpellCritRate.Text = LogParser.NonMeleeCritRate.ToString("0.0%");
-            Overlay.Value_TotalMeleeDamage.Text = LogParser.TotalMeleeDamageDone.ToString("N0");
-            Overlay.Value_AverageMeleeDamageDone.Text = LogParser.AverageMeleeDamageDone.ToString("N0");
-            Overlay.Value_AverageMeleeCritDamageDone.Text = LogParser.AverageCriticalMeleeDamageDone.ToString("N0");
+            Overlay.Value_TotalMeleeDamage.Text = LogParser.TotalMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_AverageMeleeDamageDone.Text = LogParser.AverageMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_AverageMeleeCritDamageDone.Text = LogParser.AverageCriticalMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
             Overlay.Value_MeleeCritRate.Text = LogParser.MeleeCritRate.ToString("0.0%");
-            Overlay.Value_TotalDamageTaken.Text = LogParser.TotalDamageTaken.ToString("N0");
-            Overlay.Value_DamageTakenAbsorbed.Text = LogParser.DamageTakenAbsorbed.ToString("N0");
-            Overlay.Value_DamageTakenConverted.Text = LogParser.DamageTakenConverted.ToString("N0");
-            Overlay.Value_DamageTakenBlocked.Text = LogParser.TotalDamageTakeBlocked.ToString("N0");
-            Overlay.Value_DeathBlows.Text = LogParser.DeathBlows.ToString("N0");
-            Overlay.Value_Deaths.Text = LogParser.Deaths.ToString("N0");
+            Overlay.Value_TotalDamageTaken.Text = LogParser.TotalDamageTaken.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_DamageTakenAbsorbed.Text = LogParser.DamageTakenAbsorbed.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_DamageTakenConverted.Text = LogParser.DamageTakenConverted.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_DamageTakenBlocked.Text = LogParser.TotalDamageTakeBlocked.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_DeathBlows.Text = LogParser.DeathBlows.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_Deaths.Text = LogParser.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
             #endregion
             #region Column 2 Values
-            Overlay.Value_TotalHealingRecieved.Text = LogParser.HealingTaken.ToString("N0");
-            Overlay.Value_TotalHealingDone.Text = LogParser.TotalHealingDone.ToString("N0");
-            Overlay.Value_AverageHealingDone.Text = LogParser.AverageHealDone.ToString("N0");
-            Overlay.Value_AverageCritHealingDone.Text = LogParser.AverageCriticalHealingDone.ToString("N0");
+            Overlay.Value_TotalHealingRecieved.Text = LogParser.HealingTaken.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_TotalHealingDone.Text = LogParser.TotalHealingDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_AverageHealingDone.Text = LogParser.AverageHealDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_AverageCritHealingDone.Text = LogParser.AverageCriticalHealingDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
             Overlay.Value_HealCritRate.Text = LogParser.HealCritRate.ToString("0.0%");
             Overlay.Value_BlockRate.Text = LogParser.AttacksBlockedRate.ToString("0.0%");
             Overlay.Value_EvadeRate.Text = LogParser.AttacksEvadedRate.ToString("0.0%");
             Overlay.Value_ParryRate.Text = LogParser.AttacksParriedRate.ToString("0.0%");
             Overlay.Value_MissRate.Text = LogParser.AttackMissRate.ToString("0.0%");
-            Overlay.Value_TotalPetDamage.Text = LogParser.TotalPetDamageDone.ToString("N0");
+            Overlay.Value_TotalPetDamage.Text = LogParser.TotalPetDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
             Overlay.Value_PetMeleeCritRate.Text = LogParser.PetMeleeCritRate.ToString("0.0%");
-            Overlay.Value_TotalPetHealing.Text = LogParser.TotalPetHealingDone.ToString("N0");
+            Overlay.Value_TotalPetHealing.Text = LogParser.TotalPetHealingDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
             Overlay.Value_GoldEarned.Text = LogParser.GoldEarned.ToString("N4");
-            Overlay.Value_RealmPoints.Text = LogParser.RealmPointsEarned.ToString("N0");
-            Overlay.Value_IRS.Text = LogParser.IRS.ToString("N0");
+            Overlay.Value_RealmPoints.Text = LogParser.RealmPointsEarned.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            Overlay.Value_IRS.Text = LogParser.IRS.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
             #endregion
 
             Overlay.Draw();

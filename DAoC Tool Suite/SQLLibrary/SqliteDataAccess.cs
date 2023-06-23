@@ -73,7 +73,7 @@ namespace SQLLibrary
                 string values = $"@{columnNames.Replace(",", ",@")}";
                 string tableName = "AHK";
                 string writeQuery = $"Insert into [{tableName}] ({columnNames}) values ({values})";
-                string countQuery = $"Select Count([WebID]) from [{tableName}] Where [Account] = '{model.Account}'";
+                string countQuery = $"Select Count([AHKScriptPath]) from [{tableName}] Where [WebID] = '{model.WebID}' AND [Account] = '{model.Account}'";
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
 
@@ -104,7 +104,6 @@ namespace SQLLibrary
             }
         }
         #endregion
-
 
         #region CharacterModel
         public static List<CharacterModel> LoadCharacters()
@@ -148,6 +147,7 @@ namespace SQLLibrary
                 string minDateIndexQuery = $"Select [index], min([Date]) from [{tableName}] Where [WebID] = '{character.WebID}'";
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+
                 //Check if character name changed
                 int exactCount = conn.QueryFirst<int>(exactCountQuery, new DynamicParameters());
                 int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
@@ -156,12 +156,12 @@ namespace SQLLibrary
                     //Update existing names before continueing
                     string updateQuery = $"Update [{tableName}] Set [Name] = '{character.Name}' Where [WebID] = '{character.WebID}'";
                     _ = conn.Execute(updateQuery, new DynamicParameters());
+
                 }
 
-                int maxSQLEnteriesPerCharacter = Properties.Settings.Default.MaxSQLEntriesPerCharacter; //ConfigurationManager.AppSettings["MaxSQLEntriesPerCharacter"] ?? "2";
-                //int maxCount = int.TryParse(maxSQLEnteriesPerCharacter, out maxCount) ? maxCount - 1 : 1;
-                DateTime endTime = DateTime.Now.AddSeconds(10);
-                while (endTime > DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter)
+                int maxSQLEnteriesPerCharacter = Properties.Settings.Default.MaxSQLEntriesPerCharacter;
+                DateTime endTime = DateTime.Now.AddSeconds(60);
+                while (endTime > DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter - 1)
                 {
                     DateQuery minDateQuery = conn.QueryFirst<DateQuery>(minDateIndexQuery, new DynamicParameters());
                     string deleteQuery = $"Delete From [{tableName}] Where [index] = '{minDateQuery.Index}'";
@@ -179,9 +179,6 @@ namespace SQLLibrary
             {
                 string tableName = "Characters";
                 string writeQuery = $"Insert into [{tableName}] ({CharactersColumnNames}) values ({CharactersColumnValues})";
-                //string exactCountQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\" And Name = \"{character.Name}\"";
-                //string countQuery = $"Select Count(WebID) from {tableName} Where WebID = \"{character.WebID}\"";
-                //string minDateIndexQuery = $"Select \"index\", min(Date) from {tableName} Where WebID = \"{character.WebID}\"";
 
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 foreach (CharacterModel character in characters)
@@ -199,10 +196,9 @@ namespace SQLLibrary
                         _ = conn.Execute(updateQuery, new DynamicParameters());
                     }
 
-                    int maxSQLEnteriesPerCharacter = Properties.Settings.Default.MaxSQLEntriesPerCharacter; //ConfigurationManager.AppSettings["MaxSQLEntriesPerCharacter"] ?? "2";
-                    //int maxCount = int.TryParse(maxSQLEnteriesPerCharacter, out maxCount) ? maxCount - 1 : 1;
+                    int maxSQLEnteriesPerCharacter = Properties.Settings.Default.MaxSQLEntriesPerCharacter;
                     DateTime endTime = DateTime.Now.AddSeconds(10);
-                    while (endTime > DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter)
+                    while (endTime > DateTime.Now && maxSQLEnteriesPerCharacter > 0 && count > maxSQLEnteriesPerCharacter - 1)
                     {
                         DateQuery minDateQuery = conn.QueryFirst<DateQuery>(minDateIndexQuery, new DynamicParameters());
                         string deleteQuery = $"Delete From [{tableName}] Where [index] = {minDateQuery.Index}";
@@ -602,7 +598,7 @@ namespace SQLLibrary
         {
             lock (thisLock)
             {
-                List<string> tables = new() { "Accounts", "Characters", "Guilds" };
+                List<string> tables = new() { "Accounts", "Characters", "Guilds", "AHK" };
                 using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
                 foreach (string tableName in tables)
                 {
@@ -615,5 +611,63 @@ namespace SQLLibrary
                 }
             }
         }
+
+        public static bool BackupDB(string srcFullPath, string destFullPath)
+        {
+            lock (thisLock)
+            {
+                try
+                {
+                    if (File.Exists(destFullPath))
+                        File.Delete(destFullPath);
+
+                    if (!File.Exists(srcFullPath))
+                    {
+                        TraceLog($"Could not locate file {srcFullPath}");
+                        return false;
+                    }
+                    File.Copy(srcFullPath, destFullPath, true);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    TraceLog(ex.Message);
+                    TraceLog(ex.StackTrace);
+                    return false;
+                }
+            }
+        }
+
+        public static bool RestoreDB(string srcFullPath, string destFullPath, bool IsCopy = false)
+        {
+            lock (thisLock)
+            {
+                try
+                {
+                    if (!File.Exists(srcFullPath))
+                    {
+                        TraceLog($"Could not locate file {srcFullPath}");
+                        return false;
+                    }
+
+                    if (File.Exists(destFullPath))
+                        File.Delete((destFullPath));
+
+                    if (IsCopy)
+                        BackupDB(srcFullPath, destFullPath);
+                    else
+                        File.Move(srcFullPath, destFullPath);
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    TraceLog(ex.Message);
+                    TraceLog(ex.StackTrace);
+                    return false;
+                }
+            }
+        }
+
     }
 }

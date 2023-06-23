@@ -18,10 +18,11 @@ namespace DAoCToolSuite.ChimpTool
 {
     public partial class MainForm : Form
     {
-        private string? WebIDLaunched = string.Empty;
+        private List<LaunchedCharacter> LaunchedCharacters = new();
         private static bool RefreshAllTimer = false;
         private static bool RefreshTimer = false;
-        private static DateTime GameRestartTimer = DateTime.Now;
+        private static DateTime GameRestartTimer0 = DateTime.Now;
+        private static DateTime GameRestartTimer1 = DateTime.Now;
         private static readonly object thisLock = new();
         private static readonly string BackupRepositoryFullPath = Settings.JsonBackupFileFullPath;
         private static readonly object repositoryLock = new();
@@ -117,27 +118,44 @@ namespace DAoCToolSuite.ChimpTool
             Shown += new System.EventHandler(MainForm_Shown!);
             Timer.Tick -= new EventHandler(MainForm_TimerHandler);
             Timer.Tick += new EventHandler(MainForm_TimerHandler);
-            Timer.Interval = 1000;
+            Timer.Interval = 500;
             Timer.Start();
             RefreshAllTimer = DateTime.Now < Properties.Settings.Default.NextRefreshAll;
             RefreshTimer = DateTime.Now < Properties.Settings.Default.NextRefresh;
         }
         private void MainForm_TimerHandler(object? sender, EventArgs e)
         {
-            #region Game Restart Timer
-            if (GameRestartTimer > DateTime.Now)
+            #region Game0 Restart Timer
+            if (GameRestartTimer0 > DateTime.Now)
             {
-                if (!TimerLabel.Visible)
-                    TimerLabel.Visible = true;
-                TimeSpan diff = GameRestartTimer - DateTime.Now;
-                TimerLabel.Text = diff.ToString(@"mm\:ss");
+                if (!TimerLabel0.Visible)
+                    TimerLabel0.Visible = true;
+                TimeSpan diff = GameRestartTimer0 - DateTime.Now;
+                TimerLabel0.Text = diff.ToString(@"mm\:ss");
             }
             else
             {
-                if (TimerLabel.Visible)
+                if (TimerLabel0.Visible)
                 {
-                    TimerLabel.Visible = false;
-                    TimerLabel.Text = "";
+                    TimerLabel0.Visible = false;
+                    TimerLabel0.Text = "";
+                }
+            }
+            #endregion
+            #region Game1 Restart Timer
+            if (GameRestartTimer1 > DateTime.Now)
+            {
+                if (!TimerLabel1.Visible)
+                    TimerLabel1.Visible = true;
+                TimeSpan diff = GameRestartTimer1 - DateTime.Now;
+                TimerLabel1.Text = diff.ToString(@"mm\:ss");
+            }
+            else
+            {
+                if (TimerLabel1.Visible)
+                {
+                    TimerLabel1.Visible = false;
+                    TimerLabel1.Text = "";
                 }
             }
             #endregion
@@ -147,26 +165,26 @@ namespace DAoCToolSuite.ChimpTool
                 RefreshAllTimer = false;
                 RefreshAllButton.Text = "Refresh All";
                 RefreshAllButton.Enabled = true;
-                refreshAllToolStripMenuItem.Enabled = true;
+                RefreshAllToolStripMenuItem.Enabled = true;
             }
             else if (RefreshAllTimer && DateTime.Now < Properties.Settings.Default.NextRefreshAll)
             {
                 TimeSpan Diff = Properties.Settings.Default.NextRefreshAll - DateTime.Now;
                 RefreshAllButton.Text = Convert.ToInt32(Diff.TotalSeconds).ToString();
                 RefreshAllButton.Enabled = false;
-                refreshAllToolStripMenuItem.Enabled = false;
+                RefreshAllToolStripMenuItem.Enabled = false;
             }
             else if (!RefreshAllTimer && BindingSource.Count > 0)
             {
                 RefreshAllButton.Text = "Refresh All";
                 RefreshAllButton.Enabled = true;
-                refreshAllToolStripMenuItem.Enabled = true;
+                RefreshAllToolStripMenuItem.Enabled = true;
             }
             else if (!RefreshAllTimer && BindingSource.Count < 1)
             {
                 RefreshAllButton.Text = "Refresh All";
                 RefreshAllButton.Enabled = false;
-                refreshAllToolStripMenuItem.Enabled = false;
+                RefreshAllToolStripMenuItem.Enabled = false;
             }
             #endregion
             #region Refresh Button State
@@ -175,26 +193,26 @@ namespace DAoCToolSuite.ChimpTool
                 RefreshTimer = false;
                 RefreshButton.Text = "Refresh";
                 RefreshButton.Enabled = true;
-                refreshToolStripMenuItem.Enabled = true;
+                RefreshToolStripMenuItem.Enabled = true;
             }
             else if (RefreshTimer && DateTime.Now < Properties.Settings.Default.NextRefresh)
             {
                 TimeSpan Diff = Properties.Settings.Default.NextRefresh - DateTime.Now;
                 RefreshButton.Text = Convert.ToInt32(Diff.TotalSeconds).ToString();
                 RefreshButton.Enabled = false;
-                refreshToolStripMenuItem.Enabled = false;
+                RefreshToolStripMenuItem.Enabled = false;
             }
             else if (!RefreshTimer && BindingSource.Count > 0)
             {
                 RefreshButton.Text = "Refresh";
                 RefreshButton.Enabled = true;
-                refreshToolStripMenuItem.Enabled = true;
+                RefreshToolStripMenuItem.Enabled = true;
             }
             else if (!RefreshTimer && BindingSource.Count < 1)
             {
                 RefreshButton.Text = "Refresh";
                 RefreshButton.Enabled = false;
-                refreshToolStripMenuItem.Enabled = false;
+                RefreshToolStripMenuItem.Enabled = false;
             }
             #endregion
             #region Debug Log Button State
@@ -323,10 +341,10 @@ namespace DAoCToolSuite.ChimpTool
                 }
 
             }
-            AlbionTotalsTextBox.Text = AlbionRpTotal.ToString("N0");
-            HiberniaTotalsTextBox.Text = HiberniaRpTotal.ToString("N0");
-            MidgardTotalsTextBox.Text = MidgardRpTotal.ToString("N0");
-            TotalRPTextBox.Text = (AlbionRpTotal + HiberniaRpTotal + MidgardRpTotal).ToString("N0");
+            AlbionTotalsTextBox.Text = AlbionRpTotal.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            HiberniaTotalsTextBox.Text = HiberniaRpTotal.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            MidgardTotalsTextBox.Text = MidgardRpTotal.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+            TotalRPTextBox.Text = (AlbionRpTotal + HiberniaRpTotal + MidgardRpTotal).ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
             WaitCursor.Pop();
         }
         #endregion
@@ -385,7 +403,7 @@ namespace DAoCToolSuite.ChimpTool
         #endregion
 
         #region Json Backup and Restore to DB
-        private static ChimpRepository LoadChimpRepository()
+        private static ChimpRepository? LoadChimpRepository()
         {
             WaitCursor.Push();
             Logger.Debug("Loading repository from disk.");
@@ -395,6 +413,8 @@ namespace DAoCToolSuite.ChimpTool
                 try
                 {
                     string json = ReadRepository();
+                    if (string.IsNullOrEmpty(json))
+                        return null;
                     chimpRepository = DeserializeRepository(json);
                     if (chimpRepository.AccountCount > 0)
                     {
@@ -454,7 +474,9 @@ namespace DAoCToolSuite.ChimpTool
             {
                 SqliteDataAccess.ResetTables();
 
-                ChimpRepository chimpRepository = LoadChimpRepository();
+                ChimpRepository? chimpRepository = LoadChimpRepository();
+                if (chimpRepository is null)
+                    return;
                 foreach (KeyValuePair<string, List<ChimpJson>> account in chimpRepository.Chimps)
                 {
                     SqliteDataAccess.AddAccount(account.Key);
@@ -473,12 +495,26 @@ namespace DAoCToolSuite.ChimpTool
         }
         private static void WriteRepository(string json)
         {
+            string fileName;
+            SaveFileDialog saveFileDialog = new()
+            {
+                InitialDirectory = Path.GetDirectoryName(BackupRepositoryFullPath),
+                FileName = Path.GetFileName(BackupRepositoryFullPath),
+                Filter = "json (*.json)|*.json|All files (*.*)|*.*"
+            };
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileName = saveFileDialog.FileName;
+            }
+            else
+                return;
+
             lock (repositoryLock)
             {
                 try
                 {
-                    Logger.Debug($"Writting backup to {BackupRepositoryFullPath}");
-                    File.WriteAllText(BackupRepositoryFullPath, json);
+                    Logger.Debug($"Writting backup to {fileName}");
+                    File.WriteAllText(fileName, json);
                 }
                 catch (System.Exception ex)
                 {
@@ -488,11 +524,24 @@ namespace DAoCToolSuite.ChimpTool
         }
         private static string ReadRepository()
         {
+            string fileName;
+            OpenFileDialog openFileDialog = new()
+            {
+                InitialDirectory = Path.GetDirectoryName(BackupRepositoryFullPath),
+                Filter = "json (*.json)|*.json|All files (*.*)|*.*"
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileName = openFileDialog.FileName;
+            }
+            else
+                return "";
+
             lock (repositoryLock)
             {
                 try
                 {
-                    string json = File.ReadAllText(BackupRepositoryFullPath);
+                    string json = File.ReadAllText(fileName);
                     return json;
                 }
                 catch (System.Exception ex)
@@ -644,9 +693,9 @@ namespace DAoCToolSuite.ChimpTool
                 }
 
                 string? guild = Guilds.Where(x => x.WebID == character.Guild_WebID).Select(x => x.Name).FirstOrDefault();
-                string albKills = character.Albion_Kills?.ToString("N0") ?? "0";
-                string midKills = character.Midgard_Kills?.ToString("N0") ?? "0";
-                string hibKills = character.Hibernia_Kills?.ToString("N0") ?? "0";
+                string albKills = character.Albion_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
+                string midKills = character.Midgard_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
+                string hibKills = character.Hibernia_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
 
                 string toShow = string.Empty;
                 switch (columnName)
@@ -663,13 +712,13 @@ namespace DAoCToolSuite.ChimpTool
                         switch (realm)
                         {
                             case "albion":
-                                toShow += $"Hibernia:{character.Hibernia_SoloKills?.ToString("N0") ?? "0"} Midgard:{character.Midgard_SoloKills?.ToString("N0") ?? "0"}";
+                                toShow += $"Hibernia:{character.Hibernia_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
                                 break;
                             case "midgard":
-                                toShow += $"Albion:{character.Albion_SoloKills?.ToString("N0") ?? "0"} Hibernia:{character.Hibernia_SoloKills?.ToString("N0") ?? "0"}";
+                                toShow += $"Albion:{character.Albion_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Hibernia:{character.Hibernia_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
                                 break;
                             case "hibernia":
-                                toShow += $"Albion:{character.Albion_SoloKills?.ToString("N0") ?? "0"} Midgard:{character.Midgard_SoloKills?.ToString("N0") ?? "0"}";
+                                toShow += $"Albion:{character.Albion_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
                                 break;
                             default:
                                 break;
@@ -679,13 +728,13 @@ namespace DAoCToolSuite.ChimpTool
                         switch (realm)
                         {
                             case "albion":
-                                toShow += $"Hibernia:{character.Hibernia_DeathBlows?.ToString("N0") ?? "0"} Midgard:{character.Midgard_DeathBlows?.ToString("N0") ?? "0"}";
+                                toShow += $"Hibernia:{character.Hibernia_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
                                 break;
                             case "midgard":
-                                toShow += $"Albion:{character.Albion_DeathBlows?.ToString("N0") ?? "0"} Hibernia:{character.Hibernia_DeathBlows?.ToString("N0") ?? "0"}";
+                                toShow += $"Albion:{character.Albion_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Hibernia:{character.Hibernia_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
                                 break;
                             case "hibernia":
-                                toShow += $"Albion:{character.Albion_DeathBlows?.ToString("N0") ?? "0"} Midgard:{character.Midgard_DeathBlows?.ToString("N0") ?? "0"}";
+                                toShow += $"Albion:{character.Albion_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
                                 break;
                             default:
                                 break;
@@ -695,13 +744,13 @@ namespace DAoCToolSuite.ChimpTool
                         switch (realm)
                         {
                             case "albion":
-                                toShow += $"Hibernia:{character.Hibernia_Kills?.ToString("N0") ?? "0"} Midgard:{character.Midgard_Kills?.ToString("N0") ?? "0"}";
+                                toShow += $"Hibernia:{character.Hibernia_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
                                 break;
                             case "midgard":
-                                toShow += $"Albion:{character.Albion_Kills?.ToString("N0") ?? "0"} Hibernia:{character.Hibernia_Kills?.ToString("N0") ?? "0"}";
+                                toShow += $"Albion:{character.Albion_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Hibernia:{character.Hibernia_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
                                 break;
                             case "hibernia":
-                                toShow += $"Albion:{character.Albion_Kills?.ToString("N0") ?? "0"} Midgard:{character.Midgard_Kills?.ToString("N0") ?? "0"}";
+                                toShow += $"Albion:{character.Albion_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
                                 break;
                             default:
                                 break;
@@ -737,6 +786,16 @@ namespace DAoCToolSuite.ChimpTool
                 RefreshAllButton.Enabled = false;
             }
 
+        }
+        private void SearchGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow? row = SearchGridView.Rows[e.RowIndex];
+            if (row != null)
+            {
+                string? characterName = row.Cells["Name"]?.Value?.ToString();
+                Logger.Debug($"Doubleclick detected on row containing {characterName ?? "null"}");
+                PerformLaunch();
+            }
         }
         #endregion
 
@@ -804,7 +863,7 @@ namespace DAoCToolSuite.ChimpTool
             Properties.Settings.Default.NextRefresh = DateTime.Now.AddSeconds(10);
             Properties.Settings.Default.Save();
         }
-        private void PerformRefresh(string? webID)
+        private void PerformRefresh(string? webID, string account)
         {
             if (webID is null)
             {
@@ -822,7 +881,7 @@ namespace DAoCToolSuite.ChimpTool
                 Logger.Debug("Database does not contain any records.");
                 return;
             }
-            RefreshChimp(webID, DateTime.Now);
+            RefreshChimp(webID, account, DateTime.Now);
             RefreshTimer = true;
             Properties.Settings.Default.NextRefresh = DateTime.Now.AddSeconds(10);
             Properties.Settings.Default.Save();
@@ -834,7 +893,7 @@ namespace DAoCToolSuite.ChimpTool
             RefreshButton.Enabled = false;
             PerformRefresh();
         }
-        private void RefreshChimp(string webID, DateTime date)
+        private void RefreshChimp(string webID, string account, DateTime date)
         {
             if (CharactersByAccountLastDateUpdated is null)
             {
@@ -849,7 +908,7 @@ namespace DAoCToolSuite.ChimpTool
                 if (UseAPI)
                 {
                     chimpRefreshResult = CamelotHeraldAPI.GetChimp(webID);
-                    if (UseSelenium && chimpRefreshResult.IsValid())
+                    if (UseSelenium && !chimpRefreshResult.IsValid())
                     {
                         chimpRefreshResult = CamelotHerald.GetChimp(webID);
                     }
@@ -860,20 +919,19 @@ namespace DAoCToolSuite.ChimpTool
                 }
 
 
-                if (chimpRefreshResult.IsValid())
+                if (!chimpRefreshResult.IsValid())
                 {
                     return;
                 }
-                SqliteDataAccess.AddCharacter(chimpRefreshResult.ConvertToCharacterModel(), date, AccountComboBox.Text);
+                SqliteDataAccess.AddCharacter(chimpRefreshResult.ConvertToCharacterModel(), date, account);
                 SqliteDataAccess.AddGuild(chimpRefreshResult.ConvertToGuildModel());
                 LoadCharacters();
                 CalculateRPTotals();
-
             }
             catch (MaintenanceException)
             {
                 UseAPI = false;
-                RefreshChimp(webID, date);
+                RefreshChimp(webID, account, date);
             }
             catch (System.Exception ex)
             {
@@ -888,6 +946,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             if (CharactersByAccountLastDateUpdated is null)
             {
+                Logger.Error("CharactersByAccountLastDateUpdated is null @ RefreshChimps()");
                 return;
             }
 
@@ -897,20 +956,26 @@ namespace DAoCToolSuite.ChimpTool
                 Stopwatch stopWatch = Stopwatch.StartNew();
                 if (UseAPI)
                 {
+                    Logger.Debug("Attempting RefreshAll via HeraldAPI");
                     chimpRefreshResults = CamelotHeraldAPI.GetChimps(chimpsToBeRefreshed, SearchProgressBar);
                     if (UseSelenium && chimpRefreshResults.Where(x => !x.IsValid()).Any())
                     {
-
                         List<ChimpJson> goodChimps = chimpRefreshResults.Where(x => x.IsValid()).ToList();
                         List<ChimpJson> badChimps = chimpRefreshResults.Where(x => !x.IsValid()).ToList();
                         Logger.Debug($"There were {badChimps.Count} characters that could not be refreshed via the API. Attempting via CamelotHerald scrape.");
-                        chimpRefreshResults = CamelotHerald.GetChimps(badChimps, SearchProgressBar).Where(x => x.IsValid()).ToList();
-                        chimpRefreshResults.AddRange(goodChimps);
+                        chimpRefreshResults = CamelotHerald.GetChimps(badChimps, SearchProgressBar);
+                        goodChimps.AddRange(chimpRefreshResults.Where(x => x.IsValid()).ToList());
+                        badChimps.AddRange(chimpRefreshResults.Where(x => x.IsValid()).ToList());
+                        Logger.Debug($"{goodChimps.Count} characters were refreshed with {badChimps.Count} failures.");
+                        chimpRefreshResults = goodChimps;
                     }
                 }
                 else if (UseSelenium)
                 {
                     chimpRefreshResults = CamelotHerald.GetChimps(chimpsToBeRefreshed, SearchProgressBar).Where(x => x.IsValid()).ToList();
+                    List<ChimpJson> goodChimps = chimpRefreshResults.Where(x => x.IsValid()).ToList();
+                    List<ChimpJson> badChimps = chimpRefreshResults.Where(x => !x.IsValid()).ToList();
+                    Logger.Debug($"{goodChimps.Count} characters were refreshed with {badChimps.Count} failures.");
                 }
 
                 int refreshed = chimpRefreshResults.Count;
@@ -960,11 +1025,11 @@ namespace DAoCToolSuite.ChimpTool
         {
             if (CharactersByAccountLastDateUpdated is null)
             {
+                Logger.Error("CharactersByAccountLastDateUpdated is null @ PerformRefreshAll().");
                 return;
             }
 
             DateTime date = DateTime.Now;
-            Logger.Debug("RefreshAll button clicked.");
             Logger.Debug($"There are {CharactersByAccountLastDateUpdated.Count} characters in the current table for {AccountComboBox.Text}.");
 
             WaitCursor.Push();
@@ -977,6 +1042,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void RefreshAllButton_Click(object sender, EventArgs e)
         {
+            Logger.Debug("RefreshAll button clicked.");
             RefreshAllButton.Enabled = false;
             PerformRefreshAll();
         }
@@ -1200,7 +1266,8 @@ namespace DAoCToolSuite.ChimpTool
         private CredentialModel? GetCredentials(bool force = false)
         {
             List<CredentialModel> credentials = SqliteDataAccess.LoadAccountCredentials(AccountComboBox.Text);
-            if (force || string.IsNullOrEmpty(Properties.Settings.Default.GameDllLocation) || credentials is null || credentials.Count == 0 || string.IsNullOrEmpty(credentials.First().Login) || string.IsNullOrEmpty(credentials.First().Password))
+            if (force || string.IsNullOrEmpty(Properties.Settings.Default.GameDllLocation) || !File.Exists(Properties.Settings.Default.GameDllLocation + "\\game.dll")
+                || credentials is null || credentials.Count == 0 || string.IsNullOrEmpty(credentials.First().Login) || string.IsNullOrEmpty(credentials.First().Password))
             {
                 CredentialForm form = new()
                 {
@@ -1257,6 +1324,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void PerformLaunch()
         {
+            #region DAoC Credentials
             CredentialModel? credentials;
             if (ModifierKeys.HasFlag(Keys.Shift))
             {
@@ -1271,12 +1339,15 @@ namespace DAoCToolSuite.ChimpTool
 
             if (credentials is null)
             {
-                Logger.Warn("Credentials returned from DB are invalid.");
+                Logger.Warn("Credentials returned from GetCredentials() are invalid.");
+                LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+                launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
                 return;
             }
 
             var login = credentials.Login;
             var password = credentials.Password;
+            #endregion
 
             var row = SearchGridView.SelectedRows[0];
             var charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
@@ -1284,27 +1355,42 @@ namespace DAoCToolSuite.ChimpTool
             var realm = row.Cells["Realm"].Value.ToString();
             var webID = row.Cells["WebID"].Value.ToString();
             var account = AccountComboBox.Text;
+
             Logger.Debug($"Information read from the selected item Character:{charName ?? "null"} Server:{serverName ?? "null"} Realm:{realm ?? "null"}");
 
-            if (webID is not null)
+            if (webID is null)
             {
-                try
+                Logger.Error("Could not determine character's WebID");
+                LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+                launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+                return;
+            }
+            LaunchedCharacter launchedCharacter = new();
+
+            #region AHK
+            try
+            {
+                if (!LaunchedCharacters.Where(x => x.AttacheAHK).Any()) //Check if another character had already launched w/AHK script associated.
                 {
                     AHKModel? model = SqliteDataAccess.LoadAHKModelByWebID(webID, account);
                     if (model is not null)
                     {
                         AHK = GetAHKEngine(model.Version ?? 1);
-
                         Logger.Debug($"Loading {model.AHKScriptPath}");
                         AHK.LoadFile(model.AHKScriptPath);
+                        launchedCharacter.AttacheAHK = true;
                     }
                 }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex);
-                }
+                else
+                    Logger.Debug($"Only one AHK Script can be active at one time. I think.");
             }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            #endregion
 
+            #region Launch Character
             int realmIndex = 0;
             realmIndex = realm switch
             {
@@ -1313,10 +1399,13 @@ namespace DAoCToolSuite.ChimpTool
                 //Hibernia
                 _ => 3,
             };
+
             string json = ReadServerList();
             if (string.IsNullOrEmpty(json) || json.Equals("{}"))
             {
                 Logger.Error("SeverConfig.json is invalid.");
+                LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+                launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
                 return;
             }
 
@@ -1324,6 +1413,8 @@ namespace DAoCToolSuite.ChimpTool
             if (SLI is null)
             {
                 Logger.Error("Deserialization of ServerListINI from json is invalid.");
+                LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+                launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
                 return;
             }
             Servers? servers = SLI.Servers;
@@ -1332,6 +1423,8 @@ namespace DAoCToolSuite.ChimpTool
             if (server is null)
             {
                 Logger.Error($"Could not find Server {server} in the ServerConfig.json");
+                LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+                launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
                 return;
             }
 
@@ -1340,10 +1433,32 @@ namespace DAoCToolSuite.ChimpTool
             var ip = server.IP;
 
             var path = Properties.Settings.Default.GameDllLocation;
-            if (path == null) return;
+            if (path == null)
+            {
+                Logger.Error("Game.dll location is not set.");
+                LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+                launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+                return;
+            }
 
             Logger.Debug($"Executing: {path}\\game.dll {ip} {port} {index} {ObscureUserName(login)} {HidePassword(password)} {charName} {realmIndex}");
-            WebIDLaunched = string.Empty;
+
+            int launchIndex = LaunchedCharacters.Count;
+
+            if (launchIndex < 2)
+            {
+                launchedCharacter.WebID = webID;
+                launchedCharacter.Account = account;
+                launchedCharacter.ProcessIndex = launchIndex;
+            }
+            else
+            {
+                MessageBox.Show("You may not launch more than 2 characters.", "You shall not pass");
+                LaunchButton.Enabled = launchIndex <= 2;
+                launchToolStripMenuItem.Enabled = launchIndex <= 2;
+                return;
+            }
+
             try
             {
                 var p = new System.Diagnostics.Process();
@@ -1354,17 +1469,29 @@ namespace DAoCToolSuite.ChimpTool
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.CreateNoWindow = true;
                 p.EnableRaisingEvents = true;
-                p.Exited -= GameOver;
-                p.Exited += GameOver;
+                if (launchIndex == 0)
+                {
+                    p.Exited -= GameOver0;
+                    p.Exited += GameOver0;
+                }
+                else
+                {
+                    p.Exited -= GameOver1;
+                    p.Exited += GameOver1;
+                }
                 Logger.Debug("Starting game.dll process");
-                WebIDLaunched = webID;
                 p.Start();
+                LaunchedCharacters.Add(launchedCharacter);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                SqliteDataAccess.AddAccountCredentials(AccountComboBox.Text, null, null);
+                SqliteDataAccess.AddAccountCredentials(AccountComboBox.Text, login, null);
             }
+            #endregion
+
+            LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
         }
         private void LaunchButton_Click(object sender, EventArgs e)
         {
@@ -1372,46 +1499,97 @@ namespace DAoCToolSuite.ChimpTool
             launchToolStripMenuItem.Enabled = false;
             PerformLaunch();
         }
-        private void GameOver(object? sender, EventArgs e)
+        private void GameOver0(object? sender, EventArgs e)
         {
             try
             {
                 Logger.Debug("game.dll process ended");
                 if (LaunchButton.InvokeRequired)
                 {
-                    LaunchButton.Invoke(LaunchButtonEnable);
+                    Logger.Debug("Invoked Was Required");
+                    LaunchButton.Invoke(PostGame0);
                 }
                 else
                 {
-                    Logger.Debug("Invoked Was not Required");
-                    LaunchButton.Enabled = true;
-                    launchToolStripMenuItem.Enabled = true;
-                    AHK.Terminate();
-                    _AHK = null;
-                    GameRestartTimer = DateTime.Now.AddMinutes(2);
-                    if (WebIDLaunched is not null)
-                    {
-                        PerformRefresh(WebIDLaunched);
-                    }
+                    Logger.Debug("Invoked Was NOT Required");
+                    PostGame0();
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
             }
+            LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
         }
-        private void LaunchButtonEnable()
+        private void GameOver1(object? sender, EventArgs e)
         {
-            Logger.Debug("Invoked Was Required");
-            LaunchButton.Enabled = true;
-            launchToolStripMenuItem.Enabled = true;
-            AHK.Terminate();
-            _AHK = null;
-            GameRestartTimer = DateTime.Now.AddMinutes(2);
-            if (WebIDLaunched is not null)
+            try
             {
-                PerformRefresh(WebIDLaunched);
+                Logger.Debug("game.dll process ended");
+                if (LaunchButton.InvokeRequired)
+                {
+                    Logger.Debug("Invoked Was Required");
+                    LaunchButton.Invoke(PostGame1);
+                }
+                else
+                {
+                    Logger.Debug("Invoked Was NOT Required");
+                    PostGame1();
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+        }
+        private void PostGame0()
+        {
+            GameRestartTimer0 = DateTime.Now.AddMinutes(2);
+
+            LaunchedCharacter launchedCharacter = LaunchedCharacters.Where(x => x.ProcessIndex == 0).First();
+
+            //Remove AHK
+            if (launchedCharacter.AttacheAHK)
+            {
+                AHK.Terminate();
+                _AHK = null;
+            }
+
+            //Refresh the launched character's chimp inf
+            PerformRefresh(launchedCharacter.WebID, launchedCharacter.Account);
+
+            //Freeup Process Slot
+            LaunchedCharacters.Remove(launchedCharacter);
+
+            //Re-Enable Buttons/MenuItems
+            LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+        }
+        private void PostGame1()
+        {
+            GameRestartTimer1 = DateTime.Now.AddMinutes(2);
+
+            LaunchedCharacter launchedCharacter = LaunchedCharacters.Where(x => x.ProcessIndex == 1).First();
+
+            //Remove AHK
+            if (launchedCharacter.AttacheAHK)
+            {
+                AHK.Terminate();
+                _AHK = null;
+            }
+
+            //Refresh the launched character's chimp inf
+            PerformRefresh(launchedCharacter.WebID, launchedCharacter.Account);
+
+            //Freeup Process Slot
+            LaunchedCharacters.Remove(launchedCharacter);
+
+            //Re-Enable Buttons/MenuItems
+            LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
         }
         #endregion
 
@@ -1433,6 +1611,60 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void BackupToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string fileName;
+            SaveFileDialog saveFileDialog = new()
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                FileName = "CharacterDB_Backup.db",
+                Filter = "SQLite Database (*.db)|*.db|All files (*.*)|*.*"
+            };
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileName = saveFileDialog.FileName;
+            }
+            else
+                return;
+
+            string srcFullPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\CharacterDB.db";
+            string destFileName = fileName;
+            SqliteDataAccess.BackupDB(srcFullPath, destFileName);
+        }
+        private void RestoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string fileName;
+            OpenFileDialog openFileDialog = new()
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                FileName = "CharacterDB_Backup.db",
+                Filter = "SQLite Database (*.db)|*.db|All files (*.*)|*.*"
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileName = openFileDialog.FileName;
+            }
+            else
+                return;
+
+            EnableSelectIndexChangedEvent = false;
+            string srcFullPath = fileName;
+            string destFileName = Path.GetDirectoryName(Application.ExecutablePath) + "\\CharacterDB.db";
+            SqliteDataAccess.RestoreDB(srcFullPath, destFileName, true);
+            LoadAccounts();
+            EnableSelectIndexChangedEvent = true;
+            LoadCharacters();
+            CalculateRPTotals();
+        }
+        private void ImportJsonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            restoreToolStripMenuItem.Enabled = false;
+            WaitCursor.Push();
+            Logger.Debug("Restore MenuItem has been pressed.");
+            PerformDBRestore();
+            WaitCursor.Pop();
+            restoreToolStripMenuItem.Enabled = true;
+        }
+        private void ExportJsonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             backupToolStripMenuItem.Enabled = false;
             WaitCursor.Push();
             Logger.Debug("Backup MenuItem has been pressed.");
@@ -1442,15 +1674,6 @@ namespace DAoCToolSuite.ChimpTool
             restoreToolStripMenuItem.Enabled = File.Exists(BackupRepositoryFullPath);
             WaitCursor.Pop();
             backupToolStripMenuItem.Enabled = false;
-        }
-        private void RestoreToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            restoreToolStripMenuItem.Enabled = false;
-            WaitCursor.Push();
-            Logger.Debug("Restore button has been pressed.");
-            PerformDBRestore();
-            WaitCursor.Pop();
-            restoreToolStripMenuItem.Enabled = true;
         }
         private void LaunchToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1548,9 +1771,11 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void RefreshAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            refreshAllToolStripMenuItem.Enabled = false;
+            RefreshAllToolStripMenuItem.Enabled = false;
             PerformRefreshAll();
         }
         #endregion
+
+
     }
 }

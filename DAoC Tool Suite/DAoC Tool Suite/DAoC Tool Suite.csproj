@@ -15,8 +15,8 @@
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<PackageIcon>Icons\DAoCTools.png</PackageIcon>
 		<Platforms>x86</Platforms>
-		<AssemblyVersion>0.9.3.0</AssemblyVersion>
-		<FileVersion>0.9.3.0</FileVersion>
+		<AssemblyVersion>0.9.5.0</AssemblyVersion>
+		<FileVersion>0.9.5.0</FileVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(PlatformTarget)' == 'x86'">
@@ -70,7 +70,7 @@
     <ProjectReference Include="..\CharacterTool\CharacterTool.csproj" />
     <ProjectReference Include="..\ChimpTool\ChimpTool.csproj" />
     <ProjectReference Include="..\LogTool\LogTool.csproj" />
-    <ProjectReference Include="..\ResetLocations\ResetLocations.csproj" />
+    <ProjectReference Include="..\ResetLocations\DAoCToolsResetSettings.csproj" />
   </ItemGroup>
 
   <ItemGroup>

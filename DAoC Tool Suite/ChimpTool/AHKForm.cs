@@ -1,10 +1,12 @@
-﻿using SQLLibrary;
+﻿using Logger;
+using SQLLibrary;
 using System.IO;
 
 namespace DAoCToolSuite.ChimpTool
 {
     public partial class AHKForm : Form
     {
+        LogManager Logger => LogManager.Instance;
         public string CharacterName { get; set; } = string.Empty;
         public string Realm { get; set; } = string.Empty;
         public string Server { get; set; } = string.Empty;
@@ -32,10 +34,15 @@ namespace DAoCToolSuite.ChimpTool
             AHKModel? model = SqliteDataAccess.LoadAHKModelByWebID(WebID, Account);
             if (model is not null && !string.IsNullOrEmpty(model.AHKScriptPath))
             {
+                Logger.Debug($"Previous AHK association detected for WebID:{WebID} on Account:{Account}.");
                 AHKScriptPath = model.AHKScriptPath;
                 ScriptPathTextBox.Text = AHKScriptPath;
                 UseVersion2 = model.Version == 2;
                 VersionCheckBox.Checked = UseVersion2;
+            }
+            else
+            {
+                Logger.Debug($"No previous AHK association found for WebID:{WebID} on Account:{Account}.");
             }
         }
 
@@ -67,9 +74,15 @@ namespace DAoCToolSuite.ChimpTool
         private void SubmitButton_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(AHKScriptPath))
+            {
                 SqliteDataAccess.DelAHK(WebID, Account);
+                Logger.Debug($"Removing AHK association for WebID:{WebID} on Account:{Account}");
+            }
             else
+            {
                 SqliteDataAccess.AddAHKModel(WebID, Account, AHKScriptPath, UseVersion2 ? 2 : 1);
+                Logger.Debug($"Adding AHK association for WebID:{WebID} on Account:{Account} for script at {AHKScriptPath}");
+            }
             Close();
         }
 

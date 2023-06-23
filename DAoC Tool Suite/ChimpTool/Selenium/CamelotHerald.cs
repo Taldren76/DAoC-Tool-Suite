@@ -216,8 +216,15 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 foreach (string playerName in playerNames)
                 {
                     #region ProgressBar
-                    progressBar.Value += 1;
-                    progressBar.Update();
+                    if (progressBar.Value != progressBar.Maximum)
+                    {
+                        progressBar.Value += 1;
+                        progressBar.Update();
+                    }
+                    else
+                    {
+                        Logger.Warn("ProgressBar exceeded Maximum Value");
+                    }
                     #endregion
 
                     try
@@ -259,7 +266,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
 
             progressBar.Visible = true;
             progressBar.Value = 0;
-            progressBar.Maximum = chimps.Count;
+            progressBar.Maximum = chimps.Count > 0 ? chimps.Count : 1;
             progressBar.Minimum = 0;
             progressBar.CustomText = "Retrieving Character Data";
             progressBar.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
@@ -286,8 +293,15 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 {
                     resultWatch.Restart();
                     #region ProgressBar
-                    progressBar.Value += 1;
-                    progressBar.Update();
+                    if (progressBar.Value != progressBar.Maximum)
+                    {
+                        progressBar.Value += 1;
+                        progressBar.Update();
+                    }
+                    else
+                    {
+                        Logger.Warn("ProgressBar exceeded Maximum Value");
+                    }
                     #endregion
                     Logger.Debug($"Progressbar updated in {resultWatch.Elapsed:c}");
                     if (chimp?.WebID is null)
@@ -394,7 +408,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                     chimp.Server = strTableElements.Count > 8 ? strTableElements[6].ToString().Split('-').Last().Replace(" ", "") : strTableElements[5].ToString().Split('-').Last().Replace(" ", "");
                     chimp.Realm = strTableElements.Count > 8 ? strTableElements[7].ToString() : strTableElements[6].ToString();
                     chimp.MasterLevel_Name = strMasterPathName;
-                    chimp.MasterLevel_Level = intMasterPathLevel.ToString("N0") ?? "0";
+                    chimp.MasterLevel_Level = intMasterPathLevel.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
 
                     // Table XPath: //table[1]//tr//td
                     /* ==== REALM VS REALM STATS ===
