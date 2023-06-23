@@ -277,15 +277,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DAoC Tool Suite"
-        "ProductCode" = "8:{A7107B9C-65F6-4BAE-817C-54F3A1B27390}"
-        "PackageCode" = "8:{3B3EF0DD-734A-44BE-A4FF-923D28279CA8}"
+        "ProductCode" = "8:{4D20DD09-EB46-4C5A-B4D3-116CC9E756FF}"
+        "PackageCode" = "8:{D05696E6-020A-4B00-B26C-9AACECBBC966}"
         "UpgradeCode" = "8:{B64144B6-6C56-4A20-A52F-D1B1C16ECBEB}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.9.2"
+        "ProductVersion" = "8:0.9.3"
         "Manufacturer" = "8:Taldren, Inc"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -827,7 +827,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_97A72D1CB9C94999B7E6CC9B0F5C602D"
             {
-            "SourcePath" = "8:\\\\Paldrennas\\repo\\Repos\\DAoCToolSuite\\DAoC Tool Suite\\DAoC Tool Suite\\obj\\x86\\Release\\net6.0-windows10.0.17763.0\\win-x86\\apphost.exe"
+            "SourcePath" = "8:\\\\Paldrennas\\repo\\Repos\\DAoCToolSuite\\DAoC Tool Suite\\DAoC Tool Suite\\obj\\x86\\Debug\\net6.0-windows10.0.17763.0\\win-x86\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_84BAA862631442F9A02413BED68185BE"

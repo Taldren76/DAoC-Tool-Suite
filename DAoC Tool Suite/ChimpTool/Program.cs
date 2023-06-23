@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using DAoCToolSuite.ChimpTool.Selenium;
+using System.Diagnostics;
 using System.IO;
-using DAoCToolSuite.ChimpTool.Selenium;
 
 namespace DAoCToolSuite.ChimpTool
 {

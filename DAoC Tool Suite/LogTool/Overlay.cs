@@ -1,8 +1,4 @@
 ﻿using System.Drawing.Text;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Forms;
-using Windows.Perception.Spatial;
 
 namespace DAoCToolSuite.LogTool
 {

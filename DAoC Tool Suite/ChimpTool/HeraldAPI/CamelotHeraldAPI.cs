@@ -1,10 +1,10 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
-using DAoCToolSuite.ChimpTool.Exceptions;
+﻿using DAoCToolSuite.ChimpTool.Exceptions;
 using DAoCToolSuite.ChimpTool.Json;
 using Logger;
 using Newtonsoft.Json;
 using SQLLibrary.Enums;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace DAoCToolSuite.ChimpTool.HeraldAPI
 {

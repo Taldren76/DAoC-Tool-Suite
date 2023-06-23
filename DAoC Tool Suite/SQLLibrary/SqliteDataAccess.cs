@@ -1,8 +1,7 @@
-﻿using System.Data;
+﻿using Dapper;
+using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
-using System.Security.Principal;
-using Dapper;
 
 namespace SQLLibrary
 {
@@ -54,7 +53,7 @@ namespace SQLLibrary
             }
         }
 
-        public static void AddAHKModel(string webID, string account, string? ahkScriptPath=null, int version = 1)
+        public static void AddAHKModel(string webID, string account, string? ahkScriptPath = null, int version = 1)
         {
             AHKModel model = new AHKModel()
             {
@@ -63,7 +62,7 @@ namespace SQLLibrary
                 Account = account,
                 Version = version
             };
-           AddAHKModel(model);
+            AddAHKModel(model);
         }
 
         public static void AddAHKModel(AHKModel model)

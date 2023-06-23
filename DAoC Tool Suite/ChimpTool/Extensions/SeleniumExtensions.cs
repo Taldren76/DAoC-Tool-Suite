@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using Logger;
+﻿using Logger;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using System.Diagnostics;
 
 namespace DAoCToolSuite.ChimpTool.Extensions
 {

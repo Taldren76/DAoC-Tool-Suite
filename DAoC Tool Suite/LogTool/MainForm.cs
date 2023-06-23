@@ -1,6 +1,5 @@
-using System.Data;
-using System.Windows.Forms;
 using Logger;
+using System.Data;
 
 namespace DAoCToolSuite.LogTool
 {

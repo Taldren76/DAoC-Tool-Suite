@@ -1,8 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Text.RegularExpressions;
-using CefSharp;
+﻿using CefSharp;
 using CefSharp.OffScreen;
 using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.Json;
@@ -11,6 +7,10 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SQLLibrary.Enums;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace DAoCToolSuite.ChimpTool.Selenium
 {
@@ -147,7 +147,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 return new(true);
             }
         }
-        internal static ChimpJson GetChimp(ChimpJson player)
+        internal static ChimpJson GetChimp(string webID)
         {
             if (!IsInitialized || Browser == null || !Browser.IsBrowserInitialized)
             {
@@ -170,7 +170,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             using ChromeDriver driver = new(chromeDrvService, options);
             try
             {
-                string url = $"https://search.camelotherald.com/#/character/{player.WebID}";
+                string url = $"https://search.camelotherald.com/#/character/{webID}";
                 Logger.Debug($"Navigating to {url}");
                 driver.Navigate().GoToUrl(new Uri(url));
                 Logger.Debug($"Navigation complete. Url={driver.Url}");

@@ -1,9 +1,9 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using Logger.Enums;
+﻿using Logger.Enums;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Logger
 {

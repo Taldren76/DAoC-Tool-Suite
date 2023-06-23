@@ -1,7 +1,7 @@
-﻿using System.IO;
-using Logger;
+﻿using Logger;
 using Newtonsoft.Json;
 using SQLLibrary.Enums;
+using System.IO;
 
 namespace DAoCToolSuite.ChimpTool.Settings
 {

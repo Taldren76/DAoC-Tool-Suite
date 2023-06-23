@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Diagnostics;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -36,9 +27,9 @@ namespace DAoCToolSuite.ChimpTool
 
         private void GitHubLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            LinkLabel linkLabel = new LinkLabel();
+            LinkLabel linkLabel = (LinkLabel)sender;
             linkLabel.LinkVisited = true;
-            string target = e.Link.LinkData as string;
+            string target = e?.Link?.LinkData as string ?? "https://github.com/Taldren76/DAoC-Tool-Suite";
             System.Diagnostics.Process.Start(new ProcessStartInfo { FileName = @target, UseShellExecute = true });
         }
     }

@@ -1,12 +1,11 @@
-using System.Data;
-using System.IO;
-using System.Windows.Controls;
 using DAoCToolSuite.CharacterTool.Files;
 using DAoCToolSuite.CharacterTool.Json;
 using DAoCToolSuite.CharacterTool.Settings;
 using Logger;
 using Newtonsoft.Json;
 using SQLLibrary;
+using System.Data;
+using System.IO;
 
 
 namespace DAoCToolSuite.CharacterTool

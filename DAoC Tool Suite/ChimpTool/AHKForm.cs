@@ -1,17 +1,5 @@
-﻿using CefSharp.DevTools.Network;
-using DAoCToolSuite.ChimpTool.Json;
-using Microsoft.Win32;
-using SQLLibrary;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using SQLLibrary;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DAoCToolSuite.ChimpTool
 {

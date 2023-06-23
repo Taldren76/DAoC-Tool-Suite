@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAoCToolSuite.LogTool
+﻿namespace DAoCToolSuite.LogTool
 {
     internal static class Ratio
     {
         internal static string ToRatioString(this double input)
         {
             if (input == 0) return "0";
-            if(input == 1) return "1:1";
+            if (input == 1) return "1:1";
             if (input > 1)
             {
                 return $"{input:N2}:1";

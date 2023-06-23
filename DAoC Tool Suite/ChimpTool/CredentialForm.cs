@@ -1,15 +1,5 @@
 ﻿using SQLLibrary;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -52,12 +42,12 @@ namespace DAoCToolSuite.ChimpTool
             folderBrowserDialog1 = new FolderBrowserDialog
             {
                 RootFolder = Environment.SpecialFolder.MyComputer,
-                SelectedPath = GameLocationTextBox.Text,       
+                SelectedPath = GameLocationTextBox.Text,
             };
 
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                if(File.Exists(folderBrowserDialog1.SelectedPath+"\\game.dll"))
+                if (File.Exists(folderBrowserDialog1.SelectedPath + "\\game.dll"))
                 {
                     GameLocationTextBox.Text = folderBrowserDialog1.SelectedPath;
                     Properties.Settings.Default.GameDllLocation = folderBrowserDialog1.SelectedPath;
@@ -66,7 +56,7 @@ namespace DAoCToolSuite.ChimpTool
                 else
                 {
                     _ = MessageBox.Show($"Game.dll was not found at {folderBrowserDialog1.SelectedPath}", "File Not Found", MessageBoxButtons.OK);
-                }    
+                }
             }
         }
 

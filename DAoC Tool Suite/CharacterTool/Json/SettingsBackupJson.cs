@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SQLLibrary;
+using System.Text.Json.Serialization;
 
 namespace DAoCToolSuite.CharacterTool.Json
 {

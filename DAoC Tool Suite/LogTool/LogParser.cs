@@ -1,11 +1,6 @@
-﻿using System.Globalization;
+﻿using Logger;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Windows.Shapes;
-using Logger;
-using Windows.Media.Streaming.Adaptive;
-using static System.Windows.Forms.LinkLabel;
 
 namespace DAoCToolSuite.LogTool
 {
@@ -17,7 +12,7 @@ namespace DAoCToolSuite.LogTool
         private int CriticalHealingDone = 0;
         private int DamageTaken = 0;
         private int DamageDoneBlocked = 0;
-        private int DamageTakenBlocked = 0;       
+        private int DamageTakenBlocked = 0;
         private int HealHit = 0;
         private int HealingDone = 0;
         private int MeleeCritHit = 0;
@@ -77,7 +72,7 @@ namespace DAoCToolSuite.LogTool
         public int RealmPointsEarned = 0;
         public int DeathBlows = 0;
         public int Deaths = 0;
-        public double IRS => RealmPointsEarned / (Deaths == 0 ? 1: Deaths);
+        public double IRS => RealmPointsEarned / (Deaths == 0 ? 1 : Deaths);
         public int TotalDamageTaken => DamageTaken + (PlayersOnlyFilter ? 0 : NonPlayerDamageTaken);
         public int TotalDamageDone => TotalMeleeDamageDone + TotalNonMeleeDamageDone + TotalPetDamageDone;
         public int DamageDoneAbsorbed = 0;
@@ -148,7 +143,7 @@ namespace DAoCToolSuite.LogTool
         private int TotalPetNonMeleeDamageHits => PetNonMeleeHit + (PlayersOnlyFilter ? 0 : NonPlayerPetNonMeleeHit);
         public int AveragePetCriticalMeleeDamageDone => PetCritMeleeDamageDone / (PetMeleeCritHits == 0 ? 1 : PetMeleeCritHits);
         public int AveragePetMeleeDamageDone => CombinedPetMeleeDamageDone / (TotalPetMeleeHits == 0 ? 1 : TotalPetMeleeHits);
-        public int AveragePetNonMeleeDamage => TotalPetNonMeleeDamageDone / (TotalPetNonMeleeDamageHits ==0?1:TotalPetNonMeleeDamageHits);
+        public int AveragePetNonMeleeDamage => TotalPetNonMeleeDamageDone / (TotalPetNonMeleeDamageHits == 0 ? 1 : TotalPetNonMeleeDamageHits);
         public int AveragePetHeal => PetHealingDone / (PetHealHit == 0 ? 1 : PetHealHit);
         public int TotalPetDamageDone => TotalPetNonMeleeDamageDone + TotalPetMeleeDamageDone;
         public int TotalPetHealingDone => PetHealingDone;
@@ -194,7 +189,7 @@ namespace DAoCToolSuite.LogTool
         private static readonly Regex CriticalHealingDoneByYouToPetsRegEx = new(@"You critical heal.* (\d+).*\n.*You heal (.*)'s (.*) for (\d+)"); //G1: Critical Bonus, G2: PetOwner Name, G3: PetName, G4: Critical Healing Done
         private static readonly Regex HealingDoneByYouToPetsRegEx = new(@"You heal (.*)'s (.*) for (\d+)");  //G1: PetOwner Name, G2: PetName, G3: Healing Done
         private static readonly Regex PetHealingRegEx = new(@"Your (.*) healed (the |)(.*) for (\d+)"); //G1: PetName, G2: Non-Player Test, G3: TargetName, G4 Heal
-         
+
         //Mitigation
         private static readonly Regex DamageDoneAbsorbedRegEx = new(@"(A|Your) .* absorb(?:s|) (\d+).*"); //G1: Owner Test, G2: Damage Absorbed
         private static readonly Regex DamageBlockedRegEx = new(@"(\d+) damage was blocked by (the |)(your|\w+)(?:'s|)"); //G1: DamageBlocked, G2:Non-Player Test, G3:OwnerName
@@ -209,7 +204,7 @@ namespace DAoCToolSuite.LogTool
 
         public Dictionary<DateTime, int> LogOpenEntries = new();
         public Dictionary<DateTime, int> LogCloseEntries = new();
-        public bool PlayersOnlyFilter { get; set; } = false; 
+        public bool PlayersOnlyFilter { get; set; } = false;
         private static readonly object ThisLock = new();
         private static LogManager Logger => LogManager.Instance;
         private int LogFileReadIndex { get; set; } = -1;
@@ -339,13 +334,13 @@ namespace DAoCToolSuite.LogTool
                 }
 
                 Match moneyEarnedMatch = MoneyEarnedRegEx.Match(line);
-                if(moneyEarnedMatch.Success)
+                if (moneyEarnedMatch.Success)
                 {
                     //(Your share|You pick up) - 1 match
-                    
+
                     MatchCollection moneyMatches = MoneyRegEx.Matches(line);
                     double goldEarned = 0;
-                    foreach(Match match in moneyMatches)
+                    foreach (Match match in moneyMatches)
                     {
                         //(\d+) (platinum|gold|silver|copper) - 1to4 matches
                         //G1: Quantity
@@ -370,7 +365,7 @@ namespace DAoCToolSuite.LogTool
                     }
                     GoldEarned += goldEarned;
                     continue;
-                }    
+                }
                 #endregion
 
                 #region Damage
@@ -393,7 +388,7 @@ namespace DAoCToolSuite.LogTool
                         NonPlayerNonMeleeCritHit += 1;
                     }
 
-                   
+
                     index += 1;
                     continue;
                 }
@@ -590,7 +585,7 @@ namespace DAoCToolSuite.LogTool
                     string? g2 = criticalHealingDoneMatch.Groups[2].Value?.ToString();
                     string g3 = criticalHealingDoneMatch.Groups[3].Value.ToString();
                     int g4 = Convert.ToInt32(criticalHealingDoneMatch.Groups[4].Value);
-                    
+
                     if (g3.ToLower().Equals("yourself"))
                         HealingTaken += g4;
 
@@ -699,7 +694,7 @@ namespace DAoCToolSuite.LogTool
                     string g3 = petCriticalMeleeDamageDoneMatch.Groups[3].Value.ToString();
                     int g4 = Convert.ToInt32(petCriticalMeleeDamageDoneMatch.Groups[4].Value);
                     int g5 = Convert.ToInt32(petCriticalMeleeDamageDoneMatch.Groups[5].Value);
-                    if(string.IsNullOrEmpty(g2))
+                    if (string.IsNullOrEmpty(g2))
                     {
                         PetMeleeCritHit += 1;
                         PetMeleeCriticalDamageDone += g4 + g5;
@@ -831,9 +826,9 @@ namespace DAoCToolSuite.LogTool
                     string g3 = petHealingMatch.Groups[3].Value.ToString();
                     int g4 = Convert.ToInt32(petHealingMatch.Groups[4].Value);
 
-                    if(g3.ToLower().Equals("you"))
+                    if (g3.ToLower().Equals("you"))
                         HealingTaken += g4;
-                    
+
                     PetHealingDone += g4;
                     PetHealHit += 1;
 
@@ -851,10 +846,10 @@ namespace DAoCToolSuite.LogTool
                     string g1 = damageDoneAbsorbedMatch.Groups[1].Value.ToString();
                     int g2 = Convert.ToInt32(damageDoneAbsorbedMatch.Groups[2].Value);
 
-                    if(g1.ToLower().Equals("your"))
+                    if (g1.ToLower().Equals("your"))
                     {
                         DamageTakenAbsorbed += g2;
-                    }   
+                    }
                     else
                     {
                         DamageDoneAbsorbed += g2;
@@ -871,16 +866,16 @@ namespace DAoCToolSuite.LogTool
                     int g1 = Convert.ToInt32(damageBlockedMatch.Groups[1].Value);
                     string? g2 = damageBlockedMatch.Groups[2].Value?.ToString();
                     string g3 = damageBlockedMatch.Groups[3].Value.ToString();
-                    if(string.IsNullOrEmpty(g2))
+                    if (string.IsNullOrEmpty(g2))
                     {
-                        if(g3.ToLower().Equals("your"))
+                        if (g3.ToLower().Equals("your"))
                         {
                             DamageTakenBlocked += g1;
                         }
                         else
                         {
-                            DamageDoneBlocked += g1;                           
-                        }               
+                            DamageDoneBlocked += g1;
+                        }
                     }
                     else
                     {
@@ -1009,7 +1004,7 @@ namespace DAoCToolSuite.LogTool
                     string strDateTime = $"{month}-{match.Groups[3].Value}-{match.Groups[5].Value} {match.Groups[4].Value}";
 
                     int Month = month;
-                    int Day = Int32.TryParse(match.Groups[3].Value, out Day)? Day : 1;
+                    int Day = Int32.TryParse(match.Groups[3].Value, out Day) ? Day : 1;
                     int Year = Int32.TryParse(match.Groups[5].Value, out Year) ? Year : 2001;
                     int Hour = Int32.TryParse(match.Groups[4].Value.Split(':')[0], out Hour) ? Hour : 1;
                     int Minute = Int32.TryParse(match.Groups[4].Value.Split(':')[1], out Minute) ? Minute : 1;
@@ -1050,7 +1045,7 @@ namespace DAoCToolSuite.LogTool
                 {
                     int month = GetMonthFromShortString(match.Groups[2].Value.ToString());
                     //string strDateTime = $"{month}/{match.Groups[3].Value}/{match.Groups[5].Value} {match.Groups[4].Value}";
-                    
+
                     int Month = month;
                     int Day = Int32.TryParse(match.Groups[3].Value, out Day) ? Day : 1;
                     int Year = Int32.TryParse(match.Groups[5].Value, out Year) ? Year : 2001;
@@ -1109,7 +1104,7 @@ namespace DAoCToolSuite.LogTool
         /// <returns>Boolean</returns>
         private static bool IsRejectContent(string line)
         {
-           
+
 
             if (string.IsNullOrEmpty(line.Trim()))
             {
@@ -1129,7 +1124,7 @@ namespace DAoCToolSuite.LogTool
 
                 try
                 {
-                    if(QuestFilterRegEx.IsMatch(line))
+                    if (QuestFilterRegEx.IsMatch(line))
                     {
                         return true;
                     }
@@ -1155,7 +1150,7 @@ namespace DAoCToolSuite.LogTool
             long currentPosition = 0;
             lock (ThisLock)
             {
-                
+
                 if (!File.Exists(LogPath))
                 {
                     FilteredLog = new();

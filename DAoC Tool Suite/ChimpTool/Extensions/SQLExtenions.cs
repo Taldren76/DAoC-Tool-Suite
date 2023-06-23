@@ -1,8 +1,8 @@
-﻿using System.Data;
+﻿using DAoCToolSuite.ChimpTool.Json;
+using SQLLibrary;
+using System.Data;
 using System.Globalization;
 using System.Reflection;
-using DAoCToolSuite.ChimpTool.Json;
-using SQLLibrary;
 
 namespace DAoCToolSuite.ChimpTool.Extensions
 {
@@ -85,7 +85,7 @@ namespace DAoCToolSuite.ChimpTool.Extensions
 
                 if (chimp?.MasterLevel_Level is not null)
                 {
-                    int masterLevelLevel = int.TryParse(chimp?.MasterLevel_Level, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out masterLevelLevel) ? masterLevelLevel : 0;
+                    int masterLevelLevel = int.TryParse(chimp?.MasterLevel_Level, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out masterLevelLevel) ? masterLevelLevel : 0;
                     characterModel.MasterLevel_Level = masterLevelLevel;
                 }
 
@@ -112,35 +112,35 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                 int tailoring = int.TryParse(chimp?.Tailoring, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out tailoring) ? tailoring : 0;
                 characterModel.Tailoring = tailoring;
                 //Weaponcraft
-                int weaponcraft = int.TryParse(chimp?.Weaponcraft, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out weaponcraft) ? weaponcraft : 0;
+                int weaponcraft = int.TryParse(chimp?.Weaponcraft, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out weaponcraft) ? weaponcraft : 0;
                 characterModel.Weaponcraft = weaponcraft;
 
 
-                int albion_soloKills = int.TryParse(chimp?.Albion_SoloKills, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out albion_soloKills) ? albion_soloKills : 0;
+                int albion_soloKills = int.TryParse(chimp?.Albion_SoloKills, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out albion_soloKills) ? albion_soloKills : 0;
                 characterModel.Albion_SoloKills = albion_soloKills;
-                int albion_deathBlows = int.TryParse(chimp?.Albion_DeathBlows, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out albion_deathBlows) ? albion_deathBlows : 0;
+                int albion_deathBlows = int.TryParse(chimp?.Albion_DeathBlows, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out albion_deathBlows) ? albion_deathBlows : 0;
                 characterModel.Albion_DeathBlows = albion_deathBlows;
-                int albion_Kills = int.TryParse(chimp?.Albion_Kills, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out albion_Kills) ? albion_Kills : 0;
+                int albion_Kills = int.TryParse(chimp?.Albion_Kills, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out albion_Kills) ? albion_Kills : 0;
                 characterModel.Albion_Kills = albion_Kills;
-                int albion_Deaths = int.TryParse(chimp?.Albion_Deaths, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out albion_Deaths) ? albion_Deaths : 0;
+                int albion_Deaths = int.TryParse(chimp?.Albion_Deaths, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out albion_Deaths) ? albion_Deaths : 0;
                 characterModel.Albion_Deaths = albion_Deaths;
 
-                int hibernia_soloKills = int.TryParse(chimp?.Hibernia_SoloKills, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out hibernia_soloKills) ? hibernia_soloKills : 0;
+                int hibernia_soloKills = int.TryParse(chimp?.Hibernia_SoloKills, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out hibernia_soloKills) ? hibernia_soloKills : 0;
                 characterModel.Hibernia_SoloKills = hibernia_soloKills;
-                int hibernia_deathBlows = int.TryParse(chimp?.Hibernia_DeathBlows, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out hibernia_deathBlows) ? hibernia_deathBlows : 0;
+                int hibernia_deathBlows = int.TryParse(chimp?.Hibernia_DeathBlows, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out hibernia_deathBlows) ? hibernia_deathBlows : 0;
                 characterModel.Hibernia_DeathBlows = hibernia_deathBlows;
-                int hibernia_Kills = int.TryParse(chimp?.Hibernia_Kills, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out hibernia_Kills) ? hibernia_Kills : 0;
+                int hibernia_Kills = int.TryParse(chimp?.Hibernia_Kills, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out hibernia_Kills) ? hibernia_Kills : 0;
                 characterModel.Hibernia_Kills = hibernia_Kills;
-                int hibernia_Deaths = int.TryParse(chimp?.Hibernia_Deaths, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out hibernia_Deaths) ? hibernia_Deaths : 0;
+                int hibernia_Deaths = int.TryParse(chimp?.Hibernia_Deaths, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out hibernia_Deaths) ? hibernia_Deaths : 0;
                 characterModel.Hibernia_Deaths = hibernia_Deaths;
 
-                int midgard_soloKills = int.TryParse(chimp?.Midgard_SoloKills, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out midgard_soloKills) ? midgard_soloKills : 0;
+                int midgard_soloKills = int.TryParse(chimp?.Midgard_SoloKills, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out midgard_soloKills) ? midgard_soloKills : 0;
                 characterModel.Midgard_SoloKills = midgard_soloKills;
-                int midgard_deathBlows = int.TryParse(chimp?.Midgard_DeathBlows, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out midgard_deathBlows) ? midgard_deathBlows : 0;
+                int midgard_deathBlows = int.TryParse(chimp?.Midgard_DeathBlows, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out midgard_deathBlows) ? midgard_deathBlows : 0;
                 characterModel.Midgard_DeathBlows = midgard_deathBlows;
-                int midgard_Kills = int.TryParse(chimp?.Midgard_Kills, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out midgard_Kills) ? midgard_Kills : 0;
+                int midgard_Kills = int.TryParse(chimp?.Midgard_Kills, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out midgard_Kills) ? midgard_Kills : 0;
                 characterModel.Midgard_Kills = midgard_Kills;
-                int midgard_Deaths = int.TryParse(chimp?.Midgard_Deaths, NumberStyles.AllowThousands ,System.Globalization.CultureInfo.CurrentCulture, out midgard_Deaths) ? midgard_Deaths : 0;
+                int midgard_Deaths = int.TryParse(chimp?.Midgard_Deaths, NumberStyles.AllowThousands, System.Globalization.CultureInfo.CurrentCulture, out midgard_Deaths) ? midgard_Deaths : 0;
                 characterModel.Midgard_Deaths = midgard_Deaths;
 
                 return characterModel;

@@ -1,8 +1,8 @@
-﻿using System.Data;
-using System.Diagnostics;
-using DAoCToolSuite.ChimpTool.Json;
+﻿using DAoCToolSuite.ChimpTool.Json;
 using DAoCToolSuite.ChimpTool.Settings;
 using Logger;
+using System.Data;
+using System.Diagnostics;
 
 namespace DAoCToolSuite.ChimpTool.Extensions
 {

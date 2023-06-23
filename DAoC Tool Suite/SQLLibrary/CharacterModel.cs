@@ -4,7 +4,7 @@ namespace SQLLibrary
 {
     //datetime(Date),Account,WebID,Name,Realm,Class,Server,TotalRealmPoints,TotalSoloKills,TotalDeathBlows,TotalKills,TotalDeaths,Level,Race,Guild_WebID,Alchemy,Armorcraft,Fletching,Siegecraft,Spellcrafting,Tailoring,Weaponcraft
     public class CharacterModel
-    { 
+    {
 
         public string? Date { get; set; }
 
@@ -220,7 +220,7 @@ namespace SQLLibrary
                 int RPNeeded = nextRankRP - realmPoints;
                 return RPNeeded;
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
                 Trace.Write(ex.StackTrace);

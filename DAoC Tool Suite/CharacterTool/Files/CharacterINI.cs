@@ -1,10 +1,10 @@
-﻿using System.IO;
+﻿using IniParser;
+using IniParser.Model;
+using Newtonsoft.Json;
+using System.IO;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using IniParser;
-using IniParser.Model;
-using Newtonsoft.Json;
 
 namespace DAoCToolSuite.CharacterTool.Files
 {

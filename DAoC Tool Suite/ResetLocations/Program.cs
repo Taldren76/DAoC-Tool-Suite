@@ -12,19 +12,19 @@ namespace DAoCToolSuite.ResetLocations
             string CharacterToolPath = Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\CharacterTool\");
             string LogToolPath = Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\LogTool\");
             string LauncherPath = Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\DAoC_Tool_Suite\");
-            if(Directory.Exists(ChimpToolPath))
+            if (Directory.Exists(ChimpToolPath))
             {
                 Directory.Delete(ChimpToolPath, true);
             }
-            if(Directory.Exists(CharacterToolPath))
+            if (Directory.Exists(CharacterToolPath))
             {
                 Directory.Delete(CharacterToolPath, true);
             }
-            if(Directory.Exists(LogToolPath))
+            if (Directory.Exists(LogToolPath))
             {
                 Directory.Delete(LogToolPath, true);
             }
-            if(Directory.Exists(LauncherPath))
+            if (Directory.Exists(LauncherPath))
             {
                 Directory.Delete(LauncherPath, true);
             }

@@ -1,6 +1,6 @@
-﻿using System.IO;
-using Logger;
+﻿using Logger;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace DAoCToolSuite.CharacterTool.Settings
 {
