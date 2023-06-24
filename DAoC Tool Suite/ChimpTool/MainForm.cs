@@ -145,7 +145,6 @@ namespace DAoCToolSuite.ChimpTool
             SetToLastAccount();
             SetAutoCompleteCharacterList();
             SearchGridView.DataSource = BindingSource;
-            restoreToolStripMenuItem.Enabled = HasBackupChimpRepository();
             SearchButton.Enabled = UseSelenium || UseAPI;
             SearchComboBox.Enabled = UseSelenium || UseAPI;
             Shown += new System.EventHandler(MainForm_Shown!);
@@ -432,7 +431,6 @@ namespace DAoCToolSuite.ChimpTool
                 Logger.Error(ex);
             }
         }
-
         private void DebugLog_Click(object sender, EventArgs e)
         {
             DebugLogButton.Enabled = false;
@@ -447,31 +445,22 @@ namespace DAoCToolSuite.ChimpTool
             WaitCursor.Push();
             Logger.Debug("Loading repository from disk.");
             ChimpRepository chimpRepository = new();
-            if (File.Exists(BackupRepositoryFullPath))
+            try
             {
-                try
+                string json = ReadRepository();
+                if (string.IsNullOrEmpty(json))
                 {
-                    string json = ReadRepository();
-                    if (string.IsNullOrEmpty(json))
-                    {
-                        return null;
-                    }
-
-                    chimpRepository = DeserializeRepository(json);
-                    if (chimpRepository.AccountCount > 0)
-                    {
-                        Logger.Debug($"Successfully loaded {chimpRepository.AccountCount} accounts and {chimpRepository.CharacterCount} characters from disk.");
-                    }
+                    return null;
                 }
-                catch (System.Exception e)
+                chimpRepository = DeserializeRepository(json);
+                if (chimpRepository.AccountCount > 0)
                 {
-                    Logger.Error(e);
+                    Logger.Debug($"Successfully loaded {chimpRepository.AccountCount} accounts and {chimpRepository.CharacterCount} characters from disk.");
                 }
             }
-            else
+            catch (System.Exception e)
             {
-                Logger.Warn($"No valid character repository file found. A new file will be created.");
-                chimpRepository = new ChimpRepository();
+                Logger.Error(e);
             }
             WaitCursor.Pop();
             return chimpRepository;
@@ -499,29 +488,18 @@ namespace DAoCToolSuite.ChimpTool
             WriteRepository(json);
             WaitCursor.Pop();
         }
-        private static bool HasBackupChimpRepository()
-        {
-            return File.Exists(BackupRepositoryFullPath);
-        }
-        private static void RestoreFromChimpRepository()
+        private static bool RestoreFromChimpRepository()
         {
             Logger.Debug($"Restoring from backup file {BackupRepositoryFullPath}");
             WaitCursor.Push();
-            if (!HasBackupChimpRepository())
-            {
-                return;
-            }
-
             try
             {
-                SqliteDataAccess.ResetTables();
-
                 ChimpRepository? chimpRepository = LoadChimpRepository();
                 if (chimpRepository is null)
                 {
-                    return;
+                    return false;
                 }
-
+                SqliteDataAccess.ResetTables();
                 foreach (KeyValuePair<string, List<ChimpJson>> account in chimpRepository.Chimps)
                 {
                     SqliteDataAccess.AddAccount(account.Key);
@@ -531,12 +509,17 @@ namespace DAoCToolSuite.ChimpTool
                         SqliteDataAccess.AddGuild(chimp.ConvertToGuildModel());
                     }
                 }
+                return true;
             }
             catch (System.Exception ex)
             {
                 Logger.Error(ex);
+                return false;
             }
-            WaitCursor.Pop();
+            finally
+            {
+                WaitCursor.Pop();
+            }
         }
         private static void WriteRepository(string json)
         {
@@ -544,7 +527,7 @@ namespace DAoCToolSuite.ChimpTool
             SaveFileDialog saveFileDialog = new()
             {
                 InitialDirectory = Path.GetDirectoryName(BackupRepositoryFullPath),
-                FileName = Path.GetFileName(BackupRepositoryFullPath),
+                //FileName = Path.GetFileName(BackupRepositoryFullPath),
                 Filter = "json (*.json)|*.json|All files (*.*)|*.*"
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -635,12 +618,21 @@ namespace DAoCToolSuite.ChimpTool
             if (File.Exists(BackupRepositoryFullPath))
             {
                 EnableSelectIndexChangedEvent = false;
-                RestoreFromChimpRepository();
-                Logger.Debug($"Backup restored to {BackupRepositoryFullPath}");
-                LoadAccounts();
-                EnableSelectIndexChangedEvent = true;
-                LoadCharacters();
-                CalculateRPTotals();
+                if (RestoreFromChimpRepository())
+                {
+                    Logger.Debug($"Backup restored to {BackupRepositoryFullPath}");
+                    LoadAccounts();
+                    EnableSelectIndexChangedEvent = true;
+                    LoadCharacters();
+                    CalculateRPTotals();
+                }
+                else
+                {
+                    Logger.Debug($"Aborted");
+                    SearchGridView.Visible = true;
+                    LoadingTabelLabel.Visible = false;
+                    GridPanel.Refresh();
+                }
             }
             else
             {
@@ -1675,7 +1667,7 @@ namespace DAoCToolSuite.ChimpTool
             OpenFileDialog openFileDialog = new()
             {
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = "CharacterDB_Backup.db",
+                //FileName = "CharacterDB_Backup.db",
                 Filter = "SQLite Database (*.db)|*.db|All files (*.*)|*.*"
             };
             if (openFileDialog.ShowDialog() == DialogResult.OK)

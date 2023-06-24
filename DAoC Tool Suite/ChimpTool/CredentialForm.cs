@@ -62,7 +62,7 @@ namespace DAoCToolSuite.ChimpTool
 
         private void SubmitButton_Click(object sender, EventArgs e)
         {
-            if (File.Exists(folderBrowserDialog1.SelectedPath + "\\game.dll"))
+            if (File.Exists(GameLocationTextBox.Text + "\\game.dll"))
             {
                 _ = SqliteDataAccess.AddAccountCredentials(AccountName, LoginTextBox.Text, PasswordTextBox.Text);
                 Close();
