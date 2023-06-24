@@ -5,7 +5,8 @@ Changes:
 2. Removed the bespoke Settings Manager in favor of Winform's built in Settings manager.
 3. Added the ability to Launch 2 characters at one time from two different accounts. Only one instance of AHK can be active at one time, so the first character launched with an associated AHK script will have that script active for both characters.
 4. Added a 2 minute clock when the game.dll closes. This will not block the Launch button , but may be used after a crash as an indication when you can log back in.
-Fixes:
+
+Bug Fixes:
 1. Fixed refresh issue.
 2. Fixed some edge conditions around characters with 0 RPs and no realm rank.
 
@@ -23,6 +24,7 @@ Changes:
 2. Each account in the ChimpTool has its own DAOC credentials. So you can setup multiple accounts for each of your DAoC accounts.
 3. Vastly improved the clarity of the text in the LogTool Overlay.
 4. Added the ability to customize what statistics are shown in the LogTool Overlay.
+
 Bug Fixes:
 1. Many localization fixes (Thanks Koxi)
 2. Code cleanup pass.
