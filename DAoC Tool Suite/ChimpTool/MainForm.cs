@@ -77,8 +77,8 @@ namespace DAoCToolSuite.ChimpTool
         private static bool UseSelenium
         {
             get
-            { 
-                return Properties.Settings.Default.UseSelenium; 
+            {
+                return Properties.Settings.Default.UseSelenium;
             }
             set
             {
@@ -131,9 +131,9 @@ namespace DAoCToolSuite.ChimpTool
             set
             {
                 Properties.Settings.Default.JsonBackupFileFullPath = value;
-                Properties.Settings.Default.Save(); 
+                Properties.Settings.Default.Save();
             }
-        } 
+        }
         #endregion
 
         #region MainForm

@@ -105,6 +105,7 @@ namespace DAoCToolSuite.ChimpTool
             // 
             // LoadingTabelLabel
             // 
+            LoadingTabelLabel.Dock = DockStyle.Fill;
             LoadingTabelLabel.Font = new Font("Verdana", 72F, FontStyle.Bold, GraphicsUnit.Point);
             LoadingTabelLabel.Location = new Point(0, 0);
             LoadingTabelLabel.Margin = new Padding(4, 0, 4, 0);
@@ -143,9 +144,11 @@ namespace DAoCToolSuite.ChimpTool
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             SearchGridView.DefaultCellStyle = dataGridViewCellStyle2;
             SearchGridView.Dock = DockStyle.Fill;
+            SearchGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             SearchGridView.Location = new Point(0, 0);
             SearchGridView.Margin = new Padding(4, 3, 4, 3);
             SearchGridView.Name = "SearchGridView";
+            SearchGridView.ReadOnly = true;
             SearchGridView.RowHeadersVisible = false;
             SearchGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             SearchGridView.ShowCellErrors = false;
@@ -460,16 +463,16 @@ namespace DAoCToolSuite.ChimpTool
             addAllCharactersToolStripMenuItem.Text = "Add All Characters";
             addAllCharactersToolStripMenuItem.Click += AddAllCharactersToolStripMenuItem_Click;
             // 
-            // refreshAllToolStripMenuItem
+            // RefreshAllToolStripMenuItem
             // 
-            RefreshAllToolStripMenuItem.Name = "refreshAllToolStripMenuItem";
+            RefreshAllToolStripMenuItem.Name = "RefreshAllToolStripMenuItem";
             RefreshAllToolStripMenuItem.Size = new Size(172, 22);
             RefreshAllToolStripMenuItem.Text = "Refresh All";
             RefreshAllToolStripMenuItem.Click += RefreshAllToolStripMenuItem_Click;
             // 
-            // refreshToolStripMenuItem
+            // RefreshToolStripMenuItem
             // 
-            RefreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            RefreshToolStripMenuItem.Name = "RefreshToolStripMenuItem";
             RefreshToolStripMenuItem.Size = new Size(172, 22);
             RefreshToolStripMenuItem.Text = "Refresh";
             RefreshToolStripMenuItem.Click += RefreshToolStripMenuItem_Click;
