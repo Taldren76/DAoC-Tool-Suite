@@ -12,9 +12,12 @@ namespace DAoCToolSuite.ChimpTool
         [STAThread]
         private static void Main()
         {
-            if (File.Exists("ChimpTool.log"))
-                File.Delete("ChimpTool.log");
-            _ = Trace.Listeners.Add(new TextWriterTraceListener("ChimpTool.log"));
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\ChimpTool.log"))
+            {
+                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\ChimpTool.log");
+            }
+
+            _ = Trace.Listeners.Add(new TextWriterTraceListener(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\ChimpTool.log"));
             Trace.AutoFlush = true;
             Trace.WriteLine($"***************************************************");
             Trace.WriteLine($"* Log Started: {DateTime.Now:MM/dd/yyyy HH:mm:ss}                *");

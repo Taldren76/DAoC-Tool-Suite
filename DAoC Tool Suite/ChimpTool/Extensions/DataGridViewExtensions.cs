@@ -1,6 +1,7 @@
 ﻿using DAoCToolSuite.ChimpTool.Json;
-using DAoCToolSuite.ChimpTool.Settings;
+//using DAoCToolSuite.ChimpTool.Settings;
 using Logger;
+using Newtonsoft.Json;
 using System.Data;
 using System.Diagnostics;
 
@@ -9,84 +10,10 @@ namespace DAoCToolSuite.ChimpTool.Extensions
     public static class DataGridViewExtensions
     {
         internal static LogManager Logger => LogManager.Instance;
-
-        public static SettingsManager? _settings = null;
-        public static SettingsManager Settings
-        {
-            get
-            {
-                _settings ??= new SettingsManager();
-
-                return _settings;
-
-            }
-            set => _settings = value;
-        }
-
-        public static void FastAutoSizeColumns(this DataGridView targetGrid)
-        {
-            // Cast out a DataTable from the target grid datasource.
-            // We need to iterate through all the data in the grid and a DataTable supports enumeration.
-            try
-            {
-                if (targetGrid.DataSource is null)
-                {
-                    return;
-                }
-
-                BindingSource? source = targetGrid.DataSource as BindingSource;
-                //(DataTable)targetGrid.DataSource;
-                if ((source?.DataSource as List<ChimpJson>)?.ToDataTable() is not DataTable gridTable)
-                {
-                    return;
-                }
-                // Create a graphics object from the target grid. Used for measuring text size.
-                using Graphics gfx = targetGrid.CreateGraphics();
-                if (gridTable?.Columns is null)
-                {
-                    return;
-                }
-                int gridTableCount = gridTable.Columns.Count;
-                // Iterate through the columns.
-                for (int i = 0; i < gridTableCount; i++)
-                {
-                    // Leverage Linq enumerator to rapidly collect all the rows into a string array, making sure to exclude null values.
-                    string?[] colStringCollection = gridTable?.AsEnumerable()?.Where(r => r.Field<object>(i) != null)?.Select(r => r.Field<object>(i)?.ToString())?.ToArray() ?? new string[] { };
-                    if (colStringCollection is null)
-                    {
-                        continue;
-                    }
-                    // Sort the string array by string lengths.
-                    colStringCollection = colStringCollection.OrderBy((x) => x?.Length ?? 0).ToArray();
-                    if (colStringCollection is null)
-                    {
-                        continue;
-                    }
-                    // Get the last and longest string in the array.
-                    string? longestColString = colStringCollection.Last();
-                    if (longestColString is null)
-                    {
-                        continue;
-                    }
-                    // Use the graphics object to measure the string size.
-                    SizeF colWidth = gfx.MeasureString(longestColString, targetGrid.Font);
-
-                    // If the calculated width is larger than the column header width, set the new column width.
-                    targetGrid.Columns[i].Width = colWidth.Width > targetGrid.Columns[i].HeaderCell.Size.Width
-                        ? (int)colWidth.Width
-                        : targetGrid.Columns[i].HeaderCell.Size.Width;
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Logger.Debug(ex);
-            }
-        }
-
         public static void FormatTable(this DataGridView dataGridView, TextProgressBar? progressBar = null)
         {
-            List<string> visibleColumns = Settings.DisplayedDatabaseColumnNames;
-            List<string> visibleColumnHeaderNames = Settings.DisplayedDataGridViewHeaderNames;
+            List<string> visibleColumns = JsonConvert.DeserializeObject<ColumnNames>(Properties.Settings.Default.DisplayedDatabaseColumnNames)?.Names ?? new() { "Name", "Realm", "Class", "Server", "RealmRank", "TotalRealmPoints", "TotalSoloKills", "TotalDeathBlows", "TotalKills", "TotalDeaths", "IRS", "RPNextRank", "RPLastUpdate", "BountyPoints" };
+            List<string> visibleColumnHeaderNames = JsonConvert.DeserializeObject<HeaderNames>(Properties.Settings.Default.DisplayedDataGridViewHeaderNames)?.Names ?? new() { "Name", "Realm", "Class", "Server", "Realm\nRank", "Realm\nPoints", "Solo\nKills", "Death\nBlows", "Kills", "Deaths", "IRS", "RP Next\nRank", "RP Last\nUpdate", "BountyPoints" };
             int rowCount = dataGridView.Rows.Count;
             int columnCount = dataGridView.Columns.Count;
             int nonVisibleIndex = visibleColumns.Count;
@@ -119,7 +46,6 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                     {
                         column.Visible = false;
                         column.DisplayIndex = nonVisibleIndex;
-                        Debug.WriteLine($"Column {column.Name}.Visible = false");
                         nonVisibleIndex++;
                     }
                     else
@@ -127,14 +53,11 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                         column.DisplayIndex = visibleColumns.IndexOf(column.Name);
                         column.HeaderText = visibleColumnHeaderNames[visibleColumns.IndexOf(column.Name)];
                         column.ValueType = typeof(string);
-                        //Logger.Debug($"{column.Name},{index},{column.DisplayIndex},{column.Visible}");
                         column.AutoSizeMode = column.Name switch
                         {
                             "MasterLevel_Name" => DataGridViewAutoSizeColumnMode.Fill,
                             _ => DataGridViewAutoSizeColumnMode.AllCells,
                         };
-
-                        Debug.WriteLine($"Column {column.Name}.Visible = true");
                     }
 
                 }
@@ -191,5 +114,16 @@ namespace DAoCToolSuite.ChimpTool.Extensions
                 progressBar.Refresh();
             }
         }
+    }
+    public class HeaderNames
+    {
+        [JsonProperty]
+        public List<string>? Names { get; set; }
+    }
+
+    public class ColumnNames
+    {
+        [JsonProperty]
+        public List<string>? Names { get; set; }
     }
 }

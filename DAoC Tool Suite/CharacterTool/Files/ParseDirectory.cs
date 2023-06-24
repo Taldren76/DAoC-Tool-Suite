@@ -110,7 +110,7 @@ namespace DAoCToolSuite.CharacterTool.Files
             return fullPath ? fileName : (fileName?.Split('\\')?.Last());
         }
 
-        internal string? GetFileContents(string fileName)
+        internal static string? GetFileContents(string fileName)
         {
             try
             {

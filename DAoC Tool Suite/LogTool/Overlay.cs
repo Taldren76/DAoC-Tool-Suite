@@ -1,7 +1,9 @@
 ﻿using System.Drawing.Text;
+using System.Runtime.Versioning;
 
 namespace DAoCToolSuite.LogTool
 {
+    [SupportedOSPlatform("windows")]
     public partial class Overlay : Form
     {
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -12,8 +14,8 @@ namespace DAoCToolSuite.LogTool
         internal static extern bool ReleaseCapture();
 
         private Bitmap? BTMP { get; set; }
-        private Color myForeColor { get; set; } = Color.White;
-        private Color myBackColor { get; set; } = Color.Black;
+        private Color MyForeColor { get; set; } = Color.White;
+        private Color MyBackColor { get; set; } = Color.Black;
         public bool Transparent { get; set; } = true;
         public bool ThreeDFont { get; set; } = true;
         public bool SpellDamageSection { get; set; } = true;
@@ -23,7 +25,7 @@ namespace DAoCToolSuite.LogTool
         public bool DefenseSection { get; set; } = true;
         public bool PetSection { get; set; } = true;
 
-        private List<Label> Labels = new List<Label>();
+        private readonly List<Label> Labels = new();
         private int RowIndex = 0;
         private int ColumnIndex = 0;
         private int SectionIndex = 0;
@@ -31,7 +33,7 @@ namespace DAoCToolSuite.LogTool
         public Overlay()
         {
             InitializeComponent();
-            this.FormClosing += new FormClosingEventHandler(Overlay_OnClosing);
+            FormClosing += new FormClosingEventHandler(Overlay_OnClosing);
             MouseDown += new MouseEventHandler(Overlay_MouseDown);
             MoveLabel.MouseDown += new MouseEventHandler(MoveLabel_MouseDown);
             FormatOverlay();
@@ -87,7 +89,7 @@ namespace DAoCToolSuite.LogTool
 
         private void Overlay_OnClosing(object? sender, FormClosingEventArgs e)
         {
-            Properties.Settings.Default.LastLocationOverlay = this.Location;
+            Properties.Settings.Default.LastLocationOverlay = Location;
             Properties.Settings.Default.Save();
         }
 
@@ -128,27 +130,30 @@ namespace DAoCToolSuite.LogTool
             }
             label.Location = new(point_X, point_Y);
             label.TextAlign = textAlignment;
-            label.ForeColor = myForeColor;
-            label.BackColor = myBackColor;
+            label.ForeColor = MyForeColor;
+            label.BackColor = MyBackColor;
             Labels.Add(label);
             RowIndex++;
         }
 
         private void DrawLabels()
         {
-            BTMP = new Bitmap(this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            BTMP = new Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Graphics grpx = Graphics.FromImage(BTMP);
             foreach (Label label in Labels)
             {
                 Color myColor = label.ForeColor;
-                SolidBrush solidBrush = new SolidBrush(myColor);
+                SolidBrush solidBrush = new(myColor);
                 Brush brush = new SolidBrush(Color.Black);
                 grpx.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
                 if (!Transparent)
+                {
                     grpx.FillRectangle(brush, label.Location.X, label.Location.Y, label.Width, label.Height);
+                }
+
                 if (ThreeDFont)
                 {
-                    System.Drawing.Point shadowLocation = new System.Drawing.Point(label.Location.X - 1, label.Location.Y + 1);
+                    System.Drawing.Point shadowLocation = new(label.Location.X - 1, label.Location.Y + 1);
                     grpx.DrawString(label.Text, label.Font, new SolidBrush(Color.Black), shadowLocation);
                 }
                 grpx.DrawString(label.Text, label.Font, solidBrush, label.Location);
@@ -338,7 +343,7 @@ namespace DAoCToolSuite.LogTool
             #endregion
 
             DrawLabels();
-            this.BackgroundImage = BTMP;
+            BackgroundImage = BTMP;
         }
 
         public void Draw()
@@ -349,13 +354,13 @@ namespace DAoCToolSuite.LogTool
 
         public void SetLabelBackcolor(Color color)
         {
-            myBackColor = color;
+            MyBackColor = color;
             Draw();
         }
 
         public void SetLabelForecolor(Color color)
         {
-            myForeColor = color;
+            MyForeColor = color;
             Draw();
         }
     }

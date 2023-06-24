@@ -6,7 +6,7 @@ namespace DAoCToolSuite.ChimpTool
 {
     public partial class AHKForm : Form
     {
-        LogManager Logger => LogManager.Instance;
+        private static LogManager Logger => LogManager.Instance;
         public string CharacterName { get; set; } = string.Empty;
         public string Realm { get; set; } = string.Empty;
         public string Server { get; set; } = string.Empty;

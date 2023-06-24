@@ -5,7 +5,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~F:DAoCToolSuite.LogTool.LogParser.CritPetHit")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~F:DAoCToolSuite.LogTool.LogParser.PetNonMeleeHit")]
-[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DAoCToolSuite.LogTool.LogParser.CritPetHit")]
 [assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DAoCToolSuite.LogTool.LogParser.PetNonMeleeHit")]
+[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DAoCToolSuite.LogTool.LogParser.ResistedRegEx")]

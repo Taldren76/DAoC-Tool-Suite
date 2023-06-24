@@ -12,9 +12,12 @@ namespace DAoCToolSuite
         [STAThread]
         private static void Main()
         {
-            if (File.Exists("DAoCToolSuite.log"))
-                File.Delete("DAoCToolSuite.log");
-            _ = Trace.Listeners.Add(new TextWriterTraceListener("DAoCToolSuite.log"));
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\DAoCToolSuite.log"))
+            {
+                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\DAoCToolSuite.log");
+            }
+
+            _ = Trace.Listeners.Add(new TextWriterTraceListener(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\DAoCToolSuite.log"));
             Trace.AutoFlush = true;
             Trace.WriteLine($"***************************************************");
             Trace.WriteLine($"* Log Started: {DateTime.Now:MM/dd/yyyy HH:mm:ss}                *");

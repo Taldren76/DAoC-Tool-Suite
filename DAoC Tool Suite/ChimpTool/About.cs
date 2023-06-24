@@ -7,7 +7,7 @@ namespace DAoCToolSuite.ChimpTool
         public About()
         {
             InitializeComponent();
-            GitHubLinkLabel.Links.Add(0, 15, "https://github.com/Taldren76/DAoC-Tool-Suite");
+            _ = GitHubLinkLabel.Links.Add(0, 15, "https://github.com/Taldren76/DAoC-Tool-Suite");
         }
 
         public void SetLocation()
@@ -30,7 +30,7 @@ namespace DAoCToolSuite.ChimpTool
             LinkLabel linkLabel = (LinkLabel)sender;
             linkLabel.LinkVisited = true;
             string target = e?.Link?.LinkData as string ?? "https://github.com/Taldren76/DAoC-Tool-Suite";
-            System.Diagnostics.Process.Start(new ProcessStartInfo { FileName = @target, UseShellExecute = true });
+            _ = System.Diagnostics.Process.Start(new ProcessStartInfo { FileName = @target, UseShellExecute = true });
         }
     }
 }

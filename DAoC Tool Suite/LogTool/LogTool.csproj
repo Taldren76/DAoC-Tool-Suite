@@ -15,6 +15,7 @@
     <ApplicationIcon>Icons\LogParser.ico</ApplicationIcon>
     <PackageIcon>Icons\LogParser.png</PackageIcon>
     <Platforms>x86</Platforms>
+	<AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(PlatformTarget)' == 'x86'">
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x86</RuntimeIdentifier>

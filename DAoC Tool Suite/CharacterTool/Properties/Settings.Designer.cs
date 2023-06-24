@@ -46,5 +46,77 @@ namespace DAoCToolSuite.CharacterTool.Properties {
                 this["LoadCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%AppData%\\Electronic Arts\\Dark Age of Camelot\\LotM")]
+        public string DAoCCharacterFileDirectory {
+            get {
+                return ((string)(this["DAoCCharacterFileDirectory"]));
+            }
+            set {
+                this["DAoCCharacterFileDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"Names\": [\"DateOnly\", \"FirstName\", \"Realm\", \"Class\", \"Description\"]}")]
+        public string DisplayedDatabaseColumnNames {
+            get {
+                return ((string)(this["DisplayedDatabaseColumnNames"]));
+            }
+            set {
+                this["DisplayedDatabaseColumnNames"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"Names\": [\"Date\", \"Name\", \"Realm\", \"Class\", \"Description\"]}")]
+        public string SettingDisplayedDataGridViewHeaderNames {
+            get {
+                return ((string)(this["SettingDisplayedDataGridViewHeaderNames"]));
+            }
+            set {
+                this["SettingDisplayedDataGridViewHeaderNames"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%UserProfile%\\Documents\\CharacterToolBackup.json")]
+        public string JsonBackupFileFullPath {
+            get {
+                return ((string)(this["JsonBackupFileFullPath"]));
+            }
+            set {
+                this["JsonBackupFileFullPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"{\""Realm\"": {\""Albion\"": \""Armsman,Armswoman,Cabalist,Cleric,Friar,Heretic,Infiltrator,Mauler,Mercenary,Minstrel,Necromancer,Paladin,Reaver,Scout,Sorcerer,Sorceress,Theurgist,Wizard\"", \""Hibernia\"": \""Animist,Bainshee,Bard,Blademaster,Champion,Druid,Eldritch,Enchanter,Enchantress,Hero,Mauler,Mentalist,Nightshade,Ranger,Valewalker,Vampiir,Warden\"", \""Midgard\"": \""Berserker,Bonedancer,Healer,Hunter,Mauler,Runemaster,Savage,Shadowblade,Shaman,Skald,Spiritmaster,Thane,Valkyrie,Warlock,Warrior\""}}")]
+        public string RealmClasses {
+            get {
+                return ((string)(this["RealmClasses"]));
+            }
+            set {
+                this["RealmClasses"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"{""Servers"": {""Server"": [{""Index"": 41, ""IP"": ""107.23.173.143"", ""Name"": ""YWain1"", ""Port"": 10622}, {""Index"": 49, ""IP"": ""107.23.173.143"", ""Name"": ""YWain2"", ""Port"": 10622}, {""Index"": 50, ""IP"": ""107.23.173.143"", ""Name"": ""YWain3"", ""Port"": 10622}, {""Index"": 51, ""IP"": ""107.23.173.143"", ""Name"": ""YWain4"", ""Port"": 10622}, {""Index"": 52, ""IP"": ""107.23.173.143"", ""Name"": ""YWain5"", ""Port"": 10622}, {""Index"": 53, ""IP"": ""107.23.173.143"", ""Name"": ""YWain6"", ""Port"": 10622}, {""Index"": 54, ""IP"": ""107.23.173.143"", ""Name"": ""YWain7"", ""Port"": 10622}, {""Index"": 55, ""IP"": ""107.23.173.143"", ""Name"": ""YWain8"", ""Port"": 10622}, {""Index"": 56, ""IP"": ""107.23.173.143"", ""Name"": ""YWain9"", ""Port"": 10622}, {""Index"": 57, ""IP"": ""107.23.173.143"", ""Name"": ""YWain10"", ""Port"": 10622}]}}")]
+        public string ServerList {
+            get {
+                return ((string)(this["ServerList"]));
+            }
+            set {
+                this["ServerList"] = value;
+            }
+        }
     }
 }

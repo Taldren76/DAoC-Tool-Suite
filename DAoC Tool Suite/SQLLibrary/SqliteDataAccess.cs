@@ -13,7 +13,13 @@ namespace SQLLibrary
     }
 
     public class SqliteDataAccess
-    {
+    {   //Environment.SpecialFolder.ApplicationData
+        private static string DataBasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\";
+        private static string ExecutionPath = Directory.GetCurrentDirectory();
+        private static string DataBaseFileName = "CharacterDB.db";
+        public static string DataBaseLocation => Path.Combine(DataBasePath, DataBaseFileName);
+        private static string CleanDataBaseLocation => Path.Combine(ExecutionPath, DataBaseFileName);
+
         private static readonly object thisLock = new();
         private static readonly string CharactersColumnNames = "Date,Account,WebID,FirstName,Name,Realm,Class,Server,TotalRealmPoints,TotalSoloKills,TotalDeathBlows,TotalKills,TotalDeaths,Level,Race,BountyPoints,MasterLevel_Name,Masterlevel_Level,Guild_WebID,Alchemy,Armorcraft,Fletching,Siegecraft,Spellcrafting,Tailoring,Weaponcraft,Albion_SoloKills,Albion_DeathBlows,Albion_Kills,Albion_Deaths,Hibernia_SoloKills,Hibernia_DeathBlows,Hibernia_Kills,Hibernia_Deaths,Midgard_SoloKills,Midgard_DeathBlows,Midgard_Kills,Midgard_Deaths";
         private static string CharactersColumnValues => $"@{CharactersColumnNames.Replace(",", ",@")}";
@@ -23,6 +29,7 @@ namespace SQLLibrary
             string toWrite = $"{DateTime.Now:MM/dd/yyyy HH:mm:ss}: {message ?? ""}";
             Trace.WriteLine(toWrite);
         }
+
 
         #region LaunchModel
         //Character names can change, but the WebID is unique to that character.
@@ -55,7 +62,7 @@ namespace SQLLibrary
 
         public static void AddAHKModel(string webID, string account, string? ahkScriptPath = null, int version = 1)
         {
-            AHKModel model = new AHKModel()
+            AHKModel model = new()
             {
                 WebID = webID,
                 AHKScriptPath = ahkScriptPath,
@@ -352,7 +359,6 @@ namespace SQLLibrary
                 }
                 DeleteCharacterWithAccount(accountName);
             }
-
         }
         #endregion
 
@@ -549,9 +555,12 @@ namespace SQLLibrary
         private static bool ConnectionStringLoaded = false;
         private static string LoadConnectionString(string id = "Default")
         {
+            EnsureDataBaseLocation();
+
+            //new SQLiteConnection("Data Source=C:\SQLITEDATABASES\SQLITEDB1.sqlite;Version=3;");
             string connectionString = id switch
             {
-                "Default" => Properties.Settings.Default.ConnectionString,
+                "Default" => $"Data Source={DataBaseLocation};Version=3;",
                 _ => Properties.Settings.Default.Properties[id].ToString() ?? Properties.Settings.Default.ConnectionString,
             };
             if (!ConnectionStringLoaded)
@@ -560,6 +569,18 @@ namespace SQLLibrary
                 ConnectionStringLoaded = true;
             }
             return connectionString;//ConfigurationManager.ConnectionStrings[id].ConnectionString;
+        }
+
+       private static void EnsureDataBaseLocation()
+        {
+            if (!Directory.Exists(DataBaseLocation))
+            {
+                Directory.CreateDirectory(DataBasePath);
+            }
+            if (!File.Exists(DataBaseLocation))
+            {
+                File.Copy(CleanDataBaseLocation, DataBaseLocation);
+            }
         }
 
         public static void ReIndexTables()
@@ -619,7 +640,9 @@ namespace SQLLibrary
                 try
                 {
                     if (File.Exists(destFullPath))
+                    {
                         File.Delete(destFullPath);
+                    }
 
                     if (!File.Exists(srcFullPath))
                     {
@@ -651,12 +674,18 @@ namespace SQLLibrary
                     }
 
                     if (File.Exists(destFullPath))
-                        File.Delete((destFullPath));
+                    {
+                        File.Delete(destFullPath);
+                    }
 
                     if (IsCopy)
-                        BackupDB(srcFullPath, destFullPath);
+                    {
+                        _ = BackupDB(srcFullPath, destFullPath);
+                    }
                     else
+                    {
                         File.Move(srcFullPath, destFullPath);
+                    }
 
                     return true;
                 }

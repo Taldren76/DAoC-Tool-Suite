@@ -54,7 +54,6 @@ namespace DAoCToolSuite.LogTool
         private int PetNonMeleeDamageDone = 0;
         private int PetNonPlayerMeleeDamageDone = 0;
         private int PetHealHit = 0;
-        private int PetHealingDone = 0;
         private int PetNonMeleeHit = 0;
         private int PetMeleeCritHit = 0;
         private int PetMeleeDamageDone = 0;
@@ -91,18 +90,18 @@ namespace DAoCToolSuite.LogTool
         public int TotalNonMeleeDamageDone => TotalNonMeleeDamage + TotalNonMeleeCritDamage;
         public int AverageNonMeleeCriticalDamageDone => TotalNonMeleeCritDamage / (TotalNonMeleeCritHits == 0 ? 1 : TotalNonMeleeCritHits);
         public int AverageNonMeleeDamageDone => TotalNonMeleeDamage / (TotalNonMeleeHits == 0 ? 1 : TotalNonMeleeHits);
-        public double NonMeleeCritRate => ((double)TotalNonMeleeCritHits / (double)(TotalHits == 0 ? 1 : TotalHits));
+        public double NonMeleeCritRate => TotalNonMeleeCritHits / (double)(TotalHits == 0 ? 1 : TotalHits);
         #endregion
 
         #region Melee
         private int TotalMeleeEvaded => MeleeHitEvaded + (PlayersOnlyFilter ? 0 : NonPlayerMeleeHitEvaded);
         private int TotalMeleeParried => MeleeHitParried + (PlayersOnlyFilter ? 0 : NonPlayerMeleeHitParried);
         private int TotalMeleeBlocked => MeleeHitBlocked + (PlayersOnlyFilter ? 0 : NonPlayerMeleeHitBlocked);
-        public double AttacksEvadedRate => ((double)TotalMeleeEvaded / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
-        public double AttacksParriedRate => ((double)TotalMeleeParried / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
-        public double AttacksBlockedRate => ((double)TotalMeleeBlocked / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
-        public double AttacksBladeturnedRate => ((double)Bladeturned / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
-        public double AttackMissRate => ((double)MeleeMisses / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks));
+        public double AttacksEvadedRate => TotalMeleeEvaded / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks);
+        public double AttacksParriedRate => TotalMeleeParried / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks);
+        public double AttacksBlockedRate => TotalMeleeBlocked / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks);
+        public double AttacksBladeturnedRate => Bladeturned / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks);
+        public double AttackMissRate => MeleeMisses / (double)(TotalMeleeAttacks == 0 ? 1 : TotalMeleeAttacks);
         public int Blocks => YouBlock + (PlayersOnlyFilter ? 0 : YouBlockNonPlayer);
         public int Parries => YouParry + (PlayersOnlyFilter ? 0 : YouParryNonPlayer);
         public int Evades => YouEvade + (PlayersOnlyFilter ? 0 : YouEvadeNonPlayer);
@@ -114,7 +113,7 @@ namespace DAoCToolSuite.LogTool
         public int AverageMeleeDamageDone => TotalNonCriticalMeleeDamageDone / (MeleeHits == 0 ? 1 : MeleeHits);
         public int AverageCriticalMeleeDamageDone => TotalNonCriticalMeleeDamageDone / (MeleeCritHits == 0 ? 1 : MeleeCritHits);
         private int TotalMeleeAttacks => Bladeturned + TotalMeleeEvaded + TotalMeleeParried + TotalMeleeBlocked + MeleeMisses + TotalMeleeHits;
-        public double MeleeCritRate => ((double)MeleeCritHits / (double)(TotalMeleeHits == 0 ? 1 : TotalMeleeHits));
+        public double MeleeCritRate => MeleeCritHits / (double)(TotalMeleeHits == 0 ? 1 : TotalMeleeHits);
         public int TotalMeleeDamageDone => TotalNonCriticalMeleeDamageDone + TotalCriticalMeleeDamageDone;
         #endregion
 
@@ -127,7 +126,7 @@ namespace DAoCToolSuite.LogTool
         public int TotalHealingDone => TotalCritHealingDone + TotalNonCritHealingDone;
         public int AverageHealDone => TotalNonCritHealingDone / (HealHits == 0 ? 1 : HealHits);
         public int AverageCriticalHealingDone => TotalCritHealingDone / (CritHealHits == 0 ? 1 : CritHealHits);
-        public double HealCritRate => ((double)CritHealHits / (double)(TotalHealHits == 0 ? 1 : TotalHealHits));
+        public double HealCritRate => CritHealHits / (double)(TotalHealHits == 0 ? 1 : TotalHealHits);
         public int HealingTaken = 0;
         #endregion
 
@@ -138,15 +137,15 @@ namespace DAoCToolSuite.LogTool
         private int CombinedPetMeleeDamageDone => PetMeleeDamageDone + (PlayersOnlyFilter ? 0 : PetNonPlayerMeleeDamageDone);
         private int PetCritMeleeDamageDone => PetMeleeCriticalDamageDone + (PlayersOnlyFilter ? 0 : PetNonPlayerMeleeCriticalDamageDone);
         private int TotalPetMeleeDamageDone => CombinedPetMeleeDamageDone + PetCritMeleeDamageDone;
-        public double PetMeleeCritRate => ((double)PetMeleeCritHits / (double)(TotalPetMeleeHits == 0 ? 1 : TotalPetMeleeHits));
+        public double PetMeleeCritRate => PetMeleeCritHits / (double)(TotalPetMeleeHits == 0 ? 1 : TotalPetMeleeHits);
         private int TotalPetNonMeleeDamageDone => PetNonMeleeDamageDone + (PlayersOnlyFilter ? 0 : NonPlayerPetNonMeleeDamageDone);
         private int TotalPetNonMeleeDamageHits => PetNonMeleeHit + (PlayersOnlyFilter ? 0 : NonPlayerPetNonMeleeHit);
         public int AveragePetCriticalMeleeDamageDone => PetCritMeleeDamageDone / (PetMeleeCritHits == 0 ? 1 : PetMeleeCritHits);
         public int AveragePetMeleeDamageDone => CombinedPetMeleeDamageDone / (TotalPetMeleeHits == 0 ? 1 : TotalPetMeleeHits);
         public int AveragePetNonMeleeDamage => TotalPetNonMeleeDamageDone / (TotalPetNonMeleeDamageHits == 0 ? 1 : TotalPetNonMeleeDamageHits);
-        public int AveragePetHeal => PetHealingDone / (PetHealHit == 0 ? 1 : PetHealHit);
+        public int AveragePetHeal => TotalPetHealingDone / (PetHealHit == 0 ? 1 : PetHealHit);
         public int TotalPetDamageDone => TotalPetNonMeleeDamageDone + TotalPetMeleeDamageDone;
-        public int TotalPetHealingDone => PetHealingDone;
+        public int TotalPetHealingDone { get; private set; } = 0;
         #endregion
 
         #region RegEx
@@ -212,7 +211,7 @@ namespace DAoCToolSuite.LogTool
         private static List<Regex> RejectLineContent { get; set; } = new();
         private DateTime LastParse { get; set; } = DateTime.MinValue;
         private List<string> FilteredLog { get; set; } = new();
-        TextProgressBar? ProgressBar { get; set; } = null;
+        private TextProgressBar? ProgressBar { get; set; } = null;
 
         public LogParser()
         {
@@ -309,16 +308,24 @@ namespace DAoCToolSuite.LogTool
                 string line = FilteredLog[index];
 
                 if (string.IsNullOrEmpty(line) || line[0].Equals('*')) //Checks for empty or Chat Open/Close lines
+                {
                     continue;
+                }
                 else if (line[0].Equals('[')) //All parsable lines should start with [HH:MM:SS]
+                {
                     line = line.Remove(0, 10).Trim();
+                }
 
                 //If there isn't a second line its empty.
                 string nextLine = (index + 1 < FilteredLog.Count) ? FilteredLog[index + 1] : "";
                 if (string.IsNullOrEmpty(nextLine) || nextLine[0].Equals('*')) //Checks for empty or Chat/Close lines
+                {
                     line = "";
+                }
                 else if (nextLine[0].Equals('[')) //All parsable lines should start with [HH:MM:SS]
+                {
                     nextLine = nextLine.Remove(0, 10).Trim();
+                }
 
                 //Lines is used to parse crit messages
                 string lines = $"{line}\n{nextLine}";
@@ -340,7 +347,7 @@ namespace DAoCToolSuite.LogTool
 
                     MatchCollection moneyMatches = MoneyRegEx.Matches(line);
                     double goldEarned = 0;
-                    foreach (Match match in moneyMatches)
+                    foreach (Match match in moneyMatches.Cast<Match>())
                     {
                         //(\d+) (platinum|gold|silver|copper) - 1to4 matches
                         //G1: Quantity
@@ -374,7 +381,7 @@ namespace DAoCToolSuite.LogTool
                 {
                     //G1: Non-Player Test, G2: TargetName, G3: DamageDone, G4: Critical DamageDone
                     string? g1 = nonMeleeCriticalDamageDone.Groups[1].Value.ToString();
-                    string g2 = nonMeleeCriticalDamageDone.Groups[2].Value.ToString();
+                    _ = nonMeleeCriticalDamageDone.Groups[2].Value.ToString();
                     int g3 = Convert.ToInt32(nonMeleeCriticalDamageDone.Groups[3].Value);
                     int g4 = Convert.ToInt32(nonMeleeCriticalDamageDone.Groups[4].Value);
                     if (string.IsNullOrEmpty(g1))
@@ -398,7 +405,7 @@ namespace DAoCToolSuite.LogTool
                 {
                     //G1: Non-Player Test, G2: TargetName, G3: DamageDone
                     string? g1 = nonMeleeDamageDoneMatch.Groups[1].Value.ToString();
-                    string g2 = nonMeleeDamageDoneMatch.Groups[2].Value.ToString();
+                    _ = nonMeleeDamageDoneMatch.Groups[2].Value.ToString();
                     int g3 = Convert.ToInt32(nonMeleeDamageDoneMatch.Groups[3].Value);
                     if (string.IsNullOrEmpty(g1))
                     {
@@ -418,12 +425,17 @@ namespace DAoCToolSuite.LogTool
                 {
                     //G1: Non-Player Test, G2: AttackerName, G3: DamageTaken
                     string? g1 = damageTakenMatch.Groups[1].Value.ToString();
-                    string g2 = damageTakenMatch.Groups[2].Value.ToString();
+                    _ = damageTakenMatch.Groups[2].Value.ToString();
                     int g3 = Convert.ToInt32(damageTakenMatch.Groups[3].Value);
                     if (string.IsNullOrEmpty(g1))
+                    {
                         DamageTaken += g3;
+                    }
                     else
+                    {
                         NonPlayerDamageTaken += g3;
+                    }
+
                     continue;
                 }
                 #endregion
@@ -435,7 +447,7 @@ namespace DAoCToolSuite.LogTool
                     //You attack (the |)(.*) with .* for (\d+).*\n.*You critical.* (\d+)
                     //G1: Non-Player Test, G2: TargetName, G3: MeleeDamage, G4: Critical MeleeDamage
                     string? g1 = meleeCriticalDamageDoneMatch.Groups[1].Value.ToString();
-                    string g2 = meleeCriticalDamageDoneMatch.Groups[2].Value.ToString();
+                    _ = meleeCriticalDamageDoneMatch.Groups[2].Value.ToString();
                     int g3 = Convert.ToInt32(meleeCriticalDamageDoneMatch.Groups[3].Value);
                     int g4 = Convert.ToInt32(meleeCriticalDamageDoneMatch.Groups[4].Value);
                     if (string.IsNullOrEmpty(g1))
@@ -458,7 +470,7 @@ namespace DAoCToolSuite.LogTool
                     //You attack (the |)(.*) with .* for (\d+)
                     //G1: Non-Player Test, G2: TargetName, G3: MeleeDamage
                     string? g1 = meleeDamageDoneMatch.Groups[1].Value.ToString();
-                    string g2 = meleeDamageDoneMatch.Groups[2].Value.ToString();
+                    _ = meleeDamageDoneMatch.Groups[2].Value.ToString();
                     int g3 = Convert.ToInt32(meleeDamageDoneMatch.Groups[3].Value);
                     if (string.IsNullOrEmpty(g1))
                     {
@@ -478,7 +490,7 @@ namespace DAoCToolSuite.LogTool
                 {
                     //The (.*) attacks .* (block|parr(?:y|ied)|evade)
                     //G1:AttackerName, G2: DefenseType
-                    string g1 = nonPlayerMeleeDefenseMatch.Groups[1].Value.ToString();
+                    _ = nonPlayerMeleeDefenseMatch.Groups[1].Value.ToString();
                     string g2 = nonPlayerMeleeDefenseMatch.Groups[2].Value.ToString();
                     switch (g2.ToLower())
                     {
@@ -502,7 +514,7 @@ namespace DAoCToolSuite.LogTool
                     //The (.*) attacks .* (block|parr(?:y|ied)|evade)
                     //G1: DefenseType, G2: AttackerName
                     string g1 = playerMeleeDefenseMatch.Groups[1].Value.ToString();
-                    string g2 = playerMeleeDefenseMatch.Groups[2].Value.ToString();
+                    _ = playerMeleeDefenseMatch.Groups[2].Value.ToString();
                     switch (g1.ToLower())
                     {
                         case "evade":
@@ -525,7 +537,7 @@ namespace DAoCToolSuite.LogTool
                     //(The |)(\w+) (block(?:s|ed)|parrie(?:s|d)|evade(?:s|d)) your attack!
                     //G1: Non-Player Test, G2: TargetName, G3: DefenceType
                     string? g1 = playerMeleeDefenseMatch.Groups[1].Value.ToString();
-                    string g2 = playerMeleeDefenseMatch.Groups[2].Value.ToString();
+                    _ = playerMeleeDefenseMatch.Groups[2].Value.ToString();
                     string g3 = playerMeleeDefenseMatch.Groups[3].Value.ToString();
                     switch (g3.ToLower())
                     {
@@ -533,25 +545,40 @@ namespace DAoCToolSuite.LogTool
                         case "evades":
                         case "evaded":
                             if (string.IsNullOrEmpty(g1))
+                            {
                                 YouEvade += 1;
+                            }
                             else
+                            {
                                 YouEvadeNonPlayer += 1;
+                            }
+
                             break;
                         case "parry":
                         case "parries":
                         case "parried":
                             if (string.IsNullOrEmpty(g1))
+                            {
                                 YouParry += 1;
+                            }
                             else
+                            {
                                 YouParryNonPlayer += 1;
+                            }
+
                             break;
                         case "block":
                         case "blocks":
                         case "blocked":
                             if (string.IsNullOrEmpty(g1))
+                            {
                                 YouBlock += 1;
+                            }
                             else
+                            {
                                 YouBlockNonPlayer += 1;
+                            }
+
                             break;
                     }
                     continue;
@@ -581,13 +608,15 @@ namespace DAoCToolSuite.LogTool
                 {
                     //You critical heal.* (\d+).*\n.*You heal (the |)(yourself|\w+) for (\d+)
                     ////G1: Crit Bonus (ignore), //G2: Non-Player Test, G3: TargetName, G4: Critical Healing Done
-                    int g1 = Convert.ToInt32(criticalHealingDoneMatch.Groups[1].Value);
+                    _ = Convert.ToInt32(criticalHealingDoneMatch.Groups[1].Value);
                     string? g2 = criticalHealingDoneMatch.Groups[2].Value?.ToString();
                     string g3 = criticalHealingDoneMatch.Groups[3].Value.ToString();
                     int g4 = Convert.ToInt32(criticalHealingDoneMatch.Groups[4].Value);
 
                     if (g3.ToLower().Equals("yourself"))
+                    {
                         HealingTaken += g4;
+                    }
 
                     if (string.IsNullOrEmpty(g2))
                     {
@@ -613,7 +642,9 @@ namespace DAoCToolSuite.LogTool
                     int g3 = Convert.ToInt32(healingDoneMatch.Groups[3].Value);
 
                     if (g2.ToLower().Equals("yourself"))
+                    {
                         HealingTaken += g3;
+                    }
 
                     if (string.IsNullOrEmpty(g1))
                     {
@@ -633,7 +664,7 @@ namespace DAoCToolSuite.LogTool
                 {
                     //Your (.*) ability heals you .* (\d+) 
                     //G1: Ability Name, G2: SelfHealing
-                    string g1 = abilitySelfHealingMatch.Groups[1].Value.ToString();
+                    _ = abilitySelfHealingMatch.Groups[1].Value.ToString();
                     int g2 = Convert.ToInt32(abilitySelfHealingMatch.Groups[2].Value);
                     HealingDone += g2;
                     HealingTaken += g2;
@@ -646,7 +677,7 @@ namespace DAoCToolSuite.LogTool
                     //((?:Y|y)our|\w+)(?:'s|) healing battery (?:fully heals|heals) (\w+).* (?:\(|)(\d+)
                     //G1: OwnerName, G2: TargetName, G3: Healing
                     string g1 = healingBatteryHealMatch.Groups[1].Value.ToString();
-                    string g2 = healingBatteryHealMatch.Groups[2].Value.ToString();
+                    _ = healingBatteryHealMatch.Groups[2].Value.ToString();
                     int g3 = Convert.ToInt32(healingBatteryHealMatch.Groups[3].Value);
                     if (g1.ToLower().Equals("your") && g1.ToLower().Equals("you"))
                     {
@@ -654,9 +685,14 @@ namespace DAoCToolSuite.LogTool
                         HealingDone += g3;
                     }
                     else if (g1.ToLower().Equals("your"))
+                    {
                         HealingDone += g3;
+                    }
                     else
+                    {
                         HealingTaken += g3;
+                    }
+
                     continue;
                 }
 
@@ -665,7 +701,7 @@ namespace DAoCToolSuite.LogTool
                 {
                     //(.*) healed you.*(\d+)
                     //G1: CasterName, G2: HealingTaken
-                    string g1 = healingTakenMatch.Groups[1].Value.ToString();
+                    _ = healingTakenMatch.Groups[1].Value.ToString();
                     int g2 = Convert.ToInt32(healingTakenMatch.Groups[2].Value);
                     HealingTaken += g2;
                     continue;
@@ -676,7 +712,7 @@ namespace DAoCToolSuite.LogTool
                 {
                     //(.*) healed you.*(\d+)
                     //G1: CasterName, G2: HealingTaken
-                    string g1 = healingTaken2Match.Groups[1].Value.ToString();
+                    _ = healingTaken2Match.Groups[1].Value.ToString();
                     int g2 = Convert.ToInt32(healingTaken2Match.Groups[2].Value);
                     HealingTaken += g2;
                     continue;
@@ -689,9 +725,9 @@ namespace DAoCToolSuite.LogTool
                 {
                     //Your (.*) attacks (the |)(.*) and hits for (\d+).*\n.* criticals .* (\d+)"); 
                     //G1: PetName, G2: Non-Player Test, G3: TargetName, G4: Damage, G5: Crit Damage
-                    string g1 = petCriticalMeleeDamageDoneMatch.Groups[1].Value.ToString();
+                    _ = petCriticalMeleeDamageDoneMatch.Groups[1].Value.ToString();
                     string? g2 = petCriticalMeleeDamageDoneMatch.Groups[2].Value?.ToString();
-                    string g3 = petCriticalMeleeDamageDoneMatch.Groups[3].Value.ToString();
+                    _ = petCriticalMeleeDamageDoneMatch.Groups[3].Value.ToString();
                     int g4 = Convert.ToInt32(petCriticalMeleeDamageDoneMatch.Groups[4].Value);
                     int g5 = Convert.ToInt32(petCriticalMeleeDamageDoneMatch.Groups[5].Value);
                     if (string.IsNullOrEmpty(g2))
@@ -714,9 +750,9 @@ namespace DAoCToolSuite.LogTool
                 {
                     //Your (.*) attacks (the |)(.*) and hits for (\d+)"); 
                     //G1: PetName, G2: Non-Player Test, G3: TargetName, G4: Damage
-                    string g1 = petMeleeDamageDoneMatch.Groups[1].Value.ToString();
+                    _ = petMeleeDamageDoneMatch.Groups[1].Value.ToString();
                     string? g2 = petMeleeDamageDoneMatch.Groups[2].Value?.ToString();
-                    string g3 = petMeleeDamageDoneMatch.Groups[3].Value.ToString();
+                    _ = petMeleeDamageDoneMatch.Groups[3].Value.ToString();
                     int g4 = Convert.ToInt32(petMeleeDamageDoneMatch.Groups[4].Value);
                     if (string.IsNullOrEmpty(g2))
                     {
@@ -738,7 +774,7 @@ namespace DAoCToolSuite.LogTool
                     //Your pet's spell hits (the |)(.*) for (\d+)"); 
                     //G1: Non-Player Test, G2: TargetName, G3: Damage
                     string? g1 = petSpellDamageDoneMatch.Groups[1].Value?.ToString();
-                    string g2 = petSpellDamageDoneMatch.Groups[2].Value.ToString();
+                    _ = petSpellDamageDoneMatch.Groups[2].Value.ToString();
                     int g3 = Convert.ToInt32(petSpellDamageDoneMatch.Groups[3].Value);
                     if (string.IsNullOrEmpty(g1))
                     {
@@ -759,8 +795,8 @@ namespace DAoCToolSuite.LogTool
                 {
                     //You critical heal.* (\d+).*\n.*You heal your (.+) for (\d+)"); 
                     //G1: Critical Healing, G2: PetName, G3: Total Healing Done
-                    int g1 = Convert.ToInt32(criticalHealingDoneByYouToYourPetMatch.Groups[1].Value);
-                    string g2 = criticalHealingDoneByYouToYourPetMatch.Groups[2].Value.ToString();
+                    _ = Convert.ToInt32(criticalHealingDoneByYouToYourPetMatch.Groups[1].Value);
+                    _ = criticalHealingDoneByYouToYourPetMatch.Groups[2].Value.ToString();
                     int g3 = Convert.ToInt32(criticalHealingDoneByYouToYourPetMatch.Groups[3].Value);
 
                     CriticalHealingDone += g3;
@@ -775,7 +811,7 @@ namespace DAoCToolSuite.LogTool
                 {
                     //You heal your (.+) for (\d+)"); 
                     //G1: PetName, G2: Healing
-                    string g1 = healingDoneByYouToYourPetMatch.Groups[1].Value.ToString();
+                    _ = healingDoneByYouToYourPetMatch.Groups[1].Value.ToString();
                     int g2 = Convert.ToInt32(healingDoneByYouToYourPetMatch.Groups[2].Value);
 
                     HealingDone += g2;
@@ -789,9 +825,9 @@ namespace DAoCToolSuite.LogTool
                 {
                     //You critical heal.* (\d+).*\n.*You heal (.*)'s (.*) for (\d+)"); 
                     //G1: Critical Bonus, G2: PetOwner Name, G3: PetName, G4: Critical Healing Done
-                    int g1 = Convert.ToInt32(criticalHealingDoneByYouToPetsMatch.Groups[1].Value);
-                    string g2 = criticalHealingDoneByYouToPetsMatch.Groups[2].Value.ToString();
-                    string g3 = criticalHealingDoneByYouToPetsMatch.Groups[3].Value.ToString();
+                    _ = Convert.ToInt32(criticalHealingDoneByYouToPetsMatch.Groups[1].Value);
+                    _ = criticalHealingDoneByYouToPetsMatch.Groups[2].Value.ToString();
+                    _ = criticalHealingDoneByYouToPetsMatch.Groups[3].Value.ToString();
                     int g4 = Convert.ToInt32(criticalHealingDoneByYouToPetsMatch.Groups[4].Value);
 
                     CriticalHealingDone += g4;
@@ -806,8 +842,8 @@ namespace DAoCToolSuite.LogTool
                 {
                     //You heal (.*)'s (.*) for (\d+)");  
                     //G1: PetOwner Name, G2: PetName, G3: Healing Done
-                    string g1 = healingDoneByYouToPetsMatch.Groups[1].Value.ToString();
-                    string g2 = healingDoneByYouToPetsMatch.Groups[2].Value.ToString();
+                    _ = healingDoneByYouToPetsMatch.Groups[1].Value.ToString();
+                    _ = healingDoneByYouToPetsMatch.Groups[2].Value.ToString();
                     int g3 = Convert.ToInt32(healingDoneByYouToPetsMatch.Groups[3].Value);
 
                     HealingDone += g3;
@@ -821,15 +857,17 @@ namespace DAoCToolSuite.LogTool
                 {
                     //Your (.*) healed (the |)(.*) for (\d+)"); 
                     //G1: PetName, G2: Non-Player Test, G3: TargetName, G4 Heal
-                    string g1 = petHealingMatch.Groups[1].Value.ToString();
-                    string? g2 = petHealingMatch.Groups[2]?.Value.ToString();
+                    _ = petHealingMatch.Groups[1].Value.ToString();
+                    _ = petHealingMatch.Groups[2]?.Value.ToString();
                     string g3 = petHealingMatch.Groups[3].Value.ToString();
                     int g4 = Convert.ToInt32(petHealingMatch.Groups[4].Value);
 
                     if (g3.ToLower().Equals("you"))
+                    {
                         HealingTaken += g4;
+                    }
 
-                    PetHealingDone += g4;
+                    TotalPetHealingDone += g4;
                     PetHealHit += 1;
 
                     continue;
@@ -1004,15 +1042,15 @@ namespace DAoCToolSuite.LogTool
                     string strDateTime = $"{month}-{match.Groups[3].Value}-{match.Groups[5].Value} {match.Groups[4].Value}";
 
                     int Month = month;
-                    int Day = Int32.TryParse(match.Groups[3].Value, out Day) ? Day : 1;
-                    int Year = Int32.TryParse(match.Groups[5].Value, out Year) ? Year : 2001;
-                    int Hour = Int32.TryParse(match.Groups[4].Value.Split(':')[0], out Hour) ? Hour : 1;
-                    int Minute = Int32.TryParse(match.Groups[4].Value.Split(':')[1], out Minute) ? Minute : 1;
-                    int Second = Int32.TryParse(match.Groups[4].Value.Split(':')[2], out Second) ? Second : 1;
+                    int Day = int.TryParse(match.Groups[3].Value, out Day) ? Day : 1;
+                    int Year = int.TryParse(match.Groups[5].Value, out Year) ? Year : 2001;
+                    int Hour = int.TryParse(match.Groups[4].Value.Split(':')[0], out Hour) ? Hour : 1;
+                    int Minute = int.TryParse(match.Groups[4].Value.Split(':')[1], out Minute) ? Minute : 1;
+                    int Second = int.TryParse(match.Groups[4].Value.Split(':')[2], out Second) ? Second : 1;
 
                     //DateTime test = new DateTime(Year, Month, Day, Hour, Minute, Second);
 
-                    DateTime dateTime = new DateTime(Year, Month, Day, Hour, Minute, Second); // = DateTime.Parse(strDateTime, CultureInfo.GetCultureInfo("en-US")); //Convert.ToDateTime(strDateTime);
+                    DateTime dateTime = new(Year, Month, Day, Hour, Minute, Second); // = DateTime.Parse(strDateTime, CultureInfo.GetCultureInfo("en-US")); //Convert.ToDateTime(strDateTime);
                     if (LogOpenEntries.ContainsKey(dateTime))
                     {
                         LogOpenEntries[dateTime] = lineIndex;
@@ -1047,12 +1085,12 @@ namespace DAoCToolSuite.LogTool
                     //string strDateTime = $"{month}/{match.Groups[3].Value}/{match.Groups[5].Value} {match.Groups[4].Value}";
 
                     int Month = month;
-                    int Day = Int32.TryParse(match.Groups[3].Value, out Day) ? Day : 1;
-                    int Year = Int32.TryParse(match.Groups[5].Value, out Year) ? Year : 2001;
-                    int Hour = Int32.TryParse(match.Groups[4].Value.Split(':')[0], out Hour) ? Hour : 1;
-                    int Minute = Int32.TryParse(match.Groups[4].Value.Split(':')[1], out Minute) ? Minute : 1;
-                    int Second = Int32.TryParse(match.Groups[4].Value.Split(':')[2], out Second) ? Second : 1;
-                    DateTime dateTime = new DateTime(Year, Month, Day, Hour, Minute, Second);
+                    int Day = int.TryParse(match.Groups[3].Value, out Day) ? Day : 1;
+                    int Year = int.TryParse(match.Groups[5].Value, out Year) ? Year : 2001;
+                    int Hour = int.TryParse(match.Groups[4].Value.Split(':')[0], out Hour) ? Hour : 1;
+                    int Minute = int.TryParse(match.Groups[4].Value.Split(':')[1], out Minute) ? Minute : 1;
+                    int Second = int.TryParse(match.Groups[4].Value.Split(':')[2], out Second) ? Second : 1;
+                    DateTime dateTime = new(Year, Month, Day, Hour, Minute, Second);
                     //DateTime dateTime = Convert.ToDateTime(strDateTime);
                     if (LogCloseEntries.ContainsKey(dateTime))
                     {
@@ -1095,7 +1133,7 @@ namespace DAoCToolSuite.LogTool
             RejectLineContent = rejectLineContent;
         }
 
-        private static Regex QuestFilterRegEx = new(@"\[[\w\s]+\](?!\.)");
+        private static readonly Regex QuestFilterRegEx = new(@"\[[\w\s]+\](?!\.)");
 
         /// <summary>
         /// Determines if a string contains a substring from the RejectLineContent list.
@@ -1202,7 +1240,7 @@ namespace DAoCToolSuite.LogTool
                     currentPosition += lineLength;// or plus 2 if you need to take into account carriage return
                     if (ProgressBar != null)
                     {
-                        ProgressBar.Value = (int)(((decimal)currentPosition / (decimal)length) * (decimal)100);
+                        ProgressBar.Value = (int)(currentPosition / (decimal)length * 100);
                     }
                 }
             }

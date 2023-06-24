@@ -4,7 +4,6 @@ using DAoCToolSuite.ChimpTool.Extensions;
 using DAoCToolSuite.ChimpTool.HeraldAPI;
 using DAoCToolSuite.ChimpTool.Json;
 using DAoCToolSuite.ChimpTool.Selenium;
-using DAoCToolSuite.ChimpTool.Settings;
 using Logger;
 using Logger.Enums;
 using Newtonsoft.Json;
@@ -18,13 +17,12 @@ namespace DAoCToolSuite.ChimpTool
 {
     public partial class MainForm : Form
     {
-        private List<LaunchedCharacter> LaunchedCharacters = new();
+        private static readonly List<LaunchedCharacter> LaunchedCharacters = new();
         private static bool RefreshAllTimer = false;
         private static bool RefreshTimer = false;
         private static DateTime GameRestartTimer0 = DateTime.Now;
         private static DateTime GameRestartTimer1 = DateTime.Now;
         private static readonly object thisLock = new();
-        private static readonly string BackupRepositoryFullPath = Settings.JsonBackupFileFullPath;
         private static readonly object repositoryLock = new();
         private static bool EnableSelectIndexChangedEvent = true;
         private static AutoHotkeyEngine? _AHK = null;
@@ -36,10 +34,7 @@ namespace DAoCToolSuite.ChimpTool
                 _AHK ??= GetAHKEngine();
                 return _AHK;
             }
-            set
-            {
-                _AHK = value;
-            }
+            set => _AHK = value;
         }
         private static Dictionary<string, int> CharacterList
         {
@@ -56,10 +51,7 @@ namespace DAoCToolSuite.ChimpTool
         private static int MidgardRpTotal { get; set; } = 0;
         private static AutoHotkeyEngine GetAHKEngine(int version = 1)
         {
-            if (version == 2)
-                return new AutoHotkeyEngine(AutoHotKeyVersion.v2);
-            else
-                return new AutoHotkeyEngine(AutoHotKeyVersion.v1);
+            return version == 2 ? new AutoHotkeyEngine(AutoHotKeyVersion.v2) : new AutoHotkeyEngine(AutoHotKeyVersion.v1);
         }
         private AccountModel AccountComboBoxAccount => Accounts?.Where(x => x.Account == AccountComboBox.Text)?.FirstOrDefault() ?? new AccountModel();
         private int AccountComboBoxIndex => AccountComboBoxAccount == null ? -1 : AccountComboBox.Items.IndexOf(AccountComboBoxAccount);
@@ -82,25 +74,66 @@ namespace DAoCToolSuite.ChimpTool
         #endregion
 
         #region Settings
-        private static SettingsManager? _settings = null;
-        public static SettingsManager Settings
+        private static bool UseSelenium
+        {
+            get
+            { 
+                return Properties.Settings.Default.UseSelenium; 
+            }
+            set
+            {
+                Properties.Settings.Default.UseSelenium = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+        private static bool UseAPI
         {
             get
             {
-                _settings ??= new SettingsManager();
-
-                return _settings;
-
+                return Properties.Settings.Default.UseAPI;
             }
-            set => _settings = value;
+            set
+            {
+                Properties.Settings.Default.UseAPI = value;
+                Properties.Settings.Default.Save();
+            }
         }
-        private static bool UseSelenium { get; set; } = Settings.UseSelenium;
-        private static bool UseAPI { get; set; } = Settings.UseAPI;
         private static string LastAccount
         {
-            get => Settings.LastAccount;
-            set => Settings.LastAccount = value;
+            get
+            {
+                return Properties.Settings.Default.LastAccount;
+            }
+            set
+            {
+                Properties.Settings.Default.LastAccount = value;
+                Properties.Settings.Default.Save();
+            }
         }
+        private static string DAoCCharacterFileDirectory
+        {
+            get
+            {
+                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DAoCCharacterFileDirectory);
+            }
+            set
+            {
+                Properties.Settings.Default.DAoCCharacterFileDirectory = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+        private static string BackupRepositoryFullPath
+        {
+            get
+            {
+                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.JsonBackupFileFullPath);
+            }
+            set
+            {
+                Properties.Settings.Default.JsonBackupFileFullPath = value;
+                Properties.Settings.Default.Save(); 
+            }
+        } 
         #endregion
 
         #region MainForm
@@ -129,7 +162,10 @@ namespace DAoCToolSuite.ChimpTool
             if (GameRestartTimer0 > DateTime.Now)
             {
                 if (!TimerLabel0.Visible)
+                {
                     TimerLabel0.Visible = true;
+                }
+
                 TimeSpan diff = GameRestartTimer0 - DateTime.Now;
                 TimerLabel0.Text = diff.ToString(@"mm\:ss");
             }
@@ -146,7 +182,10 @@ namespace DAoCToolSuite.ChimpTool
             if (GameRestartTimer1 > DateTime.Now)
             {
                 if (!TimerLabel1.Visible)
+                {
                     TimerLabel1.Visible = true;
+                }
+
                 TimeSpan diff = GameRestartTimer1 - DateTime.Now;
                 TimerLabel1.Text = diff.ToString(@"mm\:ss");
             }
@@ -352,7 +391,7 @@ namespace DAoCToolSuite.ChimpTool
         #region SearchBox Autocomplete
         private static string DefaultLocation()
         {
-            string sPath = Settings.DAoCCharacterFileDirectory;
+            string sPath = DAoCCharacterFileDirectory;
             return sPath;
         }
         private void SetAutoCompleteCharacterList()
@@ -371,13 +410,13 @@ namespace DAoCToolSuite.ChimpTool
                 string contents;
                 lock (thisLock)
                 {
-                    FileAttributes attributes = File.GetAttributes(Logger.PATH);
-                    using (FileStream fs = new(Logger.PATH, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    FileAttributes attributes = File.GetAttributes(Logger.LogFileLocation);
+                    using (FileStream fs = new(Logger.LogFileLocation, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         using StreamReader sr = new(fs);
                         contents = sr.ReadToEnd();
                     }
-                    File.SetAttributes(Logger.PATH, attributes);
+                    File.SetAttributes(Logger.LogFileLocation, attributes);
                 }
 
                 using LogViewer logViewer = new();
@@ -414,7 +453,10 @@ namespace DAoCToolSuite.ChimpTool
                 {
                     string json = ReadRepository();
                     if (string.IsNullOrEmpty(json))
+                    {
                         return null;
+                    }
+
                     chimpRepository = DeserializeRepository(json);
                     if (chimpRepository.AccountCount > 0)
                     {
@@ -476,7 +518,10 @@ namespace DAoCToolSuite.ChimpTool
 
                 ChimpRepository? chimpRepository = LoadChimpRepository();
                 if (chimpRepository is null)
+                {
                     return;
+                }
+
                 foreach (KeyValuePair<string, List<ChimpJson>> account in chimpRepository.Chimps)
                 {
                     SqliteDataAccess.AddAccount(account.Key);
@@ -507,7 +552,9 @@ namespace DAoCToolSuite.ChimpTool
                 fileName = saveFileDialog.FileName;
             }
             else
+            {
                 return;
+            }
 
             lock (repositoryLock)
             {
@@ -535,7 +582,9 @@ namespace DAoCToolSuite.ChimpTool
                 fileName = openFileDialog.FileName;
             }
             else
+            {
                 return "";
+            }
 
             lock (repositoryLock)
             {
@@ -816,14 +865,7 @@ namespace DAoCToolSuite.ChimpTool
             SearchGridView.Visible = true;
             GridPanel.Refresh();
 
-            if ((CharactersByAccountLastDateUpdated is null || CharactersByAccountLastDateUpdated.Count == 0) && DateTime.Now > Properties.Settings.Default.NextLoadAll)
-            {
-                addAllCharactersToolStripMenuItem.Enabled = true;
-            }
-            else
-            {
-                addAllCharactersToolStripMenuItem.Enabled = false;
-            }
+            addAllCharactersToolStripMenuItem.Enabled = (CharactersByAccountLastDateUpdated is null || CharactersByAccountLastDateUpdated.Count == 0) && DateTime.Now > Properties.Settings.Default.NextLoadAll;
         }
         private void AttachCharacters()
         {
@@ -1276,34 +1318,22 @@ namespace DAoCToolSuite.ChimpTool
                     AccountName = AccountComboBox.Text
                 };
                 form.SetLocation();
-                form.ShowDialog();
+                _ = form.ShowDialog();
                 credentials = SqliteDataAccess.LoadAccountCredentials(AccountComboBox.Text);
                 if (credentials is null || credentials.Count == 0 || string.IsNullOrEmpty(credentials.First().Login) || string.IsNullOrEmpty(credentials.First().Password))
+                {
                     return null;
+                }
             }
             return credentials.FirstOrDefault();
-        }
-        private static string ReadServerList()
-        {
-            lock (repositoryLock)
-            {
-                try
-                {
-                    string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\ServerConfig.json";
-                    string json = File.ReadAllText(path);
-                    return json;
-                }
-                catch (System.Exception ex)
-                {
-                    Logger.Error(ex);
-                    return "{}";
-                }
-            }
         }
         private static string HidePassword(string? password)
         {
             if (password == null)
+            {
                 return "null";
+            }
+
             string hidden = "";
             for (int index = 0; index < password.Length; index++)
             {
@@ -1314,7 +1344,10 @@ namespace DAoCToolSuite.ChimpTool
         private static string ObscureUserName(string? userName)
         {
             if (userName == null)
+            {
                 return "null";
+            }
+
             string obscured = userName[..2];
             for (int index = 2; index < userName.Length; index++)
             {
@@ -1345,16 +1378,16 @@ namespace DAoCToolSuite.ChimpTool
                 return;
             }
 
-            var login = credentials.Login;
-            var password = credentials.Password;
+            string? login = credentials.Login;
+            string? password = credentials.Password;
             #endregion
 
-            var row = SearchGridView.SelectedRows[0];
-            var charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
-            var serverName = row.Cells["Server"].Value.ToString();
-            var realm = row.Cells["Realm"].Value.ToString();
-            var webID = row.Cells["WebID"].Value.ToString();
-            var account = AccountComboBox.Text;
+            DataGridViewRow row = SearchGridView.SelectedRows[0];
+            string? charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
+            string? serverName = row.Cells["Server"].Value.ToString();
+            string? realm = row.Cells["Realm"].Value.ToString();
+            string? webID = row.Cells["WebID"].Value.ToString();
+            string account = AccountComboBox.Text;
 
             Logger.Debug($"Information read from the selected item Character:{charName ?? "null"} Server:{serverName ?? "null"} Realm:{realm ?? "null"}");
 
@@ -1382,7 +1415,9 @@ namespace DAoCToolSuite.ChimpTool
                     }
                 }
                 else
+                {
                     Logger.Debug($"Only one AHK Script can be active at one time. I think.");
+                }
             }
             catch (Exception ex)
             {
@@ -1400,10 +1435,10 @@ namespace DAoCToolSuite.ChimpTool
                 _ => 3,
             };
 
-            string json = ReadServerList();
+            string json = Properties.Settings.Default.ServerList;
             if (string.IsNullOrEmpty(json) || json.Equals("{}"))
             {
-                Logger.Error("SeverConfig.json is invalid.");
+                Logger.Error("ServerList is invalid.");
                 LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
                 launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
                 return;
@@ -1422,17 +1457,17 @@ namespace DAoCToolSuite.ChimpTool
             Server? server = serversList?.Where(x => x is not null && x.Name is not null && x.Name.ToLower().Equals(serverName?.ToLower())).FirstOrDefault();
             if (server is null)
             {
-                Logger.Error($"Could not find Server {server} in the ServerConfig.json");
+                Logger.Error($"Could not find Server {server} in the ServerList");
                 LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
                 launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
                 return;
             }
 
-            var index = server.Index;
-            var port = server.Port;
-            var ip = server.IP;
+            int? index = server.Index;
+            int? port = server.Port;
+            string? ip = server.IP;
 
-            var path = Properties.Settings.Default.GameDllLocation;
+            string path = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.GameDllLocation);
             if (path == null)
             {
                 Logger.Error("Game.dll location is not set.");
@@ -1453,7 +1488,7 @@ namespace DAoCToolSuite.ChimpTool
             }
             else
             {
-                MessageBox.Show("You may not launch more than 2 characters.", "You shall not pass");
+                _ = MessageBox.Show("You may not launch more than 2 characters.", "You shall not pass");
                 LaunchButton.Enabled = launchIndex <= 2;
                 launchToolStripMenuItem.Enabled = launchIndex <= 2;
                 return;
@@ -1461,7 +1496,7 @@ namespace DAoCToolSuite.ChimpTool
 
             try
             {
-                var p = new System.Diagnostics.Process();
+                Process p = new();
                 p.StartInfo.FileName = $"{path}\\game.dll";
                 p.StartInfo.Arguments = $" {ip} {port} {index} {login} {password} {charName} {realmIndex} ";
                 p.StartInfo.WorkingDirectory = path;
@@ -1480,13 +1515,13 @@ namespace DAoCToolSuite.ChimpTool
                     p.Exited += GameOver1;
                 }
                 Logger.Debug("Starting game.dll process");
-                p.Start();
+                _ = p.Start();
                 LaunchedCharacters.Add(launchedCharacter);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                SqliteDataAccess.AddAccountCredentials(AccountComboBox.Text, login, null);
+                _ = SqliteDataAccess.AddAccountCredentials(AccountComboBox.Text, login, null);
             }
             #endregion
 
@@ -1562,7 +1597,7 @@ namespace DAoCToolSuite.ChimpTool
             PerformRefresh(launchedCharacter.WebID, launchedCharacter.Account);
 
             //Freeup Process Slot
-            LaunchedCharacters.Remove(launchedCharacter);
+            _ = LaunchedCharacters.Remove(launchedCharacter);
 
             //Re-Enable Buttons/MenuItems
             LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
@@ -1585,7 +1620,7 @@ namespace DAoCToolSuite.ChimpTool
             PerformRefresh(launchedCharacter.WebID, launchedCharacter.Account);
 
             //Freeup Process Slot
-            LaunchedCharacters.Remove(launchedCharacter);
+            _ = LaunchedCharacters.Remove(launchedCharacter);
 
             //Re-Enable Buttons/MenuItems
             LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
@@ -1597,7 +1632,10 @@ namespace DAoCToolSuite.ChimpTool
         private void RefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (sender is not ToolStripMenuItem menuItem)
+            {
                 return;
+            }
+
             menuItem.Enabled = false;
             Logger.Debug("Refresh MenuItem clicked.");
             if (Properties.Settings.Default.NextRefresh > DateTime.Now)
@@ -1623,11 +1661,13 @@ namespace DAoCToolSuite.ChimpTool
                 fileName = saveFileDialog.FileName;
             }
             else
+            {
                 return;
+            }
 
-            string srcFullPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\CharacterDB.db";
+            string srcFullPath = SqliteDataAccess.DataBaseLocation;
             string destFileName = fileName;
-            SqliteDataAccess.BackupDB(srcFullPath, destFileName);
+            _ = SqliteDataAccess.BackupDB(srcFullPath, destFileName);
         }
         private void RestoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1643,12 +1683,14 @@ namespace DAoCToolSuite.ChimpTool
                 fileName = openFileDialog.FileName;
             }
             else
+            {
                 return;
+            }
 
             EnableSelectIndexChangedEvent = false;
             string srcFullPath = fileName;
-            string destFileName = Path.GetDirectoryName(Application.ExecutablePath) + "\\CharacterDB.db";
-            SqliteDataAccess.RestoreDB(srcFullPath, destFileName, true);
+            string destFileName = SqliteDataAccess.DataBaseLocation;
+            _ = SqliteDataAccess.RestoreDB(srcFullPath, destFileName, true);
             LoadAccounts();
             EnableSelectIndexChangedEvent = true;
             LoadCharacters();
@@ -1690,7 +1732,7 @@ namespace DAoCToolSuite.ChimpTool
                 AccountName = AccountComboBox.Text
             };
             form.SetLocation();
-            form.ShowDialog();
+            _ = form.ShowDialog();
         }
         private void EditToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -1698,20 +1740,23 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void AssociateAHKToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var row = SearchGridView.SelectedRows[0];
-            var charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
-            var serverName = row.Cells["Server"].Value.ToString();
-            var realm = row.Cells["Realm"].Value.ToString();
-            var webID = row.Cells["WebID"].Value.ToString();
+            DataGridViewRow row = SearchGridView.SelectedRows[0];
+            string? charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
+            string? serverName = row.Cells["Server"].Value.ToString();
+            string? realm = row.Cells["Realm"].Value.ToString();
+            string? webID = row.Cells["WebID"].Value.ToString();
             if (string.IsNullOrEmpty(charName) || string.IsNullOrEmpty(serverName) || string.IsNullOrEmpty(realm) || string.IsNullOrEmpty(webID))
+            {
                 return;
+            }
+
             AHKForm form = new(charName, realm, serverName, webID, AccountComboBox.Text)
             {
                 Owner = this,
                 StartPosition = FormStartPosition.Manual
             };
             form.SetLocation();
-            form.ShowDialog();
+            _ = form.ShowDialog();
 
         }
         private void LogViewerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1728,7 +1773,7 @@ namespace DAoCToolSuite.ChimpTool
                 StartPosition = FormStartPosition.Manual
             };
             about.SetLocation();
-            about.ShowDialog();
+            _ = about.ShowDialog();
         }
         private void AddAllCharactersToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1749,11 +1794,11 @@ namespace DAoCToolSuite.ChimpTool
             SearchProgressBar.CustomText = "Loading Characters";
             SearchProgressBar.Visible = true;
             SearchProgressBar.Refresh();
-            var useSelenium = UseSelenium;
+            bool useSelenium = UseSelenium;
             UseSelenium = false;
             try
             {
-                foreach (var character in CharacterList)
+                foreach (KeyValuePair<string, int> character in CharacterList)
                 {
                     SearchProgressBar.Value += 1;
                     AddCharacter(character.Key);
@@ -1775,7 +1820,5 @@ namespace DAoCToolSuite.ChimpTool
             PerformRefreshAll();
         }
         #endregion
-
-
     }
 }

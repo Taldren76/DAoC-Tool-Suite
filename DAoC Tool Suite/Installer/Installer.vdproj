@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_40FCEEFB95734DA994064C1F49B43399"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_726F3D3106FF4EAEB6A045FA75C156E2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -130,7 +136,7 @@
                 {
                 "Name" = "8:.NET Core"
                 "Message" = "8:[VSDNETCOREMSG]"
-                "FrameworkVersion" = "8:.NET 6.0           "
+                "FrameworkVersion" = "8:.NET 6.0            "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:https://dotnet.microsoft.com/download/dotnet-core/[NetCoreVerMajorDotMinor]"
                 "IsNETCore" = "11:TRUE"
@@ -147,6 +153,26 @@
             "TargetName" = "8:LogParser.ico"
             "Tag" = "8:"
             "Folder" = "8:_84BAA862631442F9A02413BED68185BE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_40FCEEFB95734DA994064C1F49B43399"
+            {
+            "SourcePath" = "8:..\\SQLLibrary\\CharacterDB.db"
+            "TargetName" = "8:CharacterDB.db"
+            "Tag" = "8:"
+            "Folder" = "8:_002B45B8BEF4400F8305F140AE0FA8DD"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -261,6 +287,39 @@
                 {
                 }
             }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_FC06B0B37580480CAC1D8D331ECD5CC5"
+            {
+            "Name" = "8:#1915"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:AppDataFolder"
+                "Folders"
+                {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_B9C3CF92E1274C5BA805B3F2C9495B47"
+                    {
+                    "Name" = "8:Taldren, Inc"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_33AFAD11B21A4E67B6C408582FBC747F"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_002B45B8BEF4400F8305F140AE0FA8DD"
+                            {
+                            "Name" = "8:DAoC Tool Suite"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_E44F14B9160E4F50A360F46FBF1F14A6"
+                                "Folders"
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         "LaunchCondition"
         {
@@ -278,7 +337,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DAoC Tool Suite"
         "ProductCode" = "8:{6ABCE053-3AB4-4B19-973B-399FE3FEC50E}"
-        "PackageCode" = "8:{29E90D0C-0930-4CB4-A2BF-A35E05E3E48A}"
+        "PackageCode" = "8:{A04F2B77-E6A7-4B98-A44E-B7621FE8D6AC}"
         "UpgradeCode" = "8:{B64144B6-6C56-4A20-A52F-D1B1C16ECBEB}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -827,7 +886,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_97A72D1CB9C94999B7E6CC9B0F5C602D"
             {
-            "SourcePath" = "8:\\\\Paldrennas\\repo\\Repos\\DAoCToolSuite\\DAoC Tool Suite\\DAoC Tool Suite\\obj\\x86\\Release\\net6.0-windows10.0.17763.0\\win-x86\\apphost.exe"
+            "SourcePath" = "8:..\\DAoC Tool Suite\\obj\\x86\\Debug\\net6.0-windows10.0.17763.0\\win-x86\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_84BAA862631442F9A02413BED68185BE"

@@ -18,7 +18,34 @@
       <Value Profile="(Default)">2001-01-01</Value>
     </Setting>
     <Setting Name="GameDllLocation" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">%ProgramFiles(x86)%\Electronic Arts\Dark Age of Camelot</Value>
+    </Setting>
+    <Setting Name="DAoCCharacterFileDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%AppData%\Electronic Arts\Dark Age of Camelot\LotM</Value>
+    </Setting>
+    <Setting Name="DisplayedDatabaseColumnNames" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"Names": ["Name", "Realm", "Class", "Server", "RealmRank", "TotalRealmPoints", "TotalSoloKills", "TotalDeathBlows", "TotalKills", "TotalDeaths", "IRS", "RPNextRank", "RPLastUpdate", "BountyPoints", "MasterLevel_Name"]}</Value>
+    </Setting>
+    <Setting Name="DisplayedDataGridViewHeaderNames" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"Names": ["Name", "Realm", "Class", "Server", "Realm\nRank", "Realm\nPoints", "Solo\nKills", "Death\nBlows", "Kills", "Deaths", "IRS", "RP Next\nRank", "RP Last\nUpdate", "Bounty\nPoints", "MasterLevel Path"]}</Value>
+    </Setting>
+    <Setting Name="JsonBackupFileFullPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%UserProfile%\Documents\ChimpToolBackup.json</Value>
+    </Setting>
+    <Setting Name="LastAccount" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Default</Value>
+    </Setting>
+    <Setting Name="Server" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="UseAPI" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="UseSelenium" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ServerList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"Servers": {"Server": [{"Index": 41, "IP": "107.23.173.143", "Name": "YWain1", "Port": 10622}, {"Index": 49, "IP": "107.23.173.143", "Name": "YWain2", "Port": 10622}, {"Index": 50, "IP": "107.23.173.143", "Name": "YWain3", "Port": 10622}, {"Index": 51, "IP": "107.23.173.143", "Name": "YWain4", "Port": 10622}, {"Index": 52, "IP": "107.23.173.143", "Name": "YWain5", "Port": 10622}, {"Index": 53, "IP": "107.23.173.143", "Name": "YWain6", "Port": 10622}, {"Index": 54, "IP": "107.23.173.143", "Name": "YWain7", "Port": 10622}, {"Index": 55, "IP": "107.23.173.143", "Name": "YWain8", "Port": 10622}, {"Index": 56, "IP": "107.23.173.143", "Name": "YWain9", "Port": 10622}, {"Index": 57, "IP": "107.23.173.143", "Name": "YWain10", "Port": 10622}]}}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

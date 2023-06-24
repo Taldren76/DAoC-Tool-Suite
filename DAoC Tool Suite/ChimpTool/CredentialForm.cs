@@ -10,7 +10,7 @@ namespace DAoCToolSuite.ChimpTool
         public CredentialForm()
         {
             InitializeComponent();
-            GameLocationTextBox.Text = string.IsNullOrEmpty(Properties.Settings.Default.GameDllLocation) ? "C:\\" : Properties.Settings.Default.GameDllLocation;
+            GameLocationTextBox.Text = string.IsNullOrEmpty(Properties.Settings.Default.GameDllLocation) ? "C:\\" : Environment.ExpandEnvironmentVariables(Properties.Settings.Default.GameDllLocation);
         }
 
         protected override void OnShown(EventArgs e)
@@ -64,7 +64,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             if (File.Exists(folderBrowserDialog1.SelectedPath + "\\game.dll"))
             {
-                SqliteDataAccess.AddAccountCredentials(AccountName, LoginTextBox.Text, PasswordTextBox.Text);
+                _ = SqliteDataAccess.AddAccountCredentials(AccountName, LoginTextBox.Text, PasswordTextBox.Text);
                 Close();
             }
             else

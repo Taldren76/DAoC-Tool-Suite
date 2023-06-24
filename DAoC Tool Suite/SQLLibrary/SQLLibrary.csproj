@@ -8,12 +8,8 @@
     <ApplicationIcon>DAoCTools.ico</ApplicationIcon>
     <PackageIcon>DAoCTools.png</PackageIcon>
     <Platforms>x86</Platforms>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="CharacterDB.db" />
-  </ItemGroup>
-
   <ItemGroup>
     <Content Include="CharacterDB.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

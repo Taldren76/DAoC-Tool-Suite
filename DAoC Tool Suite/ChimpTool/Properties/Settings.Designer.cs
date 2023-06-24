@@ -85,13 +85,125 @@ namespace DAoCToolSuite.ChimpTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("%ProgramFiles(x86)%\\Electronic Arts\\Dark Age of Camelot")]
         public string GameDllLocation {
             get {
                 return ((string)(this["GameDllLocation"]));
             }
             set {
                 this["GameDllLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%AppData%\\Electronic Arts\\Dark Age of Camelot\\LotM")]
+        public string DAoCCharacterFileDirectory {
+            get {
+                return ((string)(this["DAoCCharacterFileDirectory"]));
+            }
+            set {
+                this["DAoCCharacterFileDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"Names\": [\"Name\", \"Realm\", \"Class\", \"Server\", \"RealmRank\", \"TotalRealmPoints\", \"" +
+            "TotalSoloKills\", \"TotalDeathBlows\", \"TotalKills\", \"TotalDeaths\", \"IRS\", \"RPNextR" +
+            "ank\", \"RPLastUpdate\", \"BountyPoints\", \"MasterLevel_Name\"]}")]
+        public string DisplayedDatabaseColumnNames {
+            get {
+                return ((string)(this["DisplayedDatabaseColumnNames"]));
+            }
+            set {
+                this["DisplayedDatabaseColumnNames"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"Names\": [\"Name\", \"Realm\", \"Class\", \"Server\", \"Realm\\nRank\", \"Realm\\nPoints\", \"S" +
+            "olo\\nKills\", \"Death\\nBlows\", \"Kills\", \"Deaths\", \"IRS\", \"RP Next\\nRank\", \"RP Last" +
+            "\\nUpdate\", \"Bounty\\nPoints\", \"MasterLevel Path\"]}")]
+        public string DisplayedDataGridViewHeaderNames {
+            get {
+                return ((string)(this["DisplayedDataGridViewHeaderNames"]));
+            }
+            set {
+                this["DisplayedDataGridViewHeaderNames"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%UserProfile%\\Documents\\ChimpToolBackup.json")]
+        public string JsonBackupFileFullPath {
+            get {
+                return ((string)(this["JsonBackupFileFullPath"]));
+            }
+            set {
+                this["JsonBackupFileFullPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Default")]
+        public string LastAccount {
+            get {
+                return ((string)(this["LastAccount"]));
+            }
+            set {
+                this["LastAccount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Server {
+            get {
+                return ((int)(this["Server"]));
+            }
+            set {
+                this["Server"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseAPI {
+            get {
+                return ((bool)(this["UseAPI"]));
+            }
+            set {
+                this["UseAPI"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseSelenium {
+            get {
+                return ((bool)(this["UseSelenium"]));
+            }
+            set {
+                this["UseSelenium"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"{""Servers"": {""Server"": [{""Index"": 41, ""IP"": ""107.23.173.143"", ""Name"": ""YWain1"", ""Port"": 10622}, {""Index"": 49, ""IP"": ""107.23.173.143"", ""Name"": ""YWain2"", ""Port"": 10622}, {""Index"": 50, ""IP"": ""107.23.173.143"", ""Name"": ""YWain3"", ""Port"": 10622}, {""Index"": 51, ""IP"": ""107.23.173.143"", ""Name"": ""YWain4"", ""Port"": 10622}, {""Index"": 52, ""IP"": ""107.23.173.143"", ""Name"": ""YWain5"", ""Port"": 10622}, {""Index"": 53, ""IP"": ""107.23.173.143"", ""Name"": ""YWain6"", ""Port"": 10622}, {""Index"": 54, ""IP"": ""107.23.173.143"", ""Name"": ""YWain7"", ""Port"": 10622}, {""Index"": 55, ""IP"": ""107.23.173.143"", ""Name"": ""YWain8"", ""Port"": 10622}, {""Index"": 56, ""IP"": ""107.23.173.143"", ""Name"": ""YWain9"", ""Port"": 10622}, {""Index"": 57, ""IP"": ""107.23.173.143"", ""Name"": ""YWain10"", ""Port"": 10622}]}}")]
+        public string ServerList {
+            get {
+                return ((string)(this["ServerList"]));
+            }
+            set {
+                this["ServerList"] = value;
             }
         }
     }

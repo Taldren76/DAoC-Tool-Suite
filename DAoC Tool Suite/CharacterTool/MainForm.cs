@@ -1,6 +1,5 @@
 using DAoCToolSuite.CharacterTool.Files;
 using DAoCToolSuite.CharacterTool.Json;
-using DAoCToolSuite.CharacterTool.Settings;
 using Logger;
 using Newtonsoft.Json;
 using SQLLibrary;
@@ -13,8 +12,31 @@ namespace DAoCToolSuite.CharacterTool
     public partial class MainForm : Form
     {
         internal static LogManager Logger => LogManager.Instance;
+        private static string DAoCCharacterFileDirectory
+        {
+            get
+            {
+                return Properties.Settings.Default.DAoCCharacterFileDirectory;
+            }
+            set
+            {
+                Properties.Settings.Default.DAoCCharacterFileDirectory = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+        private static string JsonBackupFileFullPath
+        {
+            get
+            {
+                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.JsonBackupFileFullPath);
+            }
+            set
+            {
+                Properties.Settings.Default.JsonBackupFileFullPath = value;
+                Properties.Settings.Default.Save();
+            }
+        }
         internal string DAoCCharacterDataFolder { get; private set; }
-        internal static SettingsManager Settings { get; set; } = new SettingsManager();
         internal static ParseDirectory? ParseDirectory { get; set; }
         private List<SettingsBackUpModel> Backups { get; set; } = new();
         private BindingSource BindingSource { get; set; } = new();
@@ -51,7 +73,7 @@ namespace DAoCToolSuite.CharacterTool
         }
         internal static string DefaultLocation()
         {
-            string sPath = Settings.DAoCCharacterFileDirectory;
+            string sPath = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DAoCCharacterFileDirectory);
             return sPath;
         }
         private void UpdateCharNameAutoComplete()
@@ -75,8 +97,8 @@ namespace DAoCToolSuite.CharacterTool
             Logger.Debug("Starting CharacterTool.MainForm()");
             InitializeComponent();
             DAoCCharacterDataFolder = DefaultLocation();
-            ServerList = DeserializeServerList(Settings.Servers);
-            RealmList = DeserializeRealmClass(Settings.RealmClasses);
+            ServerList = DeserializeServerList();
+            RealmList = DeserializeRealmClass();
             _ = BackUpRealmComboBox.Items.Add("Albion");
             _ = BackUpRealmComboBox.Items.Add("Hibernia");
             _ = BackUpRealmComboBox.Items.Add("Midgard");
@@ -95,11 +117,11 @@ namespace DAoCToolSuite.CharacterTool
             LoadBackups();
         }
 
-        private static ServerListINI DeserializeServerList(string json)
+        private static ServerListINI DeserializeServerList()
         {
             try
             {
-                ServerListINI input = JsonConvert.DeserializeObject<ServerListINI>(json) ?? new ServerListINI();
+                ServerListINI input = JsonConvert.DeserializeObject<ServerListINI>(Properties.Settings.Default.ServerList) ?? new ServerListINI();
                 return input;
             }
             catch (Exception ex)
@@ -109,11 +131,11 @@ namespace DAoCToolSuite.CharacterTool
             }
         }
 
-        private static RealmClassINI DeserializeRealmClass(string json)
+        private static RealmClassINI DeserializeRealmClass()
         {
             try
             {
-                RealmClassINI input = JsonConvert.DeserializeObject<RealmClassINI>(json) ?? new RealmClassINI();
+                RealmClassINI input = JsonConvert.DeserializeObject<RealmClassINI>(Properties.Settings.Default.RealmClasses) ?? new RealmClassINI();
                 return input;
             }
             catch (Exception ex)
@@ -367,8 +389,8 @@ namespace DAoCToolSuite.CharacterTool
             string iniFileName = ParseDirectory?.FindIniFileByCharacterName(BackUpNameComboBox.Text) ?? $"{BackUpNameComboBox.Text.Split('(').First()}-{GetServerIndex(BackUpServerTextBox.Text)}.ini".Replace(" ", "");
             string ignFileName = ParseDirectory?.FindIgnFileByCharacterName(BackUpNameComboBox.Text) ?? $"{BackUpNameComboBox.Text.Split('(').First()}-143.ign".Replace(" ", "");
             string directoryPath = DAoCDirectoryTextBox.Text;
-            string? iniContents = ParseDirectory?.GetFileContents(directoryPath + $"\\{iniFileName}");
-            string? ignContents = ParseDirectory?.GetFileContents(directoryPath + $"\\{ignFileName}");
+            string? iniContents = ParseDirectory.GetFileContents(directoryPath + $"\\{iniFileName}");
+            string? ignContents = ParseDirectory.GetFileContents(directoryPath + $"\\{ignFileName}");
             SettingsBackUpModel settingsBackup = new()
             {
                 FirstName = BackUpNameComboBox.Text,
@@ -401,7 +423,9 @@ namespace DAoCToolSuite.CharacterTool
         private void SaveAll_Click(object sender, EventArgs e)
         {
             if (ParseDirectory?.INIFiles is null)
+            {
                 return;
+            }
 
             SaveAllButton.Enabled = false;
 
@@ -414,10 +438,14 @@ namespace DAoCToolSuite.CharacterTool
                 SaveAllProgressBar.Visible = true;
                 SaveAllProgressBar.Refresh();
 
-                foreach (var file in ParseDirectory.INIFiles)
+                foreach (string? file in ParseDirectory.INIFiles)
                 {
                     SaveAllProgressBar.Value += 1;
-                    if (file is null) continue;
+                    if (file is null)
+                    {
+                        continue;
+                    }
+
                     string iniFileName = file.Split('\\').Last();
                     string characterName = iniFileName.Split('-').First();
                     string serverStr = iniFileName.Split("-").Last().Split('.').First();
@@ -426,9 +454,13 @@ namespace DAoCToolSuite.CharacterTool
                     string? serverName = Servers?.Where(x => x.Index == ServerIndex).Select(x => x.Name).FirstOrDefault();
                     string? ignFileName = ParseDirectory?.FindIgnFileByCharacterName(characterName);
                     string? directoryPath = DAoCDirectoryTextBox.Text;
-                    if (ignFileName is null || directoryPath is null) continue;
-                    string? iniContents = ParseDirectory?.GetFileContents(file);
-                    string? ignContents = ParseDirectory?.GetFileContents(directoryPath + $"\\{ignFileName}");
+                    if (ignFileName is null || directoryPath is null)
+                    {
+                        continue;
+                    }
+
+                    string? iniContents = ParseDirectory.GetFileContents(file);
+                    string? ignContents = ParseDirectory.GetFileContents(directoryPath + $"\\{ignFileName}");
                     string realm;
                     string className;
                     CharacterModel? characterModel = SqliteDataAccess.LoadCharacterByFirstName(characterName);
@@ -885,7 +917,9 @@ namespace DAoCToolSuite.CharacterTool
             List<string> charNames = new();
             DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
             if (selectedRows is null)
+            {
                 return;
+            }
 
             RestoreDeleteProgressBar.Minimum = 0;
             RestoreDeleteProgressBar.Maximum = selectedRows.Count;
@@ -936,7 +970,9 @@ namespace DAoCToolSuite.CharacterTool
             RestoreDeleteSettingsButton.Enabled = false;
             DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
             if (selectedRows is null)
+            {
                 return;
+            }
 
             List<int> charactersToDelete = new();
             foreach (DataGridViewRow row in selectedRows)
@@ -995,25 +1031,32 @@ namespace DAoCToolSuite.CharacterTool
         {
             Logger.Debug("EditDescriptionButton clicked.");
             SettingsBackUpModel? settingsBackup = null;
-            int dbIndex = -1;
             DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
             DataGridViewRow row = selectedRows[0];
             if (row is null)
+            {
                 return;
+            }
+
             string? dbIndexStr = row?.Cells["index"]?.Value?.ToString();
             if (dbIndexStr is not null)
             {
-                dbIndex = int.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
+                int dbIndex = int.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
                 if (dbIndex > -1)
                 {
                     settingsBackup = SqliteDataAccess.LoadSettingByIndex(dbIndex);
                 }
                 else
+                {
                     return;
+                }
             }
             if (settingsBackup is null)
+            {
                 return;
-            EditDialog dialog = new EditDialog(row!, DAoCCharacterDataFolder, ServerList!, RealmList!)
+            }
+
+            EditDialog dialog = new(row!, DAoCCharacterDataFolder, ServerList!, RealmList!)
             {
                 Owner = this,
                 StartPosition = FormStartPosition.Manual
@@ -1029,7 +1072,7 @@ namespace DAoCToolSuite.CharacterTool
             dialog.BackUpClassComboBox.Text = settingsBackup.Class;
             dialog.BackUpDescriptionTextBox.Text = settingsBackup.Description;
             dialog.SetLocation();
-            dialog.ShowDialog();
+            _ = dialog.ShowDialog();
             LoadBackups();
         }
         #endregion
@@ -1056,7 +1099,7 @@ namespace DAoCToolSuite.CharacterTool
             {
                 try
                 {
-                    File.WriteAllText(Settings.JsonBackupFileFullPath, json);
+                    File.WriteAllText(JsonBackupFileFullPath, json);
                 }
                 catch (Exception ex)
                 {
@@ -1073,7 +1116,7 @@ namespace DAoCToolSuite.CharacterTool
 
         private static bool HasDBBackupJson()
         {
-            return File.Exists(Settings.JsonBackupFileFullPath);
+            return File.Exists(JsonBackupFileFullPath);
         }
 
         private static string ReadDBBackupJson()
@@ -1082,7 +1125,7 @@ namespace DAoCToolSuite.CharacterTool
             {
                 try
                 {
-                    string json = File.ReadAllText(Settings.JsonBackupFileFullPath);
+                    string json = File.ReadAllText(JsonBackupFileFullPath);
                     return json;
                 }
                 catch (Exception ex)
@@ -1167,7 +1210,7 @@ namespace DAoCToolSuite.CharacterTool
         private void RestoreDBButton_Click(object sender, EventArgs e)
         {
             Logger.Debug("Restore button has been pressed.");
-            if (File.Exists(Settings.JsonBackupFileFullPath))
+            if (File.Exists(JsonBackupFileFullPath))
             {
                 DialogResult del = MessageBox.Show($"WARNING: Restoring DB will delete all existing records.\nContinue?", "Restore Database", MessageBoxButtons.YesNo);
                 if (del == DialogResult.No)
@@ -1175,12 +1218,12 @@ namespace DAoCToolSuite.CharacterTool
                     return;
                 }
                 RestoreDBFromJson();
-                Logger.Debug($"Backup restored from {Settings.JsonBackupFileFullPath}");
+                Logger.Debug($"Backup restored from {JsonBackupFileFullPath}");
                 LoadBackups();
             }
             else
             {
-                Logger.Debug($"No DB Backup Json found at {Settings.JsonBackupFileFullPath}");
+                Logger.Debug($"No DB Backup Json found at {JsonBackupFileFullPath}");
             }
         }
         #endregion

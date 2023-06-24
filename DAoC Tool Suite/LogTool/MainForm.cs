@@ -17,8 +17,8 @@ namespace DAoCToolSuite.LogTool
         {
             InitializeComponent();
 
-            this.FormClosing -= new FormClosingEventHandler(MainForm_Closing);
-            this.FormClosing += new FormClosingEventHandler(MainForm_Closing);
+            FormClosing -= new FormClosingEventHandler(MainForm_Closing);
+            FormClosing += new FormClosingEventHandler(MainForm_Closing);
 
             Timer.Tick -= new EventHandler(MainForm_TimerHandler);
             Timer.Tick += new EventHandler(MainForm_TimerHandler);
@@ -82,7 +82,7 @@ namespace DAoCToolSuite.LogTool
         private void MainForm_Closing(object? sender, FormClosingEventArgs e)
         {
             Overlay?.Close();
-            Properties.Settings.Default.LastLocationMainform = this.Location;
+            Properties.Settings.Default.LastLocationMainform = Location;
             Properties.Settings.Default.Save();
         }
 
@@ -136,10 +136,10 @@ namespace DAoCToolSuite.LogTool
         private DataTable ProduceDataTable()
         {
             DataTable dt = new();
-            dt.Columns.Add();
-            dt.Columns.Add();
-            dt.Columns.Add();
-            dt.Columns.Add();
+            _ = dt.Columns.Add();
+            _ = dt.Columns.Add();
+            _ = dt.Columns.Add();
+            _ = dt.Columns.Add();
             AddRow("Total Damage Done:", LogParser.TotalDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Total Healing Recieved:", LogParser.HealingTaken.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
             AddRow("", "", "", "");
             AddRow("Total Spell Dmg:", LogParser.TotalNonMeleeDamageDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture), "Total Healing Done:", LogParser.TotalHealingDone.ToString("N0", System.Globalization.CultureInfo.CurrentCulture));
@@ -427,7 +427,10 @@ namespace DAoCToolSuite.LogTool
             {
                 string? item = checkedListBox.Items[index]?.ToString();
                 if (item is null)
+                {
                     continue;
+                }
+
                 switch (item)
                 {
                     case "Spell":

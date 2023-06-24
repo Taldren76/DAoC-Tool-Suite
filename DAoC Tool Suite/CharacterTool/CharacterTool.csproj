@@ -36,7 +36,6 @@
 
   <ItemGroup>
     <None Remove="App.config" />
-    <None Remove="CharacterTool.Config" />
     <None Remove="Icons\CharacterTool.ico" />
     <None Remove="Icons\DAoCTools.ico" />
     <None Remove="Icons\DAoCTools.png" />
@@ -45,9 +44,6 @@
   <ItemGroup>
     <Content Include="App.config">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CharacterTool.Config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\CharacterTool.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

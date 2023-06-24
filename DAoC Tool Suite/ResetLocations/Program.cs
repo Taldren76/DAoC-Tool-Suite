@@ -5,7 +5,7 @@ namespace DAoCToolSuite.DAoCToolsResetSettings
     public static class Program
     {
         [STAThread]
-        public static void Main(string[] args)
+        public static void Main()
         {
             Console.WriteLine("Restoring Default Settings.");
             string ChimpToolPath = Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\ChimpTool\");

@@ -27,7 +27,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="App.config" />
-		<None Remove="ChimpTools.Config" />
 		<None Remove="DAoCTools.xcf" />
 		<None Remove="DAoCToolsBW.ico" />
 		<None Remove="Icons\ChimpTool.ico" />
@@ -35,14 +34,10 @@
 		<None Remove="Icons\DAoCTools.png" />
 		<None Remove="preamble.ahk" />
 		<None Remove="Selenium\chromedriver.exe" />
-		<None Remove="ServerConfig.json" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="App.config">
 		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-		</Content>
-		<Content Include="ChimpTools.Config">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Icons\ChimpTool.ico">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -65,9 +60,6 @@
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Selenium\chromedriver.exe">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="ServerConfig.json">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>

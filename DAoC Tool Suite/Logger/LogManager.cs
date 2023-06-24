@@ -12,7 +12,10 @@ namespace Logger
     {
         public DebugLevel CurrentDebugLevel { get; set; } = DebugLevel.Debug;
         private NLog.Logger NLogLogger { get; set; }
-        public string PATH { get; private set; } = Properties.Settings.Default.LogFileName;
+        public string LogFileName { get; private set; } = Properties.Settings.Default.LogFileName;
+        
+        private string LogFileBasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\";
+        public string LogFileLocation => Path.Combine(LogFileBasePath, LogFileName);
         public static LogManager Instance
         {
             get
@@ -111,9 +114,7 @@ namespace Logger
         {
             try
             {
-                //     $"{System.IO.Path.GetDirectoryName(Application.ExecutablePath)}\\DAoCToolSuite.log";
-                //     $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\DAoCToolSuite.log";
-                string path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\{Properties.Settings.Default.LogFileName}";
+                string path = LogFileLocation;
                 TraceLog($"Path: {path}");
                 return path;
             }
@@ -127,13 +128,23 @@ namespace Logger
 
         public LogManager()
         {
-            PATH = GetPath();
             if (!Initialized)
             {
                 InitalizeLogger();
             }
             NLogLogger = NLog.LogManager.GetCurrentClassLogger();
-            Debug($"Log created at {PATH}");
+            Debug($"Log created at {LogFileLocation}");
+        }
+
+        public LogManager(string filename)
+        {
+            LogFileName = filename;
+            if (!Initialized)
+            {
+                InitalizeLogger();
+            }
+            NLogLogger = NLog.LogManager.GetCurrentClassLogger();
+            Debug($"Log created at {LogFileLocation}");
         }
 
         private void InitalizeLogger()
@@ -149,7 +160,7 @@ namespace Logger
                     FileTarget fileTarget = new()
                     {
                         Name = "file",
-                        FileName = PATH,
+                        FileName = LogFileLocation,
                         DeleteOldFileOnStartup = true
                     };
                     config.AddTarget("file", fileTarget);
@@ -177,13 +188,13 @@ namespace Logger
                 string contents;
                 lock (thisLock)
                 {
-                    FileAttributes attributes = File.GetAttributes(PATH);
-                    using (FileStream fs = new(PATH, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    FileAttributes attributes = File.GetAttributes(LogFileLocation);
+                    using (FileStream fs = new(LogFileLocation, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         using StreamReader sr = new(fs);
                         contents = sr.ReadToEnd();
                     }
-                    File.SetAttributes(PATH, attributes);
+                    File.SetAttributes(LogFileLocation, attributes);
                 }
                 return contents;
             }

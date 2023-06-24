@@ -11,9 +11,12 @@ namespace DAoCToolSuite.CharacterTool
         [STAThread]
         private static void Main()
         {
-            if (File.Exists("CharacterTool.log"))
-                File.Delete("CharacterTool.log");
-            _ = Trace.Listeners.Add(new TextWriterTraceListener("CharacterTool.log"));
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\CharacterTool.log"))
+            {
+                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\CharacterTool.log");
+            }
+
+            _ = Trace.Listeners.Add(new TextWriterTraceListener(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\CharacterTool.log"));
             Trace.AutoFlush = true;
             Trace.WriteLine($"***************************************************");
             Trace.WriteLine($"* Log Started: {DateTime.Now:MM/dd/yyyy HH:mm:ss}                *");

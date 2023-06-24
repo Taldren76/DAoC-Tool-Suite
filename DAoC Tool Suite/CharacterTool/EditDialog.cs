@@ -8,7 +8,7 @@ namespace DAoCToolSuite.CharacterTool
 {
     public partial class EditDialog : Form
     {
-        private LogManager Logger => LogManager.Instance;
+        private static LogManager Logger => LogManager.Instance;
         private static ServerListINI? ServerList { get; set; }
         private static RealmClassINI? RealmList { get; set; }
         public string DAoCCharacterDataFolder { get; private set; }
@@ -22,7 +22,8 @@ namespace DAoCToolSuite.CharacterTool
             }
             set => _characterList = value;
         }
-        DataGridViewRow SelectedRow { get; set; }
+
+        private DataGridViewRow SelectedRow { get; set; }
 
 
         public EditDialog(DataGridViewRow selectedRow, string charaacterDataFolder, ServerListINI serverListINI, RealmClassINI realmClassINI)
@@ -151,7 +152,10 @@ namespace DAoCToolSuite.CharacterTool
                 string? dbIndexStr = SelectedRow?.Cells["index"]?.Value?.ToString();
                 int dbIndex = int.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
                 if (dbIndex < 0)
+                {
                     return;
+                }
+
                 SqliteDataAccess.UpdateEntryByIndex(dbIndex, settingsBackup);
                 Close();
             }

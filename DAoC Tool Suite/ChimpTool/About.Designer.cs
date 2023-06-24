@@ -77,9 +77,9 @@
             label3.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point);
             label3.Location = new Point(269, 12);
             label3.Name = "label3";
-            label3.Size = new Size(150, 18);
+            label3.Size = new Size(197, 18);
             label3.TabIndex = 3;
-            label3.Text = "1.0.0 (20230621)";
+            label3.Text = "0.9.5 BETA (20230623)";
             // 
             // pictureBox1
             // 
