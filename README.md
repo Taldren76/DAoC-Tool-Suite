@@ -1,3 +1,14 @@
+DAoC Tool Suite BETA 0.9.5
+---
+Changes:
+1. Moved all data into User's AppData folder to avoid the evil that is the VirtualStore folder.
+2. Removed the bespoke Settings Manager in favor of Winform's built in Settings manager.
+3. Added the ability to Launch 2 characters at one time from two different accounts. Only one instance of AHK can be active at one time, so the first character launched with an associated AHK script will have that script active for both characters.
+4. Added a 2 minute clock when the game.dll closes. This will not block the Launch button , but may be used after a crash as an indication when you can log back in.
+Fixes:
+1. Fixed refresh issue.
+2. Fixed some edge conditions around characters with 0 RPs and no realm rank.
+
 DAoC Tool Suite BETA 0.9.2
 ---
 Changes:
