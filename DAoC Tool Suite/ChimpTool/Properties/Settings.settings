@@ -24,10 +24,10 @@
       <Value Profile="(Default)">%AppData%\Electronic Arts\Dark Age of Camelot\LotM</Value>
     </Setting>
     <Setting Name="DisplayedDatabaseColumnNames" Type="System.String" Scope="User">
-      <Value Profile="(Default)">{"Names": ["Name", "Realm", "Class", "Server", "RealmRank", "TotalRealmPoints", "TotalSoloKills", "TotalDeathBlows", "TotalKills", "TotalDeaths", "IRS", "RPNextRank", "RPLastUpdate", "BountyPoints", "MasterLevel_Name"]}</Value>
+      <Value Profile="(Default)">{"Names": ["Name", "Realm", "Level","Class", "Server", "RealmRank", "TotalRealmPoints", "TotalSoloKills", "TotalDeathBlows", "TotalKills", "TotalDeaths", "IRS", "RPNextRank", "RPLastUpdate", "BountyPoints", "MasterLevel_Name"]}</Value>
     </Setting>
     <Setting Name="DisplayedDataGridViewHeaderNames" Type="System.String" Scope="User">
-      <Value Profile="(Default)">{"Names": ["Name", "Realm", "Class", "Server", "Realm\nRank", "Realm\nPoints", "Solo\nKills", "Death\nBlows", "Kills", "Deaths", "IRS", "RP Next\nRank", "RP Last\nUpdate", "Bounty\nPoints", "MasterLevel Path"]}</Value>
+      <Value Profile="(Default)">{"Names": ["Name", "Realm","Level", "Class", "Server", "Realm\nRank", "Realm\nPoints", "Solo\nKills", "Death\nBlows", "Kills", "Deaths", "IRS", "RP Next\nRank", "RP Last\nUpdate", "Bounty\nPoints", "MasterLevel Path"]}</Value>
     </Setting>
     <Setting Name="JsonBackupFileFullPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">%UserProfile%\Documents\ChimpToolBackup.json</Value>

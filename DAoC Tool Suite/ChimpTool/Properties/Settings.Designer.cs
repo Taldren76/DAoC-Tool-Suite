@@ -109,9 +109,9 @@ namespace DAoCToolSuite.ChimpTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{\"Names\": [\"Name\", \"Realm\", \"Class\", \"Server\", \"RealmRank\", \"TotalRealmPoints\", \"" +
-            "TotalSoloKills\", \"TotalDeathBlows\", \"TotalKills\", \"TotalDeaths\", \"IRS\", \"RPNextR" +
-            "ank\", \"RPLastUpdate\", \"BountyPoints\", \"MasterLevel_Name\"]}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"Names\": [\"Name\", \"Realm\", \"Level\",\"Class\", \"Server\", \"RealmRank\", \"TotalRealmPo" +
+            "ints\", \"TotalSoloKills\", \"TotalDeathBlows\", \"TotalKills\", \"TotalDeaths\", \"IRS\", " +
+            "\"RPNextRank\", \"RPLastUpdate\", \"BountyPoints\", \"MasterLevel_Name\"]}")]
         public string DisplayedDatabaseColumnNames {
             get {
                 return ((string)(this["DisplayedDatabaseColumnNames"]));
@@ -123,9 +123,9 @@ namespace DAoCToolSuite.ChimpTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{\"Names\": [\"Name\", \"Realm\", \"Class\", \"Server\", \"Realm\\nRank\", \"Realm\\nPoints\", \"S" +
-            "olo\\nKills\", \"Death\\nBlows\", \"Kills\", \"Deaths\", \"IRS\", \"RP Next\\nRank\", \"RP Last" +
-            "\\nUpdate\", \"Bounty\\nPoints\", \"MasterLevel Path\"]}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"Names\": [\"Name\", \"Realm\",\"Level\", \"Class\", \"Server\", \"Realm\\nRank\", \"Realm\\nPoi" +
+            "nts\", \"Solo\\nKills\", \"Death\\nBlows\", \"Kills\", \"Deaths\", \"IRS\", \"RP Next\\nRank\", " +
+            "\"RP Last\\nUpdate\", \"Bounty\\nPoints\", \"MasterLevel Path\"]}")]
         public string DisplayedDataGridViewHeaderNames {
             get {
                 return ((string)(this["DisplayedDataGridViewHeaderNames"]));

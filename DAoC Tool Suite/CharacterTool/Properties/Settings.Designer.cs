@@ -97,7 +97,7 @@ namespace DAoCToolSuite.CharacterTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"{\""Realm\"": {\""Albion\"": \""Armsman,Armswoman,Cabalist,Cleric,Friar,Heretic,Infiltrator,Mauler,Mercenary,Minstrel,Necromancer,Paladin,Reaver,Scout,Sorcerer,Sorceress,Theurgist,Wizard\"", \""Hibernia\"": \""Animist,Bainshee,Bard,Blademaster,Champion,Druid,Eldritch,Enchanter,Enchantress,Hero,Mauler,Mentalist,Nightshade,Ranger,Valewalker,Vampiir,Warden\"", \""Midgard\"": \""Berserker,Bonedancer,Healer,Hunter,Mauler,Runemaster,Savage,Shadowblade,Shaman,Skald,Spiritmaster,Thane,Valkyrie,Warlock,Warrior\""}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"{""Realm"": {""Albion"": ""Armsman,Armswoman,Cabalist,Cleric,Friar,Heretic,Infiltrator,Mauler,Mercenary,Minstrel,Necromancer,Paladin,Reaver,Scout,Sorcerer,Sorceress,Theurgist,Wizard"", ""Hibernia"": ""Animist,Bainshee,Bard,Blademaster,Champion,Druid,Eldritch,Enchanter,Enchantress,Hero,Mauler,Mentalist,Nightshade,Ranger,Valewalker,Vampiir,Warden"", ""Midgard"": ""Berserker,Bonedancer,Healer,Hunter,Mauler,Runemaster,Savage,Shadowblade,Shaman,Skald,Spiritmaster,Thane,Valkyrie,Warlock,Warrior""}}")]
         public string RealmClasses {
             get {
                 return ((string)(this["RealmClasses"]));

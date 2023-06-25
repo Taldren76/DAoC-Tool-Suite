@@ -3,6 +3,7 @@
     public class AccountModel
     {
         public string? Account { get; set; }
+        public int? index { get; set; }
     }
 
     public class CredentialModel

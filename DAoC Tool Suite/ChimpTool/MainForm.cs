@@ -1812,5 +1812,17 @@ namespace DAoCToolSuite.ChimpTool
             PerformRefreshAll();
         }
         #endregion
+
+        private void ManageAccountsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AccountManagerForm form = new AccountManagerForm()
+            {
+                Owner = this,
+                StartPosition = FormStartPosition.Manual,
+            };
+            form.SetLocation();
+            form.ShowDialog();          
+            LoadAccounts();
+        }
     }
 }

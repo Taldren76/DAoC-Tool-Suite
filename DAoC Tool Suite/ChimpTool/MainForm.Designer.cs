@@ -82,6 +82,7 @@ namespace DAoCToolSuite.ChimpTool
             aboutToolStripMenuItem = new ToolStripMenuItem();
             saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
+            manageAccountsToolStripMenuItem = new ToolStripMenuItem();
             GridPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SearchGridView).BeginInit();
             CharacterSearchPanel.SuspendLayout();
@@ -493,7 +494,7 @@ namespace DAoCToolSuite.ChimpTool
             // 
             // accountToolStripMenuItem
             // 
-            accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dAoCCredentialsToolStripMenuItem });
+            accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dAoCCredentialsToolStripMenuItem, manageAccountsToolStripMenuItem });
             accountToolStripMenuItem.Name = "accountToolStripMenuItem";
             accountToolStripMenuItem.Size = new Size(64, 20);
             accountToolStripMenuItem.Text = "Account";
@@ -501,7 +502,7 @@ namespace DAoCToolSuite.ChimpTool
             // dAoCCredentialsToolStripMenuItem
             // 
             dAoCCredentialsToolStripMenuItem.Name = "dAoCCredentialsToolStripMenuItem";
-            dAoCCredentialsToolStripMenuItem.Size = new Size(167, 22);
+            dAoCCredentialsToolStripMenuItem.Size = new Size(180, 22);
             dAoCCredentialsToolStripMenuItem.Text = "DAoC Credentials";
             dAoCCredentialsToolStripMenuItem.Click += DAoCCredentialsToolStripMenuItem_Click;
             // 
@@ -578,6 +579,13 @@ namespace DAoCToolSuite.ChimpTool
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // manageAccountsToolStripMenuItem
+            // 
+            manageAccountsToolStripMenuItem.Name = "manageAccountsToolStripMenuItem";
+            manageAccountsToolStripMenuItem.Size = new Size(180, 22);
+            manageAccountsToolStripMenuItem.Text = "Manage Accounts";
+            manageAccountsToolStripMenuItem.Click += ManageAccountsToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -663,6 +671,7 @@ namespace DAoCToolSuite.ChimpTool
         private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
         private Label TimerLabel0;
+        private ToolStripMenuItem manageAccountsToolStripMenuItem;
     }
 }
 

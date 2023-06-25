@@ -98,7 +98,7 @@ namespace DAoCToolSuite.CharacterTool
             RestoreNameFilterComboBox = new ComboBox();
             RestoreNameFilterLabel = new Label();
             panel3 = new Panel();
-            restoreDataGridView = new DataGridView();
+            RestoreDataGridView = new DataGridView();
             ClearFilterButton = new Button();
             RestoreDeleteSettingsButton = new Button();
             RestoreRestoreSettingsButton = new Button();
@@ -123,7 +123,7 @@ namespace DAoCToolSuite.CharacterTool
             panel4.SuspendLayout();
             restoreCharacterTab.SuspendLayout();
             panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)restoreDataGridView).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)RestoreDataGridView).BeginInit();
             SuspendLayout();
             // 
             // DAoCDirectoryPanel
@@ -791,7 +791,7 @@ namespace DAoCToolSuite.CharacterTool
             // panel3
             // 
             panel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel3.Controls.Add(restoreDataGridView);
+            panel3.Controls.Add(RestoreDataGridView);
             panel3.Location = new Point(0, 35);
             panel3.Name = "panel3";
             panel3.Size = new Size(762, 259);
@@ -799,13 +799,13 @@ namespace DAoCToolSuite.CharacterTool
             // 
             // restoreDataGridView
             // 
-            restoreDataGridView.AllowUserToAddRows = false;
-            restoreDataGridView.AllowUserToDeleteRows = false;
-            restoreDataGridView.AllowUserToResizeColumns = false;
-            restoreDataGridView.AllowUserToResizeRows = false;
-            restoreDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            restoreDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            restoreDataGridView.BackgroundColor = SystemColors.Control;
+            RestoreDataGridView.AllowUserToAddRows = false;
+            RestoreDataGridView.AllowUserToDeleteRows = false;
+            RestoreDataGridView.AllowUserToResizeColumns = false;
+            RestoreDataGridView.AllowUserToResizeRows = false;
+            RestoreDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            RestoreDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            RestoreDataGridView.BackgroundColor = SystemColors.Control;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -813,8 +813,8 @@ namespace DAoCToolSuite.CharacterTool
             dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            restoreDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            restoreDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            RestoreDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            RestoreDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = SystemColors.Window;
             dataGridViewCellStyle2.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -823,13 +823,13 @@ namespace DAoCToolSuite.CharacterTool
             dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            restoreDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
-            restoreDataGridView.Dock = DockStyle.Fill;
-            restoreDataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
-            restoreDataGridView.Location = new Point(0, 0);
-            restoreDataGridView.Margin = new Padding(4, 3, 4, 3);
-            restoreDataGridView.Name = "restoreDataGridView";
-            restoreDataGridView.ReadOnly = true;
+            RestoreDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            RestoreDataGridView.Dock = DockStyle.Fill;
+            RestoreDataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            RestoreDataGridView.Location = new Point(0, 0);
+            RestoreDataGridView.Margin = new Padding(4, 3, 4, 3);
+            RestoreDataGridView.Name = "restoreDataGridView";
+            RestoreDataGridView.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = SystemColors.Control;
             dataGridViewCellStyle3.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
@@ -837,18 +837,18 @@ namespace DAoCToolSuite.CharacterTool
             dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            restoreDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            restoreDataGridView.RowHeadersVisible = false;
+            RestoreDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            RestoreDataGridView.RowHeadersVisible = false;
             dataGridViewCellStyle4.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            restoreDataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
-            restoreDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            restoreDataGridView.ShowCellErrors = false;
-            restoreDataGridView.ShowCellToolTips = false;
-            restoreDataGridView.ShowEditingIcon = false;
-            restoreDataGridView.ShowRowErrors = false;
-            restoreDataGridView.Size = new Size(762, 259);
-            restoreDataGridView.TabIndex = 23;
-            restoreDataGridView.DataSourceChanged += RestoreDataGridView_DataSourceChanged;
+            RestoreDataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            RestoreDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            RestoreDataGridView.ShowCellErrors = false;
+            RestoreDataGridView.ShowCellToolTips = false;
+            RestoreDataGridView.ShowEditingIcon = false;
+            RestoreDataGridView.ShowRowErrors = false;
+            RestoreDataGridView.Size = new Size(762, 259);
+            RestoreDataGridView.TabIndex = 23;
+            RestoreDataGridView.DataSourceChanged += RestoreDataGridView_DataSourceChanged;
             // 
             // ClearFilterButton
             // 
@@ -956,7 +956,7 @@ namespace DAoCToolSuite.CharacterTool
             restoreCharacterTab.ResumeLayout(false);
             restoreCharacterTab.PerformLayout();
             panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)restoreDataGridView).EndInit();
+            ((System.ComponentModel.ISupportInitialize)RestoreDataGridView).EndInit();
             ResumeLayout(false);
         }
 
@@ -1004,7 +1004,7 @@ namespace DAoCToolSuite.CharacterTool
         private Button ClearFilterButton;
         private Button RestoreDeleteSettingsButton;
         private Button RestoreRestoreSettingsButton;
-        private DataGridView restoreDataGridView;
+        private DataGridView RestoreDataGridView;
         private Label RestoreClassLabel;
         private ComboBox RestoreClassComboBox;
         private Label RestoreRealmLabel;

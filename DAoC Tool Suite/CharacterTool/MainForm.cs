@@ -110,7 +110,7 @@ namespace DAoCToolSuite.CharacterTool
             DAoCDirectoryTextBox.Text = DefaultLocation();
             ClearFilterButton.Enabled = false;
             ParseDirectory = new ParseDirectory(DAoCCharacterDataFolder);
-            restoreDataGridView.DataSource = BindingSource;
+            RestoreDataGridView.DataSource = BindingSource;
             UpdateCharNameAutoComplete();
             List<string?> serverList = GetServerList() ?? throw new NullReferenceException("ServerList is null");
             ServerNames = serverList;
@@ -658,8 +658,8 @@ namespace DAoCToolSuite.CharacterTool
         {
             List<string> visibleColumns = new() { "DateOnly", "FirstName", "Realm", "Class", "Description" };
             List<string> visibleColumnHeaderNames = new() { "Date", "Name", "Realm", "Class", "Description" };
-            _ = restoreDataGridView.Rows.Count;
-            int columnCount = restoreDataGridView.Columns.Count;
+            int rowCount = RestoreDataGridView.Rows.Count;
+            int columnCount = RestoreDataGridView.Columns.Count;
             int nonVisibleIndex = visibleColumns.Count;
 
 
@@ -670,7 +670,7 @@ namespace DAoCToolSuite.CharacterTool
             {
                 for (int index = 0; index < columnCount; index++)
                 {
-                    DataGridViewColumn column = restoreDataGridView.Columns[index];
+                    DataGridViewColumn column = RestoreDataGridView.Columns[index];
                     if (!visibleColumns.Contains(column.Name))
                     {
                         column.Visible = false;
@@ -899,7 +899,7 @@ namespace DAoCToolSuite.CharacterTool
             ResetFilters();
             FilterDataSource();
 
-            if (restoreDataGridView.Rows.Count > 0)
+            if (RestoreDataGridView.Rows.Count > 0)
             {
                 RestoreRestoreSettingsButton.Enabled = true;
                 RestoreDeleteSettingsButton.Enabled = true;
@@ -915,7 +915,7 @@ namespace DAoCToolSuite.CharacterTool
             Logger.Debug("RestoreButton clicked.");
             RestoreRestoreSettingsButton.Enabled = false;
             List<string> charNames = new();
-            DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
+            DataGridViewSelectedRowCollection selectedRows = RestoreDataGridView.SelectedRows;
             if (selectedRows is null)
             {
                 return;
@@ -968,7 +968,7 @@ namespace DAoCToolSuite.CharacterTool
         {
             Logger.Debug("RestoreDeleteRecordButton clicked.");
             RestoreDeleteSettingsButton.Enabled = false;
-            DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
+            DataGridViewSelectedRowCollection selectedRows = RestoreDataGridView.SelectedRows;
             if (selectedRows is null)
             {
                 return;
@@ -1031,7 +1031,7 @@ namespace DAoCToolSuite.CharacterTool
         {
             Logger.Debug("EditDescriptionButton clicked.");
             SettingsBackUpModel? settingsBackup = null;
-            DataGridViewSelectedRowCollection selectedRows = restoreDataGridView.SelectedRows;
+            DataGridViewSelectedRowCollection selectedRows = RestoreDataGridView.SelectedRows;
             DataGridViewRow row = selectedRows[0];
             if (row is null)
             {

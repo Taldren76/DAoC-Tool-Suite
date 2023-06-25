@@ -258,8 +258,9 @@ namespace SQLLibrary
                 try
                 {
                     using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-                    string columnNames = "Account";
-                    List<AccountModel> query = conn.Query<AccountModel>($"Select ({columnNames}) from [Accounts]", new DynamicParameters()).ToList();
+                    string columnNames = "[Account], [index]";
+                    string queyString = $"Select {columnNames} from [Accounts]";
+                    List<AccountModel> query = conn.Query<AccountModel>(queyString, new DynamicParameters()).ToList();
                     return query;
                 }
                 catch (Exception ex)
@@ -338,18 +339,78 @@ namespace SQLLibrary
                 _ = conn.Execute(writeQuery, accountModel);
             }
         }
-        public static void RemoveAccount(string accountName)
+
+        public static void RenameAccount(string accountNameOld, string accountNameNew)
         {
-            if (accountName == "Default")
+            string tableName = "Accounts";
+            string indexQuery = $"Select [index] from [{tableName}] Where [Account] = '{accountNameOld}'";
+            string renameAccountQuery = $"UPDATE [{tableName}] SET [Account] = '{accountNameNew}' Where [Account] = '{accountNameOld}'";
+            string countOldQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountNameOld}'";
+            string countNewQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountNameNew}'"; 
+            
+            using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+            
+            int countNew = conn.QueryFirst<int>(countNewQuery, new DynamicParameters());
+            if(countNew > 0)
             {
+                TraceLog($"There is already an account named {accountNameNew} in the database. Aborting.");
+                return;
+            }    
+
+            int countOld = conn.QueryFirst<int>(countOldQuery, new DynamicParameters());
+            if (countOld > 0)
+            {
+                lock (thisLock)
+                {
+                    _ = conn.Query(renameAccountQuery, new DynamicParameters());
+                }
+                RenameAccountInCharacterTable(accountNameOld, accountNameNew);
+            }
+            else
+            {
+                TraceLog($"There is no account named {accountNameOld} in the database. Aborting.");
                 return;
             }
 
+        }
+
+        public static void RenameAccountInCharacterTable(string accountNameOld, string accountNameNew)
+        {
+            string tableName = "Characters";
+            string renameAccountQuery = $"UPDATE [{tableName}] SET [Account] = '{accountNameNew}' Where [Account] = '{accountNameOld}'";
+            string countQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountNameOld}'";
+
+            using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+            int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
+            if (count > 0)
+            {
+                lock (thisLock)
+                {
+                    _ = conn.Query(renameAccountQuery, new DynamicParameters());
+                }
+            }
+            else
+            {
+                TraceLog($"There is no characters associated with account {accountNameOld} in the database. Aborting.");
+                return;
+            }
+
+        }
+
+        public static void RemoveAccount(string accountName)
+        { 
             string tableName = "Accounts";
+            string indexQuery = $"Select [index] from [{tableName}] Where [Account] = '{accountName}'";
             string deleteAccountQuery = $"Delete From [{tableName}] Where [Account] = '{accountName}'";
             string countQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountName}'";
 
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+            int index = conn.QueryFirst<int>(indexQuery, new DynamicParameters());   
+            if(index == 1)
+            {
+                TraceLog("Attempted to delete the Default account index. Aborting.");
+                return;
+            }
             int count = conn.QueryFirst<int>(countQuery, new DynamicParameters());
             if (count > 0)
             {
