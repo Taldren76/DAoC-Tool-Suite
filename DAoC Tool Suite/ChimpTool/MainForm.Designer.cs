@@ -32,12 +32,17 @@ namespace DAoCToolSuite.ChimpTool
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             GridPanel = new Panel();
             LoadingTabelLabel = new Label();
             SearchGridView = new DataGridView();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            launchToolStripMenuItem1 = new ToolStripMenuItem();
+            refreshToolStripMenuItem1 = new ToolStripMenuItem();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             CharacterSearchPanel = new Panel();
             SearchComboBox = new ComboBox();
@@ -70,6 +75,7 @@ namespace DAoCToolSuite.ChimpTool
             launchToolStripMenuItem = new ToolStripMenuItem();
             accountToolStripMenuItem = new ToolStripMenuItem();
             dAoCCredentialsToolStripMenuItem = new ToolStripMenuItem();
+            manageAccountsToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
             propertiesToolStripMenuItem = new ToolStripMenuItem();
             backupToolStripMenuItem = new ToolStripMenuItem();
@@ -80,11 +86,9 @@ namespace DAoCToolSuite.ChimpTool
             helpToolStripMenuItem = new ToolStripMenuItem();
             logViewerToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
-            saveFileDialog1 = new SaveFileDialog();
-            openFileDialog1 = new OpenFileDialog();
-            manageAccountsToolStripMenuItem = new ToolStripMenuItem();
             GridPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)SearchGridView).BeginInit();
+            contextMenuStrip1.SuspendLayout();
             CharacterSearchPanel.SuspendLayout();
             AccountPanel.SuspendLayout();
             RefreshPanel.SuspendLayout();
@@ -135,6 +139,7 @@ namespace DAoCToolSuite.ChimpTool
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             SearchGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             SearchGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            SearchGridView.ContextMenuStrip = contextMenuStrip1;
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = SystemColors.Window;
             dataGridViewCellStyle2.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -161,6 +166,34 @@ namespace DAoCToolSuite.ChimpTool
             SearchGridView.DataSourceChanged += SearchGridView_DataSourceChanged;
             SearchGridView.CellDoubleClick += SearchGridView_CellDoubleClick;
             SearchGridView.CellToolTipTextNeeded += SearchGridView_CellToolTipTextNeeded;
+            SearchGridView.CellContextMenuStripNeeded += SearchGridView_CellContextMenuStripNeeded;
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { launchToolStripMenuItem1, refreshToolStripMenuItem1, deleteToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(181, 92);
+            // 
+            // launchToolStripMenuItem1
+            // 
+            launchToolStripMenuItem1.Name = "launchToolStripMenuItem1";
+            launchToolStripMenuItem1.Size = new Size(180, 22);
+            launchToolStripMenuItem1.Text = "Launch";
+            launchToolStripMenuItem1.Click += launchToolStripMenuItem1_Click;
+            // 
+            // refreshToolStripMenuItem1
+            // 
+            refreshToolStripMenuItem1.Name = "refreshToolStripMenuItem1";
+            refreshToolStripMenuItem1.Size = new Size(180, 22);
+            refreshToolStripMenuItem1.Text = "Refresh";
+            refreshToolStripMenuItem1.Click += refreshToolStripMenuItem1_Click;
+            // 
+            // deleteToolStripMenuItem
+            // 
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.Size = new Size(180, 22);
+            deleteToolStripMenuItem.Text = "Delete";
+            deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
             // CharacterSearchPanel
             // 
@@ -502,9 +535,16 @@ namespace DAoCToolSuite.ChimpTool
             // dAoCCredentialsToolStripMenuItem
             // 
             dAoCCredentialsToolStripMenuItem.Name = "dAoCCredentialsToolStripMenuItem";
-            dAoCCredentialsToolStripMenuItem.Size = new Size(180, 22);
+            dAoCCredentialsToolStripMenuItem.Size = new Size(170, 22);
             dAoCCredentialsToolStripMenuItem.Text = "DAoC Credentials";
             dAoCCredentialsToolStripMenuItem.Click += DAoCCredentialsToolStripMenuItem_Click;
+            // 
+            // manageAccountsToolStripMenuItem
+            // 
+            manageAccountsToolStripMenuItem.Name = "manageAccountsToolStripMenuItem";
+            manageAccountsToolStripMenuItem.Size = new Size(170, 22);
+            manageAccountsToolStripMenuItem.Text = "Manage Accounts";
+            manageAccountsToolStripMenuItem.Click += ManageAccountsToolStripMenuItem_Click;
             // 
             // editToolStripMenuItem
             // 
@@ -576,17 +616,6 @@ namespace DAoCToolSuite.ChimpTool
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
             // 
-            // openFileDialog1
-            // 
-            openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // manageAccountsToolStripMenuItem
-            // 
-            manageAccountsToolStripMenuItem.Name = "manageAccountsToolStripMenuItem";
-            manageAccountsToolStripMenuItem.Size = new Size(180, 22);
-            manageAccountsToolStripMenuItem.Text = "Manage Accounts";
-            manageAccountsToolStripMenuItem.Click += ManageAccountsToolStripMenuItem_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -609,6 +638,7 @@ namespace DAoCToolSuite.ChimpTool
             FormClosed += MainForm_FormClosed;
             GridPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)SearchGridView).EndInit();
+            contextMenuStrip1.ResumeLayout(false);
             CharacterSearchPanel.ResumeLayout(false);
             CharacterSearchPanel.PerformLayout();
             AccountPanel.ResumeLayout(false);
@@ -668,10 +698,12 @@ namespace DAoCToolSuite.ChimpTool
         private Label TimerLabel1;
         private ToolStripMenuItem importJsonToolStripMenuItem;
         private ToolStripMenuItem exportJsonToolStripMenuItem;
-        private SaveFileDialog saveFileDialog1;
-        private OpenFileDialog openFileDialog1;
         private Label TimerLabel0;
         private ToolStripMenuItem manageAccountsToolStripMenuItem;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem launchToolStripMenuItem1;
+        private ToolStripMenuItem refreshToolStripMenuItem1;
+        private ToolStripMenuItem deleteToolStripMenuItem;
     }
 }
 

@@ -12,6 +12,8 @@ using SQLLibrary.Enums;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Controls;
+using System.Windows.Forms;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -136,7 +138,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         #endregion
 
-        #region MainForm
+       #region MainForm
         public MainForm()
         {
             WaitCursor.Push();
@@ -306,6 +308,7 @@ namespace DAoCToolSuite.ChimpTool
             sd.Show();
             sd.Refresh();
         }
+
         private void SetToLastAccount()
         {
             int indexLast = 0;
@@ -838,6 +841,17 @@ namespace DAoCToolSuite.ChimpTool
                 PerformLaunch();
             }
         }
+
+        private void SearchGridView_CellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
+        {
+            SearchGridView.ClearSelection();
+            int rowSelected = e.RowIndex;
+            if (e.RowIndex != -1)
+            {
+                this.SearchGridView.Rows[rowSelected].Selected = true;
+            }
+            e.ContextMenuStrip = contextMenuStrip1;
+        }
         #endregion
 
         #region Characters (Add, Remove, Refresh)
@@ -1367,6 +1381,7 @@ namespace DAoCToolSuite.ChimpTool
                 Logger.Warn("Credentials returned from GetCredentials() are invalid.");
                 LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
                 launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+                launchToolStripMenuItem1.Enabled = LaunchedCharacters.Count <= 2;
                 return;
             }
 
@@ -1388,6 +1403,7 @@ namespace DAoCToolSuite.ChimpTool
                 Logger.Error("Could not determine character's WebID");
                 LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
                 launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+                launchToolStripMenuItem1.Enabled = LaunchedCharacters.Count <= 2;
                 return;
             }
             LaunchedCharacter launchedCharacter = new();
@@ -1519,11 +1535,13 @@ namespace DAoCToolSuite.ChimpTool
 
             LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
             launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem1.Enabled = LaunchedCharacters.Count <= 2;
         }
         private void LaunchButton_Click(object sender, EventArgs e)
         {
             LaunchButton.Enabled = false;
             launchToolStripMenuItem.Enabled = false;
+            launchToolStripMenuItem1.Enabled = false;
             PerformLaunch();
         }
         private void GameOver0(object? sender, EventArgs e)
@@ -1548,6 +1566,7 @@ namespace DAoCToolSuite.ChimpTool
             }
             LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
             launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem1.Enabled = LaunchedCharacters.Count <= 2;
         }
         private void GameOver1(object? sender, EventArgs e)
         {
@@ -1571,6 +1590,7 @@ namespace DAoCToolSuite.ChimpTool
             }
             LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
             launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem1.Enabled = LaunchedCharacters.Count <= 2;
         }
         private void PostGame0()
         {
@@ -1594,6 +1614,7 @@ namespace DAoCToolSuite.ChimpTool
             //Re-Enable Buttons/MenuItems
             LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
             launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem1.Enabled = LaunchedCharacters.Count <= 2;
         }
         private void PostGame1()
         {
@@ -1617,6 +1638,7 @@ namespace DAoCToolSuite.ChimpTool
             //Re-Enable Buttons/MenuItems
             LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
             launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+            launchToolStripMenuItem1.Enabled = LaunchedCharacters.Count <= 2;
         }
         #endregion
 
@@ -1713,6 +1735,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             LaunchButton.Enabled = false;
             launchToolStripMenuItem.Enabled = false;
+            launchToolStripMenuItem1.Enabled = false;
             PerformLaunch();
         }
         private void DAoCCredentialsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1821,8 +1844,82 @@ namespace DAoCToolSuite.ChimpTool
                 StartPosition = FormStartPosition.Manual,
             };
             form.SetLocation();
-            form.ShowDialog();          
+            form.ShowDialog();
             LoadAccounts();
+        }
+
+        private void launchToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            LaunchButton.Enabled = false;
+            launchToolStripMenuItem.Enabled = false;
+            launchToolStripMenuItem1.Enabled = false;
+            PerformLaunch();
+        }
+
+        private void refreshToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (sender is not ToolStripMenuItem menuItem)
+            {
+                return;
+            }
+
+            menuItem.Enabled = false;
+            Logger.Debug("Refresh MenuItem clicked.");
+            if (Properties.Settings.Default.NextRefresh > DateTime.Now)
+            {
+                _ = MessageBox.Show($"Refresh can only be done every 10 seconds.\nPlease try again later.", "Refresh Character", MessageBoxButtons.OK);
+                menuItem.Enabled = true;
+                return;
+            }
+            PerformRefresh();
+            menuItem.Enabled = true;
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            deleteToolStripMenuItem.Enabled = false;
+            try
+            {
+                WaitCursor.Push();
+                Logger.Debug("Remove button clicked.");
+                DataGridViewSelectedRowCollection rowsToDelete = SearchGridView.SelectedRows;
+                List<string> webIDs = new();
+                foreach (DataGridViewRow row in rowsToDelete)
+                {
+                    string? webIDValue = row?.Cells["WebID"]?.Value?.ToString();
+                    if (webIDValue is not null)
+                    {
+                        webIDs.Add(webIDValue);
+                    }
+                    else
+                    {
+                        Logger.Warn("Row entry indicates its null.");
+                    }
+                }
+                Logger.Debug($"There are {webIDs.Count} selected rows.");
+                if (CharactersByAccountLastDateUpdated is null)
+                {
+                    Logger.Error("CharactersByAccountLastDateUpdated is null.");
+                    return;
+                }
+                if (CharactersByAccountLastDateUpdated.Count > 0)
+                {
+
+                    foreach (string _webID in webIDs)
+                    {
+                        SqliteDataAccess.DeleteCharacter(_webID);
+                    }
+                }
+                LoadCharacters();
+                CalculateRPTotals();
+                WaitCursor.Pop();
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Error(ex);
+            }
+
+            deleteToolStripMenuItem.Enabled = true;
         }
     }
 }
