@@ -12,8 +12,6 @@ using SQLLibrary.Enums;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Controls;
-using System.Windows.Forms;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -78,10 +76,7 @@ namespace DAoCToolSuite.ChimpTool
         #region Settings
         private static bool UseSelenium
         {
-            get
-            {
-                return Properties.Settings.Default.UseSelenium;
-            }
+            get => Properties.Settings.Default.UseSelenium;
             set
             {
                 Properties.Settings.Default.UseSelenium = value;
@@ -90,10 +85,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         private static bool UseAPI
         {
-            get
-            {
-                return Properties.Settings.Default.UseAPI;
-            }
+            get => Properties.Settings.Default.UseAPI;
             set
             {
                 Properties.Settings.Default.UseAPI = value;
@@ -102,10 +94,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         private static string LastAccount
         {
-            get
-            {
-                return Properties.Settings.Default.LastAccount;
-            }
+            get => Properties.Settings.Default.LastAccount;
             set
             {
                 Properties.Settings.Default.LastAccount = value;
@@ -114,10 +103,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         private static string DAoCCharacterFileDirectory
         {
-            get
-            {
-                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DAoCCharacterFileDirectory);
-            }
+            get => Environment.ExpandEnvironmentVariables(Properties.Settings.Default.DAoCCharacterFileDirectory);
             set
             {
                 Properties.Settings.Default.DAoCCharacterFileDirectory = value;
@@ -126,10 +112,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         private static string BackupRepositoryFullPath
         {
-            get
-            {
-                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.JsonBackupFileFullPath);
-            }
+            get => Environment.ExpandEnvironmentVariables(Properties.Settings.Default.JsonBackupFileFullPath);
             set
             {
                 Properties.Settings.Default.JsonBackupFileFullPath = value;
@@ -138,7 +121,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         #endregion
 
-       #region MainForm
+        #region MainForm
         public MainForm()
         {
             WaitCursor.Push();
@@ -848,7 +831,7 @@ namespace DAoCToolSuite.ChimpTool
             int rowSelected = e.RowIndex;
             if (e.RowIndex != -1)
             {
-                this.SearchGridView.Rows[rowSelected].Selected = true;
+                SearchGridView.Rows[rowSelected].Selected = true;
             }
             e.ContextMenuStrip = contextMenuStrip1;
         }
@@ -882,6 +865,7 @@ namespace DAoCToolSuite.ChimpTool
             WaitCursor.Push();
             DataGridViewSelectedRowCollection rowsToRefresh = SearchGridView.SelectedRows;
             Logger.Debug($"There are {rowsToRefresh.Count} selected rows.");
+
             if (CharactersByAccountLastDateUpdated is null)
             {
                 Logger.Warn("CharactersByAccountLastDateUpdated is null @ PerformRefresh()");
@@ -893,6 +877,7 @@ namespace DAoCToolSuite.ChimpTool
                 Logger.Debug("Database does not contain any records.");
                 return;
             }
+
             List<ChimpJson> chimpsToBeRefreshed = new();
             DateTime date = DateTime.Now;
             foreach (DataGridViewRow row in rowsToRefresh)
@@ -1027,7 +1012,7 @@ namespace DAoCToolSuite.ChimpTool
                 }
 
                 int refreshed = chimpRefreshResults.Count;
-                int failed = CharactersByAccountLastDateUpdated.Count - refreshed;
+                int failed = chimpsToBeRefreshed.Count - refreshed;
                 Logger.Debug($"Success:{refreshed} Failure:{failed} in {stopWatch.Elapsed:c})");
 
                 SearchProgressBar.Minimum = 0;
@@ -1834,21 +1819,21 @@ namespace DAoCToolSuite.ChimpTool
             RefreshAllToolStripMenuItem.Enabled = false;
             PerformRefreshAll();
         }
-        #endregion
-
         private void ManageAccountsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AccountManagerForm form = new AccountManagerForm()
+            AccountManagerForm form = new()
             {
                 Owner = this,
                 StartPosition = FormStartPosition.Manual,
             };
             form.SetLocation();
-            form.ShowDialog();
+            _ = form.ShowDialog();
             LoadAccounts();
         }
+        #endregion
 
-        private void launchToolStripMenuItem1_Click(object sender, EventArgs e)
+        #region Right Click Menu
+        private void RC_LaunchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LaunchButton.Enabled = false;
             launchToolStripMenuItem.Enabled = false;
@@ -1856,7 +1841,7 @@ namespace DAoCToolSuite.ChimpTool
             PerformLaunch();
         }
 
-        private void refreshToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void RC_RefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (sender is not ToolStripMenuItem menuItem)
             {
@@ -1875,7 +1860,7 @@ namespace DAoCToolSuite.ChimpTool
             menuItem.Enabled = true;
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RC_DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             deleteToolStripMenuItem.Enabled = false;
             try
@@ -1921,5 +1906,17 @@ namespace DAoCToolSuite.ChimpTool
 
             deleteToolStripMenuItem.Enabled = true;
         }
+
+        private void RC_AssociateAHKToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AHKForm form = new(SearchGridView.SelectedRows[0], AccountComboBox.Text)
+            {
+                Owner = this,
+                StartPosition = FormStartPosition.Manual
+            };
+            form.SetLocation();
+            _ = form.ShowDialog();
+        }
+        #endregion
     }
 }

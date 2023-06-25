@@ -15,6 +15,24 @@ namespace DAoCToolSuite.ChimpTool
         public string? AHKScriptPath { get; set; } = null;
         public int Version { get; set; } = 1;
 
+
+        public AHKForm(DataGridViewRow row, string account)
+        {
+            InitializeComponent();
+            string? charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
+            string? serverName = row.Cells["Server"].Value.ToString();
+            string? realm = row.Cells["Realm"].Value.ToString();
+            string? webID = row.Cells["WebID"].Value.ToString();
+            if (string.IsNullOrEmpty(charName) || string.IsNullOrEmpty(serverName) || string.IsNullOrEmpty(realm) || string.IsNullOrEmpty(webID))
+            {
+                return;
+            }
+            CharacterName = charName;
+            Realm = realm;
+            Server = serverName;
+            WebID = webID;
+            Account = account;
+        }
         public AHKForm(string characterName, string realm, string server, string webID, string account)
         {
             InitializeComponent();

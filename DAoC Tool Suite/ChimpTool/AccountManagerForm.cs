@@ -1,16 +1,5 @@
 ﻿using Logger;
 using SQLLibrary;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Windows.UI.Popups;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -135,7 +124,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             if (SelectedAccountIndex == 1)
             {
-                MessageBox.Show("You may not delete the default account.", "Error", MessageBoxButtons.OK);
+                _ = MessageBox.Show("You may not delete the default account.", "Error", MessageBoxButtons.OK);
                 return;
             }
             SqliteDataAccess.RemoveAccount(SelectedAccountTextBox.Text);

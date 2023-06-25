@@ -1,9 +1,6 @@
-﻿using DAoCToolSuite.ChimpTool.Json;
-//using DAoCToolSuite.ChimpTool.Settings;
+﻿//using DAoCToolSuite.ChimpTool.Settings;
 using Logger;
 using Newtonsoft.Json;
-using System.Data;
-using System.Diagnostics;
 
 namespace DAoCToolSuite.ChimpTool.Extensions
 {

@@ -14,10 +14,7 @@ namespace DAoCToolSuite.CharacterTool
         internal static LogManager Logger => LogManager.Instance;
         private static string DAoCCharacterFileDirectory
         {
-            get
-            {
-                return Properties.Settings.Default.DAoCCharacterFileDirectory;
-            }
+            get => Properties.Settings.Default.DAoCCharacterFileDirectory;
             set
             {
                 Properties.Settings.Default.DAoCCharacterFileDirectory = value;
@@ -26,10 +23,7 @@ namespace DAoCToolSuite.CharacterTool
         }
         private static string JsonBackupFileFullPath
         {
-            get
-            {
-                return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.JsonBackupFileFullPath);
-            }
+            get => Environment.ExpandEnvironmentVariables(Properties.Settings.Default.JsonBackupFileFullPath);
             set
             {
                 Properties.Settings.Default.JsonBackupFileFullPath = value;
@@ -658,7 +652,7 @@ namespace DAoCToolSuite.CharacterTool
         {
             List<string> visibleColumns = new() { "DateOnly", "FirstName", "Realm", "Class", "Description" };
             List<string> visibleColumnHeaderNames = new() { "Date", "Name", "Realm", "Class", "Description" };
-            int rowCount = RestoreDataGridView.Rows.Count;
+            _ = RestoreDataGridView.Rows.Count;
             int columnCount = RestoreDataGridView.Columns.Count;
             int nonVisibleIndex = visibleColumns.Count;
 

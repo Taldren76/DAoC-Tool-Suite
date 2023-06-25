@@ -3,7 +3,6 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace Logger
 {
@@ -13,8 +12,8 @@ namespace Logger
         public DebugLevel CurrentDebugLevel { get; set; } = DebugLevel.Debug;
         private NLog.Logger NLogLogger { get; set; }
         public string LogFileName { get; private set; } = Properties.Settings.Default.LogFileName;
-        
-        private string LogFileBasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\";
+
+        private readonly string LogFileBasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\";
         public string LogFileLocation => Path.Combine(LogFileBasePath, LogFileName);
         public static LogManager Instance
         {

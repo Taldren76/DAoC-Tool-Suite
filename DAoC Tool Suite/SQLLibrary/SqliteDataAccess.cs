@@ -14,9 +14,9 @@ namespace SQLLibrary
 
     public class SqliteDataAccess
     {   //Environment.SpecialFolder.ApplicationData
-        private static string DataBasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\";
-        private static string ExecutionPath = Directory.GetCurrentDirectory();
-        private static string DataBaseFileName = "CharacterDB.db";
+        private static readonly string DataBasePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Taldren, Inc\\DAoC Tool Suite\\";
+        private static readonly string ExecutionPath = Directory.GetCurrentDirectory();
+        private static readonly string DataBaseFileName = "CharacterDB.db";
         public static string DataBaseLocation => Path.Combine(DataBasePath, DataBaseFileName);
         private static string CleanDataBaseLocation => Path.Combine(ExecutionPath, DataBaseFileName);
 
@@ -343,19 +343,19 @@ namespace SQLLibrary
         public static void RenameAccount(string accountNameOld, string accountNameNew)
         {
             string tableName = "Accounts";
-            string indexQuery = $"Select [index] from [{tableName}] Where [Account] = '{accountNameOld}'";
+            _ = $"Select [index] from [{tableName}] Where [Account] = '{accountNameOld}'";
             string renameAccountQuery = $"UPDATE [{tableName}] SET [Account] = '{accountNameNew}' Where [Account] = '{accountNameOld}'";
             string countOldQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountNameOld}'";
-            string countNewQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountNameNew}'"; 
-            
+            string countNewQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountNameNew}'";
+
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-            
+
             int countNew = conn.QueryFirst<int>(countNewQuery, new DynamicParameters());
-            if(countNew > 0)
+            if (countNew > 0)
             {
                 TraceLog($"There is already an account named {accountNameNew} in the database. Aborting.");
                 return;
-            }    
+            }
 
             int countOld = conn.QueryFirst<int>(countOldQuery, new DynamicParameters());
             if (countOld > 0)
@@ -398,15 +398,15 @@ namespace SQLLibrary
         }
 
         public static void RemoveAccount(string accountName)
-        { 
+        {
             string tableName = "Accounts";
             string indexQuery = $"Select [index] from [{tableName}] Where [Account] = '{accountName}'";
             string deleteAccountQuery = $"Delete From [{tableName}] Where [Account] = '{accountName}'";
             string countQuery = $"Select Count([Account]) from [{tableName}] Where [Account] = '{accountName}'";
 
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
-            int index = conn.QueryFirst<int>(indexQuery, new DynamicParameters());   
-            if(index == 1)
+            int index = conn.QueryFirst<int>(indexQuery, new DynamicParameters());
+            if (index == 1)
             {
                 TraceLog("Attempted to delete the Default account index. Aborting.");
                 return;
@@ -632,11 +632,11 @@ namespace SQLLibrary
             return connectionString;//ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
 
-       private static void EnsureDataBaseLocation()
+        private static void EnsureDataBaseLocation()
         {
             if (!Directory.Exists(DataBaseLocation))
             {
-                Directory.CreateDirectory(DataBasePath);
+                _ = Directory.CreateDirectory(DataBasePath);
             }
             if (!File.Exists(DataBaseLocation))
             {
