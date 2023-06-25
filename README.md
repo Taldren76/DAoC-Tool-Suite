@@ -1,3 +1,12 @@
+DAoC Tool Suite BETA 0.9.6
+---
+Changes:
+1. ChimpTool - Added RightClick context menu.
+2. ChimpTool - Added Account Management under Account menu. You can now rename your accounts.
+
+Bug Fixes:
+1. The ChimpTool table is now readonly.
+
 DAoC Tool Suite BETA 0.9.5
 ---
 Changes:
