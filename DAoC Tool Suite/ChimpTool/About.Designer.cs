@@ -44,7 +44,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(0, 195);
+            label1.Location = new Point(3, 190);
             label1.Name = "label1";
             label1.Size = new Size(108, 15);
             label1.TabIndex = 0;
@@ -52,7 +52,7 @@
             // 
             // OKButton
             // 
-            OKButton.Location = new Point(547, 213);
+            OKButton.Location = new Point(547, 306);
             OKButton.Name = "OKButton";
             OKButton.Size = new Size(75, 23);
             OKButton.TabIndex = 1;
@@ -64,7 +64,7 @@
             // 
             VersionLabel.AutoSize = true;
             VersionLabel.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            VersionLabel.Location = new Point(188, 12);
+            VersionLabel.Location = new Point(188, 7);
             VersionLabel.Name = "VersionLabel";
             VersionLabel.Size = new Size(75, 18);
             VersionLabel.TabIndex = 2;
@@ -75,7 +75,7 @@
             label3.AutoSize = true;
             label3.BackColor = SystemColors.ControlLight;
             label3.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(269, 12);
+            label3.Location = new Point(269, 7);
             label3.Name = "label3";
             label3.Size = new Size(188, 18);
             label3.TabIndex = 3;
@@ -84,7 +84,7 @@
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Location = new Point(3, 3);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(182, 184);
             pictureBox1.TabIndex = 8;
@@ -94,7 +94,7 @@
             // 
             GitHubLabel.AutoSize = true;
             GitHubLabel.Font = new Font("Verdana", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            GitHubLabel.Location = new Point(188, 43);
+            GitHubLabel.Location = new Point(188, 32);
             GitHubLabel.Name = "GitHubLabel";
             GitHubLabel.Size = new Size(56, 16);
             GitHubLabel.TabIndex = 5;
@@ -104,7 +104,7 @@
             // 
             LicenseLabel.AutoSize = true;
             LicenseLabel.Font = new Font("Verdana", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            LicenseLabel.Location = new Point(188, 69);
+            LicenseLabel.Location = new Point(188, 53);
             LicenseLabel.Name = "LicenseLabel";
             LicenseLabel.Size = new Size(62, 16);
             LicenseLabel.TabIndex = 6;
@@ -114,17 +114,17 @@
             // 
             label2.BackColor = SystemColors.ControlLight;
             label2.BorderStyle = BorderStyle.FixedSingle;
-            label2.Font = new Font("Verdana", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label2.Location = new Point(188, 88);
+            label2.Font = new Font("Verdana", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label2.Location = new Point(191, 72);
             label2.Name = "label2";
-            label2.Size = new Size(434, 122);
+            label2.Size = new Size(431, 229);
             label2.TabIndex = 7;
             label2.Text = resources.GetString("label2.Text");
             // 
             // GitHubLinkLabel
             // 
             GitHubLinkLabel.AutoSize = true;
-            GitHubLinkLabel.Location = new Point(250, 44);
+            GitHubLinkLabel.Location = new Point(250, 33);
             GitHubLinkLabel.Name = "GitHubLinkLabel";
             GitHubLinkLabel.Size = new Size(96, 15);
             GitHubLinkLabel.TabIndex = 9;
@@ -136,7 +136,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(629, 242);
+            ClientSize = new Size(629, 334);
             Controls.Add(GitHubLinkLabel);
             Controls.Add(label2);
             Controls.Add(LicenseLabel);

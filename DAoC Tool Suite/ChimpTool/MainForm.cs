@@ -1692,7 +1692,10 @@ namespace DAoCToolSuite.ChimpTool
 
             string srcFullPath = SqliteDataAccess.DataBaseLocation;
             string destFileName = fileName;
-            _ = SqliteDataAccess.BackupDB(srcFullPath, destFileName);
+            if (!SqliteDataAccess.BackupDB(srcFullPath, destFileName))
+            {
+                Logger.Error("Failed to backup the DB. See ChimpTool.log for more details.");
+            }
         }
         private void RestoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1715,11 +1718,17 @@ namespace DAoCToolSuite.ChimpTool
             EnableSelectIndexChangedEvent = false;
             string srcFullPath = fileName;
             string destFileName = SqliteDataAccess.DataBaseLocation;
-            _ = SqliteDataAccess.RestoreDB(srcFullPath, destFileName, true);
-            LoadAccounts();
+            if (SqliteDataAccess.RestoreDB(srcFullPath, destFileName, true))
+            {
+                LoadAccounts();
+                LoadCharacters();
+                CalculateRPTotals();
+            }
+            else
+            {
+                Logger.Error("Failed to restore the DB. See ChimpTool.log for more details.");
+            }
             EnableSelectIndexChangedEvent = true;
-            LoadCharacters();
-            CalculateRPTotals();
         }
         private void ImportJsonToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1945,7 +1954,6 @@ namespace DAoCToolSuite.ChimpTool
         }
         #endregion
 
-
         private void PerformRestoreSettings()
         {
             var firstName = SearchGridView.SelectedRows[0].Cells["Name"].Value?.ToString()?.Split(' ').First();
@@ -1967,13 +1975,27 @@ namespace DAoCToolSuite.ChimpTool
             PerformRestoreSettings();
             settingsToolStripMenuItem.Enabled = true;
         }
-
         private void settingsRestoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Logger.Debug("Restore Settings ToolStrip MenuItem Clicked");
             settingsRestoreToolStripMenuItem.Enabled = false;
             PerformRestoreSettings();
             settingsRestoreToolStripMenuItem.Enabled = true;
+        }
+
+        private void moveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow row = SearchGridView.SelectedRows[0];
+            string? webID = row.Cells["WebID"].Value.ToString();
+            string? account = AccountComboBox.Text.ToString();
+            if(string.IsNullOrEmpty(webID) || string.IsNullOrEmpty(account))
+            {
+                return;
+            }
+            MoveAccountForm form = new(webID, account) { Owner = this, StartPosition = FormStartPosition.Manual };
+            form.SetLocation();
+            form.ShowDialog();
+            LoadCharacters();
         }
     }
 }
