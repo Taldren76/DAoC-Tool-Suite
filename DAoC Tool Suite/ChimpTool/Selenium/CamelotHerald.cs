@@ -115,7 +115,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 if (driver.GetIfExists(By.XPath("//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a"), secondsToTry * 1000, 100) is null) //Delays until a result exists in the table;
                 {
                     Logger.Debug($"Could not find {"//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a"} in\n{driver.PageSource}");
-                    return new(true);
+                    return new();
                 }
 
                 ReadOnlyCollection<IWebElement> playerSearchResultsTable = driver.FindElements(By.XPath("//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody//tr//td//a"));
@@ -133,7 +133,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
 
                 if (characterNameLink is null)
                 {
-                    return new(true);
+                    return new();
                 }
 
                 characterNameLink?.Click();
@@ -144,7 +144,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             }
             catch
             {
-                return new(true);
+                return new();
             }
         }
         internal static ChimpJson GetChimp(string webID)
@@ -179,7 +179,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return new ChimpJson(true);
+                return new ChimpJson();
             }
         }
         internal static List<ChimpJson> GetChimps(List<string> playerNames, ServerCluster cluster, TextProgressBar progressBar, int secondsToTry = 5)
@@ -542,7 +542,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
             catch (System.Exception ex)
             {
                 Logger.Error(ex);
-                return new ChimpJson(true);
+                return new ChimpJson();
             }
         }
     }

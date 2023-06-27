@@ -706,95 +706,101 @@ namespace DAoCToolSuite.ChimpTool
             {
                 return;
             }
-
-            DataGridViewColumn column = dataGridView.Columns[e.ColumnIndex];
-            if (e.RowIndex != -1 && column.Visible == true)
+            try
             {
-                DataGridViewRow row = dataGridView.Rows[e.RowIndex];
-                CharacterModel character = CharactersByAccountLastDateUpdated[e.RowIndex]; //.Where(x => x.WebID == webID).First();
-                string columnName = column.Name;
-                string? realm = row?.Cells["Realm"]?.Value?.ToString()?.ToLower();
-                if (realm is null)
+                DataGridViewColumn column = dataGridView.Columns[e.ColumnIndex];
+                if (e.RowIndex != -1 && column.Visible == true)
                 {
-                    return;
+                    DataGridViewRow row = dataGridView.Rows[e.RowIndex];
+                    CharacterModel character = CharactersByAccountLastDateUpdated[e.RowIndex]; //.Where(x => x.WebID == webID).First();
+                    string columnName = column.Name;
+                    string? realm = row?.Cells["Realm"]?.Value?.ToString()?.ToLower();
+                    if (realm is null)
+                    {
+                        return;
+                    }
+
+                    string? guild = Guilds.Where(x => x.WebID == character.Guild_WebID).Select(x => x.Name).FirstOrDefault();
+                    string albKills = character.Albion_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
+                    string midKills = character.Midgard_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
+                    string hibKills = character.Hibernia_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
+
+                    string toShow = string.Empty;
+                    switch (columnName)
+                    {
+                        case "Name":
+                            toShow = $"Level {character.Level} {character.Race}";
+                            if (!string.IsNullOrEmpty(guild))
+                            {
+                                toShow += $" - {guild}";
+                            }
+
+                            break;
+                        case "TotalSoloKills":
+                            switch (realm)
+                            {
+                                case "albion":
+                                    toShow += $"Hibernia:{character.Hibernia_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
+                                    break;
+                                case "midgard":
+                                    toShow += $"Albion:{character.Albion_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Hibernia:{character.Hibernia_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
+                                    break;
+                                case "hibernia":
+                                    toShow += $"Albion:{character.Albion_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case "TotalDeathBlows":
+                            switch (realm)
+                            {
+                                case "albion":
+                                    toShow += $"Hibernia:{character.Hibernia_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
+                                    break;
+                                case "midgard":
+                                    toShow += $"Albion:{character.Albion_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Hibernia:{character.Hibernia_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
+                                    break;
+                                case "hibernia":
+                                    toShow += $"Albion:{character.Albion_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case "TotalKills":
+                            switch (realm)
+                            {
+                                case "albion":
+                                    toShow += $"Hibernia:{character.Hibernia_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
+                                    break;
+                                case "midgard":
+                                    toShow += $"Albion:{character.Albion_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Hibernia:{character.Hibernia_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
+                                    break;
+                                case "hibernia":
+                                    toShow += $"Albion:{character.Albion_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                    }
+                    // get x and y position of cell		response	error CS0103: 
+
+                    Rectangle rec = dataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                    Point p = rec.Location;
+                    // add offset to move tip up
+                    p.Offset(0, -40);
+                    // changed dataGridView1 to panel1, use offset cell position, and timeout
+
+                    MouseOverTooltip.BackColor = Color.White;
+                    MouseOverTooltip.ForeColor = Color.Black;
+                    MouseOverTooltip.Show(toShow, GridPanel, p, 10000); // show tool tip
                 }
-
-                string? guild = Guilds.Where(x => x.WebID == character.Guild_WebID).Select(x => x.Name).FirstOrDefault();
-                string albKills = character.Albion_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
-                string midKills = character.Midgard_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
-                string hibKills = character.Hibernia_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0";
-
-                string toShow = string.Empty;
-                switch (columnName)
-                {
-                    case "Name":
-                        toShow = $"Level {character.Level} {character.Race}";
-                        if (!string.IsNullOrEmpty(guild))
-                        {
-                            toShow += $" - {guild}";
-                        }
-
-                        break;
-                    case "TotalSoloKills":
-                        switch (realm)
-                        {
-                            case "albion":
-                                toShow += $"Hibernia:{character.Hibernia_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
-                                break;
-                            case "midgard":
-                                toShow += $"Albion:{character.Albion_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Hibernia:{character.Hibernia_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
-                                break;
-                            case "hibernia":
-                                toShow += $"Albion:{character.Albion_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_SoloKills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case "TotalDeathBlows":
-                        switch (realm)
-                        {
-                            case "albion":
-                                toShow += $"Hibernia:{character.Hibernia_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
-                                break;
-                            case "midgard":
-                                toShow += $"Albion:{character.Albion_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Hibernia:{character.Hibernia_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
-                                break;
-                            case "hibernia":
-                                toShow += $"Albion:{character.Albion_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_DeathBlows?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case "TotalKills":
-                        switch (realm)
-                        {
-                            case "albion":
-                                toShow += $"Hibernia:{character.Hibernia_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
-                                break;
-                            case "midgard":
-                                toShow += $"Albion:{character.Albion_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Hibernia:{character.Hibernia_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
-                                break;
-                            case "hibernia":
-                                toShow += $"Albion:{character.Albion_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"} Midgard:{character.Midgard_Kills?.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0"}";
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                }
-                // get x and y position of cell		response	error CS0103: 
-
-                Rectangle rec = dataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
-                Point p = rec.Location;
-                // add offset to move tip up
-                p.Offset(0, -40);
-                // changed dataGridView1 to panel1, use offset cell position, and timeout
-
-                MouseOverTooltip.BackColor = Color.White;
-                MouseOverTooltip.ForeColor = Color.Black;
-                MouseOverTooltip.Show(toShow, GridPanel, p, 10000); // show tool tip
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
             }
         }
         private void SearchGridView_DataSourceChanged(object sender, EventArgs e)
@@ -995,11 +1001,25 @@ namespace DAoCToolSuite.ChimpTool
                     {
                         List<ChimpJson> goodChimps = chimpRefreshResults.Where(x => x.IsValid()).ToList();
                         List<ChimpJson> badChimps = chimpRefreshResults.Where(x => !x.IsValid()).ToList();
+                        foreach (var bad in badChimps)
+                        {
+                            if (bad?.Name is not null)
+                            {
+                                Logger.Debug($"Failed to update chimp for: {bad.Name}");
+                            }
+                        }
                         Logger.Debug($"There were {badChimps.Count} characters that could not be refreshed via the API. Attempting via CamelotHerald scrape.");
                         chimpRefreshResults = CamelotHerald.GetChimps(badChimps, SearchProgressBar);
                         goodChimps.AddRange(chimpRefreshResults.Where(x => x.IsValid()).ToList());
                         badChimps.AddRange(chimpRefreshResults.Where(x => x.IsValid()).ToList());
                         Logger.Debug($"{goodChimps.Count} characters were refreshed with {badChimps.Count} failures.");
+                        foreach (var bad in badChimps)
+                        {
+                            if (bad?.Name is not null)
+                            {
+                                Logger.Debug($"Failed to update chimp for: {bad.Name}");
+                            }
+                        }
                         chimpRefreshResults = goodChimps;
                     }
                 }
@@ -1009,12 +1029,18 @@ namespace DAoCToolSuite.ChimpTool
                     List<ChimpJson> goodChimps = chimpRefreshResults.Where(x => x.IsValid()).ToList();
                     List<ChimpJson> badChimps = chimpRefreshResults.Where(x => !x.IsValid()).ToList();
                     Logger.Debug($"{goodChimps.Count} characters were refreshed with {badChimps.Count} failures.");
+                    foreach (var bad in badChimps)
+                    {
+                        if (bad?.Name is not null)
+                        {
+                            Logger.Debug($"Failed to update chimp for: {bad.Name}");
+                        }
+                    }
                 }
 
                 int refreshed = chimpRefreshResults.Count;
                 int failed = chimpsToBeRefreshed.Count - refreshed;
                 Logger.Debug($"Success:{refreshed} Failure:{failed} in {stopWatch.Elapsed:c})");
-
                 SearchProgressBar.Minimum = 0;
                 SearchProgressBar.Maximum = chimpRefreshResults.Count;
                 SearchProgressBar.Value = 0;
@@ -1025,7 +1051,7 @@ namespace DAoCToolSuite.ChimpTool
 
                 foreach (ChimpJson result in chimpRefreshResults)
                 {
-                    SearchProgressBar.Value++;
+                    SearchProgressBar.Value += 1;
                     SqliteDataAccess.AddCharacter(result.ConvertToCharacterModel(), date, AccountComboBox.Text);
                     SqliteDataAccess.AddGuild(result.ConvertToGuildModel());
                 }
@@ -1918,5 +1944,36 @@ namespace DAoCToolSuite.ChimpTool
             _ = form.ShowDialog();
         }
         #endregion
+
+
+        private void PerformRestoreSettings()
+        {
+            var firstName = SearchGridView.SelectedRows[0].Cells["Name"].Value?.ToString()?.Split(' ').First();
+            var realm = SearchGridView.SelectedRows[0].Cells["Realm"].Value?.ToString();
+            var _class = SearchGridView.SelectedRows[0].Cells["Class"].Value?.ToString();
+            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(realm) || string.IsNullOrEmpty(_class)) { return; }
+            SettingsManagerForm form = new(firstName, realm, _class)
+            {
+                Owner = this,
+                StartPosition = FormStartPosition.Manual
+            };
+            form.SetLocation();
+            form.ShowDialog(this);
+        }
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Logger.Debug("Restore Settings ToolStrip Context MenuItem Clicked");
+            settingsToolStripMenuItem.Enabled = false;
+            PerformRestoreSettings();
+            settingsToolStripMenuItem.Enabled = true;
+        }
+
+        private void settingsRestoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Logger.Debug("Restore Settings ToolStrip MenuItem Clicked");
+            settingsRestoreToolStripMenuItem.Enabled = false;
+            PerformRestoreSettings();
+            settingsRestoreToolStripMenuItem.Enabled = true;
+        }
     }
 }

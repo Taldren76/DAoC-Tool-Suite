@@ -1,8 +1,12 @@
-﻿namespace SQLLibrary
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace SQLLibrary
 {
     public class SettingsBackUpModel
     {
-        public int? index { get; set; }
+        [JsonPropertyName("index")]
+        public int? Index { get; set; }
         public string? Date { get; set; }
         public string? FirstName { get; set; }
         public string? Realm { get; set; }

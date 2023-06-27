@@ -44,7 +44,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(188, 169);
+            label1.Location = new Point(0, 195);
             label1.Name = "label1";
             label1.Size = new Size(108, 15);
             label1.TabIndex = 0;
@@ -52,7 +52,7 @@
             // 
             // OKButton
             // 
-            OKButton.Location = new Point(547, 165);
+            OKButton.Location = new Point(547, 213);
             OKButton.Name = "OKButton";
             OKButton.Size = new Size(75, 23);
             OKButton.TabIndex = 1;
@@ -77,9 +77,9 @@
             label3.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point);
             label3.Location = new Point(269, 12);
             label3.Name = "label3";
-            label3.Size = new Size(197, 18);
+            label3.Size = new Size(188, 18);
             label3.TabIndex = 3;
-            label3.Text = "0.9.5 BETA (20230623)";
+            label3.Text = "0.9.7 RC1 (20230626)";
             // 
             // pictureBox1
             // 
@@ -117,7 +117,7 @@
             label2.Font = new Font("Verdana", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             label2.Location = new Point(188, 88);
             label2.Name = "label2";
-            label2.Size = new Size(434, 74);
+            label2.Size = new Size(434, 122);
             label2.TabIndex = 7;
             label2.Text = resources.GetString("label2.Text");
             // 
@@ -136,7 +136,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(629, 191);
+            ClientSize = new Size(629, 242);
             Controls.Add(GitHubLinkLabel);
             Controls.Add(label2);
             Controls.Add(LicenseLabel);

@@ -186,7 +186,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             CharacterSearchResult? searchResult = CharacterSearch(name, cluster);
             if (searchResult is null || searchResult.Results is null)
             {
-                return new(true);
+                return new();
             }
 
             try
@@ -201,7 +201,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             catch (System.Exception e)
             {
                 Logger.Error(e);
-                return new(true);
+                return new();
             }
         }
         public static ChimpJson GetChimp(string webId)
@@ -279,6 +279,11 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
         }
         public static List<ChimpJson> GetChimps(List<ChimpJson> chimps, TextProgressBar progressBar)
         {
+            if(chimps.Count < 1)
+            {
+                Logger.Warn("A empty List<ChimpJson> was passed to GetChimps(). Aborting.");
+                return new();
+            }
 
             progressBar.Visible = true;
             progressBar.Value = 0;
@@ -292,7 +297,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             foreach (ChimpJson chimp in chimps)
             {
                 #region ProgressBar
-                if (progressBar.Value != progressBar.Maximum)
+                if (progressBar.Value < progressBar.Maximum)
                 {
                     progressBar.Value += 1;
                     progressBar.Update();
@@ -315,6 +320,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                 {
                     if (infoResult?.Realm is not null && infoResult.IsValid)
                     {
+                        Logger.Debug($"Retrieved information for {infoResult.Name}");
                         int deaths = infoResult.RealmWarStats?.Current?.PlayerKills?.Total?.Deaths ?? 0;
                         int rps = infoResult.RealmWarStats?.Current?.RealmPoints ?? 0;
                         int irs = deaths > 0 ? rps / deaths : rps;
@@ -363,7 +369,6 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                             Midgard_Deaths = infoResult?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
                             TotalRealmPoints = rps.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
                             IRS = irs.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
-
                             RealmRank = CalculateRealmRank(rps).ToString().Insert(CalculateRealmRank(rps).ToString().Length - 1, "L")
                         };
                         results.Add(result);

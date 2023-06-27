@@ -84,79 +84,44 @@ namespace DAoCToolSuite.ChimpTool.Json
         private List<string> Classes { get; set; } = new List<string>();
         private List<string> Servers { get; set; } = new List<string>();
 
-        private static Dictionary<int, double> RealmRanks { get; set; } = new Dictionary<int, double>();
-
-        public ChimpJson(bool StubObject)
-        {
-            _ = new Dictionary<int, double>();
-            Realms = new();
-            Races = new();
-            Classes = new();
-            Servers = new();
-        }
-
         public ChimpJson()
         {
-            #region RealmRanks
-            Dictionary<int, double> realmRanks = new();
-            for (int rr = 0; rr < 100; rr++)
-            {
-                realmRanks.Add(rr + 11, ((50 * Math.Pow(rr, 3)) + (75 * Math.Pow(rr, 2)) + (25 * rr)) / 6);
-            }
-            realmRanks.Add(111, 9111713);
-            realmRanks.Add(112, 10114001);
-            realmRanks.Add(113, 11226541);
-            realmRanks.Add(114, 12461460);
-            realmRanks.Add(115, 13832221);
-            realmRanks.Add(116, 15353765);
-            realmRanks.Add(117, 17042680);
-            realmRanks.Add(118, 18917374);
-            realmRanks.Add(119, 20998286);
-            realmRanks.Add(120, 23308097);
-            realmRanks.Add(121, 25871988);
-            realmRanks.Add(122, 28717906);
-            realmRanks.Add(123, 31876876);
-            realmRanks.Add(124, 35383333);
-            realmRanks.Add(125, 39275499);
-            realmRanks.Add(126, 43595804);
-            realmRanks.Add(127, 48391343);
-            realmRanks.Add(128, 53714390);
-            realmRanks.Add(129, 59622973);
-            realmRanks.Add(130, 66181501);
-            realmRanks.Add(131, 73461466);
-            realmRanks.Add(132, 81542227);
-            realmRanks.Add(133, 90511872);
-            realmRanks.Add(134, 100468178);
-            realmRanks.Add(135, 111519678);
-            realmRanks.Add(136, 123786843);
-            realmRanks.Add(137, 137403395);
-            realmRanks.Add(138, 152517769);
-            realmRanks.Add(139, 169294723);
-            realmRanks.Add(140, 187917143);
-            RealmRanks = realmRanks;
-            #endregion
+            SetRealms();
+            SetRaces();
+            SetClasses();
+            SetServers();
+        }
 
+        private void SetRealms()
+        {
             Realms = new List<string>()
             {
                 "Albion", "Hibernia", "Midgard"
             };
+        }
 
+        private void SetRaces()
+        {
             Races = new List<string>()
             {
                 "Briton","Saracen","Avalonian","Highlander","Inconnu","Half Ogre","Korazh",
                 "Celt", "Lurikeen","Firbolg","Elf","Sylvan", "Shar", "Graoch",
                 "Kobold", "Dwarf", "Norseman", "Troll", "Valkyn", "Frostalf", "Deifrang"
             };
+        }
 
+        private void SetClasses()
+        {
             Classes = new List<string>()
             {
                 "Animist","Bainshee","Bard","Blademaster","Champion","Druid","Eldritch","Enchanter","Enchantress","Hero","Mauler","Mentalist","Nightshade","Ranger","Valewalker","Vampiir","Warden",
                 "Armsman","Armswoman","Cabalist","Cleric","Friar","Heretic","Infiltrator","Mercenary","Minstrel","Necromancer","Paladin","Reaver","Scout","Sorcerer", "Sorceress", "Theurgist","Wizard",
                 "Berserker","Bonedancer","Healer","Hunter","Runemaster","Savage","Shadowblade","Shaman","Skald","Spiritmaster","Thane","Valkyrie","Warlock","Warrior"
             };
+        }
 
-
-
+        private void SetServers()
+        {
             Servers = new List<string>()
             {
                 "Ywain1","Ywain2","Ywain3","Ywain4","Ywain5","Ywain6","Ywain7","Ywain8","Ywain9","Ywain10",

@@ -115,7 +115,7 @@ namespace DAoCToolSuite
             MinimumSize = new Size(476, 220);
             Name = "DAoCToolSuiteForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "DAoC Tool Suite v0.9.6";
+            Text = "DAoC Tool Suite v0.9.7";
             FormClosing += DAoCTestSuiteForm_FormClosing;
             ResumeLayout(false);
         }

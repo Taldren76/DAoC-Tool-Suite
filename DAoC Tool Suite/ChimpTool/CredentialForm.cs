@@ -50,12 +50,10 @@ namespace DAoCToolSuite.ChimpTool
                 if (File.Exists(folderBrowserDialog1.SelectedPath + "\\game.dll"))
                 {
                     GameLocationTextBox.Text = folderBrowserDialog1.SelectedPath;
-                    Properties.Settings.Default.GameDllLocation = folderBrowserDialog1.SelectedPath;
-                    Properties.Settings.Default.Save();
                 }
                 else
                 {
-                    _ = MessageBox.Show($"Game.dll was not found at:\n{folderBrowserDialog1.SelectedPath}", "File Not Found", MessageBoxButtons.OK);
+                    _ = MessageBox.Show($"Game.dll was not found at:\n{GameLocationTextBox.Text}", "File Not Found", MessageBoxButtons.OK);
                 }
             }
         }
@@ -65,6 +63,8 @@ namespace DAoCToolSuite.ChimpTool
             if (File.Exists(GameLocationTextBox.Text + "\\game.dll"))
             {
                 _ = SqliteDataAccess.AddAccountCredentials(AccountName, LoginTextBox.Text, PasswordTextBox.Text);
+                Properties.Settings.Default.GameDllLocation = GameLocationTextBox.Text;
+                Properties.Settings.Default.Save();
                 Close();
             }
             else

@@ -543,6 +543,17 @@ namespace SQLLibrary
                 return query;
             }
         }
+
+        public static List<SettingsBackUpModel> LoadSettingBackUps(string firstName, string realm, string _class)
+        {
+            lock (thisLock)
+            {
+                using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
+                List<SettingsBackUpModel> query = conn.Query<SettingsBackUpModel>($"SELECT * FROM [SettingsBackup] WHERE [FirstName] = '{firstName}' AND [Realm] = '{realm}' AND [Class] = '{_class}'", new DynamicParameters()).ToList();
+                return query;
+            }
+        }
+
         public static List<SettingsBackUpModel> LoadSettingBackUps(string characterFirstName)
         {
             lock (thisLock)
