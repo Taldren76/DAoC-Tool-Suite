@@ -1,3 +1,15 @@
+DAoC Tool Suite 0.9.9.0 Release Candidate 3
+---
+Changes:
+1. Renamed Account to ChimpPages
+
+Fixes:
+1. Will no longer crash if you attempt to associate an ahk with no character selected.
+2. Lock Overlay will actually lock the overlay.
+3. Add ChimpPage will be greyed out unless the name entered in the ChimpPage combobox is unique.
+4. Export Json will no longer leave BackupDB greyed out.
+5. Import Json will no longer leave the chimptool table hidden from view when complete.
+
 DAoC Tool Suite 0.9.8 Release Candidate 2
 ---
 Important Note: It seems it is best practice to uninstall the previous version rather than installing the new one ovetop the old. Make a DB Backup (or Export) in ChimpTool and CharacterTool and uninstall it completely. Then install the new version and perform a DB Restore (or Import) in ChimpTool and CharacterTool.
