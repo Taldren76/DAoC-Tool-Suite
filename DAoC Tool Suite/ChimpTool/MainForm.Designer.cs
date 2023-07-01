@@ -316,7 +316,7 @@ namespace DAoCToolSuite.ChimpTool
             AddAccountButton.Name = "AddAccountButton";
             AddAccountButton.Size = new Size(107, 29);
             AddAccountButton.TabIndex = 5;
-            AddAccountButton.Text = "Add Chimp Page";
+            AddAccountButton.Text = "Add ChimpPage";
             AddAccountButton.UseVisualStyleBackColor = true;
             AddAccountButton.Click += AddAccountButton_Click;
             // 
@@ -567,8 +567,8 @@ namespace DAoCToolSuite.ChimpTool
             // 
             accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dAoCCredentialsToolStripMenuItem, manageAccountsToolStripMenuItem });
             accountToolStripMenuItem.Name = "accountToolStripMenuItem";
-            accountToolStripMenuItem.Size = new Size(84, 20);
-            accountToolStripMenuItem.Text = "Chimp Page";
+            accountToolStripMenuItem.Size = new Size(81, 20);
+            accountToolStripMenuItem.Text = "ChimpPage";
             // 
             // dAoCCredentialsToolStripMenuItem
             // 

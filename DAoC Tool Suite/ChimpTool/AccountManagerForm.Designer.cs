@@ -141,7 +141,7 @@
             Controls.Add(AccountGridView);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "AccountManagerForm";
-            Text = "Chimp Page Manager";
+            Text = "ChimpPage Manager";
             ((System.ComponentModel.ISupportInitialize)AccountGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();
