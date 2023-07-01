@@ -530,6 +530,7 @@ namespace DAoCToolSuite.ChimpTool
                 try
                 {
                     Logger.Debug($"Writting backup to {fileName}");
+                    BackupRepositoryFullPath = fileName;
                     File.WriteAllText(fileName, json);
                 }
                 catch (System.Exception ex)
@@ -1257,6 +1258,7 @@ namespace DAoCToolSuite.ChimpTool
             AccountComboBox.DataSource = Accounts;
             AccountComboBox.DisplayMember = "Account";
             AccountComboBox.Refresh();
+            AddAccountButton.Enabled = false;
         }
         private void AddAccount()
         {

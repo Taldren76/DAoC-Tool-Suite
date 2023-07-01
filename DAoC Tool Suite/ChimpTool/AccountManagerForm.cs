@@ -51,7 +51,7 @@ namespace DAoCToolSuite.ChimpTool
         private void FormatGridView()
         {
             List<string> visibleColumns = new() { "Account" };
-            List<string> visibleColumnHeaderNames = new() { "Chimp Page" };
+            List<string> visibleColumnHeaderNames = new() { "ChimpPage" };
             int columnCount = AccountGridView.Columns.Count;
             int nonVisibleIndex = visibleColumns.Count;
 

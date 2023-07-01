@@ -311,6 +311,7 @@ namespace DAoCToolSuite.ChimpTool
             // 
             // AddAccountButton
             // 
+            AddAccountButton.Enabled = false;
             AddAccountButton.Location = new Point(251, 6);
             AddAccountButton.Margin = new Padding(4, 3, 4, 3);
             AddAccountButton.Name = "AddAccountButton";
@@ -573,14 +574,14 @@ namespace DAoCToolSuite.ChimpTool
             // dAoCCredentialsToolStripMenuItem
             // 
             dAoCCredentialsToolStripMenuItem.Name = "dAoCCredentialsToolStripMenuItem";
-            dAoCCredentialsToolStripMenuItem.Size = new Size(180, 22);
+            dAoCCredentialsToolStripMenuItem.Size = new Size(167, 22);
             dAoCCredentialsToolStripMenuItem.Text = "DAoC Credentials";
             dAoCCredentialsToolStripMenuItem.Click += DAoCCredentialsToolStripMenuItem_Click;
             // 
             // manageAccountsToolStripMenuItem
             // 
             manageAccountsToolStripMenuItem.Name = "manageAccountsToolStripMenuItem";
-            manageAccountsToolStripMenuItem.Size = new Size(180, 22);
+            manageAccountsToolStripMenuItem.Size = new Size(167, 22);
             manageAccountsToolStripMenuItem.Text = "Manage Pages";
             manageAccountsToolStripMenuItem.Click += ManageAccountsToolStripMenuItem_Click;
             // 

@@ -110,8 +110,13 @@
                 {
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.CoreRuntime.6.0.x86"
                     {
-                    "Name" = "8:.NET Runtime 6.0.16 (x86)"
+                    "Name" = "8:.NET Runtime 6.0.18 (x86)"
                     "ProductCode" = "8:Microsoft.NetCore.CoreRuntime.6.0.x86"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.6.0.x86"
+                    {
+                    "Name" = "8:.NET Desktop Runtime 6.0.18 (x86)"
+                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.6.0.x86"
                     }
                 }
             }
@@ -337,7 +342,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DAoC Tool Suite"
         "ProductCode" = "8:{7F80470E-85F1-479A-A402-98AC7D0E940D}"
-        "PackageCode" = "8:{0BCC0AA0-F4A7-42D3-A9CC-C9EEAD52D8D0}"
+        "PackageCode" = "8:{01EF44A4-5C57-46DD-A3CC-9565C69462C6}"
         "UpgradeCode" = "8:{B64144B6-6C56-4A20-A52F-D1B1C16ECBEB}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"

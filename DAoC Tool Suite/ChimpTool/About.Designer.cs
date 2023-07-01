@@ -79,7 +79,7 @@
             label3.Name = "label3";
             label3.Size = new Size(188, 18);
             label3.TabIndex = 3;
-            label3.Text = "0.9.8 RC2 (20230627)";
+            label3.Text = "0.9.8 RC3 (20230630)";
             // 
             // pictureBox1
             // 
