@@ -1,3 +1,21 @@
+DAoC Tool Suite 0.9.8 Release Candidate 2
+---
+Important Note: It seems it is best practice to uninstall the previous version rather than installing the new one ovetop the old. Make a DB Backup (or Export) in ChimpTool and CharacterTool and uninstall it completely. Then install the new version and perform a DB Restore (or Import) in ChimpTool and CharacterTool.
+
+Changes:
+1. Added new contect menu option to move a character between accounts in ChimpTool.
+
+Fixes:
+1. None - none reported. :)
+
+DAoC Tool Suite 0.9.7 Release Candidate 1
+---
+Changes:
+1. Added new contect and menu options to restore settings for selected character.
+
+Fixes:
+1. Fixed issue where if you change the text line for the Game.DLL folder location in the text box and not actually browse to the location using the browse button, it doesn't actually change and will try with the wrong game location.
+
 DAoC Tool Suite BETA 0.9.6
 ---
 Changes:
