@@ -393,7 +393,7 @@ namespace DAoCToolSuite.LogTool
             MinimumSize = new Size(720, 540);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "LogTool v1.0.0";
+            Text = "LogTool v1.1.0";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);

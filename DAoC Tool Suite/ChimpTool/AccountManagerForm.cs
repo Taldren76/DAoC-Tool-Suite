@@ -36,11 +36,11 @@ namespace DAoCToolSuite.ChimpTool
         {
             try
             {
-                Logger.Debug("Loading Accounts");
+                Logger.Debug("Loading Chimp Pages");
                 Accounts = SqliteDataAccess.LoadAccounts().ToList();
                 AttachAccounts();
                 FormatGridView();
-                Logger.Debug("Accounts Loaded");
+                Logger.Debug("Chimp Pages Loaded");
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace DAoCToolSuite.ChimpTool
         private void FormatGridView()
         {
             List<string> visibleColumns = new() { "Account" };
-            List<string> visibleColumnHeaderNames = new() { "Account Name" };
+            List<string> visibleColumnHeaderNames = new() { "Chimp Page" };
             int columnCount = AccountGridView.Columns.Count;
             int nonVisibleIndex = visibleColumns.Count;
 
@@ -111,7 +111,7 @@ namespace DAoCToolSuite.ChimpTool
             string? oldChar = SelectedAccountTextBox.Text;
             if (oldChar is null)
             {
-                Logger.Debug("No account name capturd from DataGridView.");
+                Logger.Debug("No chimp page name captured from DataGridView.");
                 return;
             }
             string newChar = RenameAddNewTextBox.Text;
@@ -124,7 +124,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             if (SelectedAccountIndex == 1)
             {
-                _ = MessageBox.Show("You may not delete the default account.", "Error", MessageBoxButtons.OK);
+                _ = MessageBox.Show("You may not delete the default chimp page.", "Error", MessageBoxButtons.OK);
                 return;
             }
             SqliteDataAccess.RemoveAccount(SelectedAccountTextBox.Text);

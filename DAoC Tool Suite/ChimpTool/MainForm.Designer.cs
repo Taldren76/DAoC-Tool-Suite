@@ -177,52 +177,52 @@ namespace DAoCToolSuite.ChimpTool
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { launchToolStripMenuItem1, refreshToolStripMenuItem1, settingsToolStripMenuItem, associateAHKToolStripMenuItem1, toolStripSeparator1, moveToolStripMenuItem, deleteToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 164);
+            contextMenuStrip1.Size = new Size(159, 142);
             // 
             // launchToolStripMenuItem1
             // 
             launchToolStripMenuItem1.Name = "launchToolStripMenuItem1";
-            launchToolStripMenuItem1.Size = new Size(180, 22);
+            launchToolStripMenuItem1.Size = new Size(158, 22);
             launchToolStripMenuItem1.Text = "Launch";
             launchToolStripMenuItem1.Click += RC_LaunchToolStripMenuItem_Click;
             // 
             // refreshToolStripMenuItem1
             // 
             refreshToolStripMenuItem1.Name = "refreshToolStripMenuItem1";
-            refreshToolStripMenuItem1.Size = new Size(180, 22);
+            refreshToolStripMenuItem1.Size = new Size(158, 22);
             refreshToolStripMenuItem1.Text = "Refresh";
             refreshToolStripMenuItem1.Click += RC_RefreshToolStripMenuItem_Click;
             // 
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(180, 22);
+            settingsToolStripMenuItem.Size = new Size(158, 22);
             settingsToolStripMenuItem.Text = "Restore Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // associateAHKToolStripMenuItem1
             // 
             associateAHKToolStripMenuItem1.Name = "associateAHKToolStripMenuItem1";
-            associateAHKToolStripMenuItem1.Size = new Size(180, 22);
+            associateAHKToolStripMenuItem1.Size = new Size(158, 22);
             associateAHKToolStripMenuItem1.Text = "Associate AHK";
             associateAHKToolStripMenuItem1.Click += RC_AssociateAHKToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(155, 6);
             // 
             // moveToolStripMenuItem
             // 
             moveToolStripMenuItem.Name = "moveToolStripMenuItem";
-            moveToolStripMenuItem.Size = new Size(180, 22);
+            moveToolStripMenuItem.Size = new Size(158, 22);
             moveToolStripMenuItem.Text = "Move";
             moveToolStripMenuItem.Click += moveToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(180, 22);
+            deleteToolStripMenuItem.Size = new Size(158, 22);
             deleteToolStripMenuItem.Text = "Delete";
             deleteToolStripMenuItem.Click += RC_DeleteToolStripMenuItem_Click;
             // 
@@ -316,7 +316,7 @@ namespace DAoCToolSuite.ChimpTool
             AddAccountButton.Name = "AddAccountButton";
             AddAccountButton.Size = new Size(107, 29);
             AddAccountButton.TabIndex = 5;
-            AddAccountButton.Text = "Add Account";
+            AddAccountButton.Text = "Add Chimp Page";
             AddAccountButton.UseVisualStyleBackColor = true;
             AddAccountButton.Click += AddAccountButton_Click;
             // 
@@ -567,21 +567,21 @@ namespace DAoCToolSuite.ChimpTool
             // 
             accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dAoCCredentialsToolStripMenuItem, manageAccountsToolStripMenuItem });
             accountToolStripMenuItem.Name = "accountToolStripMenuItem";
-            accountToolStripMenuItem.Size = new Size(64, 20);
-            accountToolStripMenuItem.Text = "Account";
+            accountToolStripMenuItem.Size = new Size(84, 20);
+            accountToolStripMenuItem.Text = "Chimp Page";
             // 
             // dAoCCredentialsToolStripMenuItem
             // 
             dAoCCredentialsToolStripMenuItem.Name = "dAoCCredentialsToolStripMenuItem";
-            dAoCCredentialsToolStripMenuItem.Size = new Size(170, 22);
+            dAoCCredentialsToolStripMenuItem.Size = new Size(180, 22);
             dAoCCredentialsToolStripMenuItem.Text = "DAoC Credentials";
             dAoCCredentialsToolStripMenuItem.Click += DAoCCredentialsToolStripMenuItem_Click;
             // 
             // manageAccountsToolStripMenuItem
             // 
             manageAccountsToolStripMenuItem.Name = "manageAccountsToolStripMenuItem";
-            manageAccountsToolStripMenuItem.Size = new Size(170, 22);
-            manageAccountsToolStripMenuItem.Text = "Manage Accounts";
+            manageAccountsToolStripMenuItem.Size = new Size(180, 22);
+            manageAccountsToolStripMenuItem.Text = "Manage Pages";
             manageAccountsToolStripMenuItem.Click += ManageAccountsToolStripMenuItem_Click;
             // 
             // editToolStripMenuItem
@@ -672,7 +672,7 @@ namespace DAoCToolSuite.ChimpTool
             Name = "MainForm";
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ChimpTool v2.0.2";
+            Text = "ChimpTool v2.1.1";
             FormClosing += MainForm_FormClosing;
             FormClosed += MainForm_FormClosed;
             GridPanel.ResumeLayout(false);

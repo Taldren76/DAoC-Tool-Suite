@@ -615,15 +615,15 @@ namespace DAoCToolSuite.ChimpTool
                 else
                 {
                     Logger.Debug($"Aborted");
-                    SearchGridView.Visible = true;
-                    LoadingTabelLabel.Visible = false;
-                    GridPanel.Refresh();
                 }
             }
             else
             {
                 Logger.Debug($"No backup chimp repository found at {BackupRepositoryFullPath}");
             }
+            SearchGridView.Visible = true;
+            LoadingTabelLabel.Visible = false;
+            GridPanel.Refresh();
         }
         #endregion
 
@@ -1262,7 +1262,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             string currentAccount = AccountComboBoxAccount?.Account ?? "/\\/073QU4|"; //Some invalid name that //shouldn't// match anything is the database.
             string newText = AccountComboBox.Text;
-            Logger.Debug($"Adding account {newText}");
+            Logger.Debug($"Adding chimp page {newText}");
             if (!string.IsNullOrEmpty(newText) && !newText.Equals(currentAccount))
             {
                 SqliteDataAccess.AddAccount(newText);
@@ -1312,11 +1312,16 @@ namespace DAoCToolSuite.ChimpTool
             AccountModel? account = Accounts.Where(x => x.Account == AccountComboBox.Text).FirstOrDefault();
             if (EnableSelectIndexChangedEvent && account is not null)
             {
+                AddAccountButton.Enabled = false;
                 LoadCharacters();
                 CalculateRPTotals();
                 int index = AccountComboBox.Items.IndexOf(account);
                 LastAccount = account?.Account ?? "Default";
                 Logger.Debug($"Settings.LastAccount = {LastAccount}");
+            }
+            else
+            {
+                AddAccountButton.Enabled = true;
             }
         }
         #endregion
@@ -1735,21 +1740,41 @@ namespace DAoCToolSuite.ChimpTool
             restoreToolStripMenuItem.Enabled = false;
             WaitCursor.Push();
             Logger.Debug("Restore MenuItem has been pressed.");
-            PerformDBRestore();
-            WaitCursor.Pop();
-            restoreToolStripMenuItem.Enabled = true;
+            try
+            {
+                PerformDBRestore();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            finally
+            {
+                WaitCursor.Pop();
+                restoreToolStripMenuItem.Enabled = true;
+            }
         }
         private void ExportJsonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             backupToolStripMenuItem.Enabled = false;
             WaitCursor.Push();
             Logger.Debug("Backup MenuItem has been pressed.");
-            LoadCharacters();
-            BackupToChimpRepository();
-            Logger.Debug($"Backup created at {BackupRepositoryFullPath}");
-            restoreToolStripMenuItem.Enabled = File.Exists(BackupRepositoryFullPath);
-            WaitCursor.Pop();
-            backupToolStripMenuItem.Enabled = false;
+            try
+            {
+                LoadCharacters();
+                BackupToChimpRepository();
+                Logger.Debug($"Backup created at {BackupRepositoryFullPath}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            finally
+            {
+                restoreToolStripMenuItem.Enabled = File.Exists(BackupRepositoryFullPath);
+                WaitCursor.Pop();
+                backupToolStripMenuItem.Enabled = true;
+            }
         }
         private void LaunchToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1775,6 +1800,8 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void AssociateAHKToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (SearchGridView.SelectedRows.Count < 1)
+                return;
             DataGridViewRow row = SearchGridView.SelectedRows[0];
             string? charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
             string? serverName = row.Cells["Server"].Value.ToString();
@@ -1988,7 +2015,7 @@ namespace DAoCToolSuite.ChimpTool
             DataGridViewRow row = SearchGridView.SelectedRows[0];
             string? webID = row.Cells["WebID"].Value.ToString();
             string? account = AccountComboBox.Text.ToString();
-            if(string.IsNullOrEmpty(webID) || string.IsNullOrEmpty(account))
+            if (string.IsNullOrEmpty(webID) || string.IsNullOrEmpty(account))
             {
                 return;
             }

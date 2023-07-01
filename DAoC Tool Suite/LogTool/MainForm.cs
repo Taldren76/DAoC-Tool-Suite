@@ -360,13 +360,13 @@ namespace DAoCToolSuite.LogTool
             if (Overlay.MoveLabel.Visible)
             {
                 LockOverlayButton.Text = "Unlock Overlay";
-                Overlay.MoveLabel.Hide();
+                Overlay.LockOverlay();
                 Properties.Settings.Default.OverlayLocked = true;
             }
             else
             {
                 LockOverlayButton.Text = "Lock Overlay";
-                Overlay.MoveLabel.Show();
+                Overlay.UnlockOverlay();
                 Properties.Settings.Default.OverlayLocked = false;
             }
             Properties.Settings.Default.Save();

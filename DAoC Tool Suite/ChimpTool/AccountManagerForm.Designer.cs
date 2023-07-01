@@ -68,9 +68,9 @@
             AccountNameLabel.AutoSize = true;
             AccountNameLabel.Location = new Point(258, 12);
             AccountNameLabel.Name = "AccountNameLabel";
-            AccountNameLabel.Size = new Size(137, 15);
+            AccountNameLabel.Size = new Size(118, 15);
             AccountNameLabel.TabIndex = 1;
-            AccountNameLabel.Text = "Selected Account Name:";
+            AccountNameLabel.Text = "Selected Page Name:";
             // 
             // SelectedAccountTextBox
             // 
@@ -141,7 +141,7 @@
             Controls.Add(AccountGridView);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "AccountManagerForm";
-            Text = "Account Manager";
+            Text = "Chimp Page Manager";
             ((System.ComponentModel.ISupportInitialize)AccountGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();

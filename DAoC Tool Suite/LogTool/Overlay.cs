@@ -39,6 +39,20 @@ namespace DAoCToolSuite.LogTool
             FormatOverlay();
         }
 
+        public void LockOverlay()
+        {
+            MouseDown -= new MouseEventHandler(Overlay_MouseDown);
+            MoveLabel.MouseDown -= new MouseEventHandler(MoveLabel_MouseDown);
+            MoveLabel.Hide();
+        }
+
+        public void UnlockOverlay()
+        {
+            MouseDown += new MouseEventHandler(Overlay_MouseDown);
+            MoveLabel.MouseDown += new MouseEventHandler(MoveLabel_MouseDown);
+            MoveLabel.Show();
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
