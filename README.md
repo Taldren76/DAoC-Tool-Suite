@@ -9,6 +9,7 @@ Fixes:
 3. Add ChimpPage will be greyed out unless the name entered in the ChimpPage combobox is unique.
 4. Export Json will no longer leave BackupDB greyed out.
 5. Import Json will no longer leave the chimptool table hidden from view when complete.
+6. Huntress characters can now be added to chimptool.
 
 DAoC Tool Suite 0.9.8 Release Candidate 2
 ---
