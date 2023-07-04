@@ -1,4 +1,4 @@
-DAoC Tool Suite v1.0.0 Release
+**DAoC Tool Suite v1.0.0 Release**
 
 Instruction: [DAoCToolsInstructions.docx](https://github.com/Taldren76/DAoC-Tool-Suite/files/11950965/DAoCToolsInstructions.docx)
 
