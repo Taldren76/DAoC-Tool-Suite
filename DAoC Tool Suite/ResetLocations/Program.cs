@@ -1,6 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-namespace DAoCToolsResetSettings
+namespace DAoCToolSuite.DAoCToolsResetSettings
 {
     public static class Program
     {
