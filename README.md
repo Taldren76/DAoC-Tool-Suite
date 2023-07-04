@@ -1,5 +1,7 @@
 DAoC Tool Suite v1.0.0 Release
+
 Instruction: [DAoCToolsInstructions.docx](https://github.com/Taldren76/DAoC-Tool-Suite/files/11950965/DAoCToolsInstructions.docx)
+
 To Download:
   1. Joined Hammered Gaming Discord: https://discord.gg/eDfNYC43mt
   2. Go to the #daoc-tool-suite channel under the DAOC channel category.
