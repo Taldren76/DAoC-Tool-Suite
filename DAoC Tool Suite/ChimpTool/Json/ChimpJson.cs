@@ -153,7 +153,7 @@ namespace DAoCToolSuite.ChimpTool.Json
             }
             if (string.IsNullOrEmpty(Realm) || !Realms.Contains(Realm))
             {
-                Logger.Debug($"Invalid Realm: {Realm ?? "null"} WebID: {WebID??"null"} Name: {Name ?? "null"}");
+                Logger.Debug($"Invalid Realm: {Realm ?? "null"} WebID: {WebID ?? "null"} Name: {Name ?? "null"}");
                 result &= false;
             }
             if (string.IsNullOrEmpty(Race) || !Races.Contains(Race))

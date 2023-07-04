@@ -28,7 +28,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
 
         }
 
-        private static Dictionary<int,double> GetRealmRanks()
+        private static Dictionary<int, double> GetRealmRanks()
         {
             Dictionary<int, double> realmRanks = new();
             for (int rr = 0; rr < 100; rr++)
@@ -332,7 +332,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
         }
         public static List<ChimpJson> GetChimps(List<ChimpJson> chimps, TextProgressBar progressBar)
         {
-            if(chimps.Count < 1)
+            if (chimps.Count < 1)
             {
                 Logger.Warn("A empty List<ChimpJson> was passed to GetChimps(). Aborting.");
                 return new();

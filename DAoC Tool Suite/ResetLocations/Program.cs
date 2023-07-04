@@ -1,6 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-namespace DAoCToolSuite.DAoCToolsResetSettings
+namespace DAoCToolsResetSettings
 {
     public static class Program
     {
@@ -28,8 +28,11 @@ namespace DAoCToolSuite.DAoCToolsResetSettings
             DelDirectory(VS);
 
             if (args.Length == 0)
+            {
                 return;
-            var command = args[0];
+            }
+
+            string command = args[0];
             switch (command.ToLower())
             {
                 case "/all":

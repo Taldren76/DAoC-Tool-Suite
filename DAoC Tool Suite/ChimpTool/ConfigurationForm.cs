@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.IO;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -99,7 +90,7 @@ namespace DAoCToolSuite.ChimpTool
 
         private void INIFileBrowseButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog
+            FolderBrowserDialog folderBrowserDialog1 = new()
             {
                 RootFolder = Environment.SpecialFolder.MyComputer,
                 SelectedPath = INIFileTextBox.Text,
@@ -122,7 +113,7 @@ namespace DAoCToolSuite.ChimpTool
 
         private void GameLocationBrowseButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog
+            FolderBrowserDialog folderBrowserDialog1 = new()
             {
                 RootFolder = Environment.SpecialFolder.MyComputer,
                 SelectedPath = GameLocationTextBox.Text,

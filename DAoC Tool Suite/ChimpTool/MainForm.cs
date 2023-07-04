@@ -12,7 +12,6 @@ using SQLLibrary.Enums;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -68,8 +67,7 @@ namespace DAoCToolSuite.ChimpTool
         {
             get
             {
-                if (_Servers is null)
-                    _Servers = GetServerList();
+                _Servers ??= GetServerList();
                 return _Servers;
             }
         }
@@ -93,10 +91,7 @@ namespace DAoCToolSuite.ChimpTool
 
             List<Server>? serversList = servers?.Server;
 
-            if (serversList is null)
-                return new();
-
-            return serversList;
+            return serversList is null ? new() : serversList;
         }
         #endregion
 
@@ -1041,7 +1036,7 @@ namespace DAoCToolSuite.ChimpTool
                     {
                         List<ChimpJson> goodChimps = chimpRefreshResults.Where(x => x.IsValid()).ToList();
                         List<ChimpJson> badChimps = chimpRefreshResults.Where(x => !x.IsValid()).ToList();
-                        foreach (var bad in badChimps)
+                        foreach (ChimpJson bad in badChimps)
                         {
                             if (bad?.Name is not null)
                             {
@@ -1053,7 +1048,7 @@ namespace DAoCToolSuite.ChimpTool
                         goodChimps.AddRange(chimpRefreshResults.Where(x => x.IsValid()).ToList());
                         badChimps.AddRange(chimpRefreshResults.Where(x => x.IsValid()).ToList());
                         Logger.Debug($"{goodChimps.Count} characters were refreshed with {badChimps.Count} failures.");
-                        foreach (var bad in badChimps)
+                        foreach (ChimpJson bad in badChimps)
                         {
                             if (bad?.Name is not null)
                             {
@@ -1069,7 +1064,7 @@ namespace DAoCToolSuite.ChimpTool
                     List<ChimpJson> goodChimps = chimpRefreshResults.Where(x => x.IsValid()).ToList();
                     List<ChimpJson> badChimps = chimpRefreshResults.Where(x => !x.IsValid()).ToList();
                     Logger.Debug($"{goodChimps.Count} characters were refreshed with {badChimps.Count} failures.");
-                    foreach (var bad in badChimps)
+                    foreach (ChimpJson bad in badChimps)
                     {
                         if (bad?.Name is not null)
                         {
@@ -1284,16 +1279,24 @@ namespace DAoCToolSuite.ChimpTool
             {
                 Logger.Debug("Shift key detected.");
                 if (Properties.Settings.Default.CharacterShiftLeftClick.Equals("Gaheris"))
+                {
                     AddNewCharacter(ServerCluster.Gaheris);
+                }
                 else
+                {
                     AddNewCharacter(ServerCluster.Ywain);
+                }
             }
             else
             {
                 if (Properties.Settings.Default.CharacterLeftClick.Equals("Ywain"))
+                {
                     AddNewCharacter(ServerCluster.Ywain);
+                }
                 else
+                {
                     AddNewCharacter(ServerCluster.Gaheris);
+                }
             }
             SearchButton.Enabled = true;
         }
@@ -1864,12 +1867,15 @@ namespace DAoCToolSuite.ChimpTool
                 StartPosition = FormStartPosition.Manual
             };
             form.SetLocation();
-            form.ShowDialog();
+            _ = form.ShowDialog();
         }
         private void AssociateAHKToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (SearchGridView.SelectedRows.Count < 1)
+            {
                 return;
+            }
+
             DataGridViewRow row = SearchGridView.SelectedRows[0];
             string? charName = row.Cells["Name"]?.Value?.ToString()?.Split(' ').First();
             string? serverName = row.Cells["Server"].Value.ToString();
@@ -1935,11 +1941,13 @@ namespace DAoCToolSuite.ChimpTool
 
                     SearchProgressBar.Value += 1;
                     ServerCluster server = ServerCluster.Ywain;
-                    var serverName = Servers.Where(x => x.Index == value).FirstOrDefault()?.Name;
+                    string? serverName = Servers.Where(x => x.Index == value).FirstOrDefault()?.Name;
                     if (serverName is not null)
                     {
                         if (serverName.Contains("Ywain", StringComparison.OrdinalIgnoreCase))
+                        {
                             serverName = "Ywain";
+                        }
 
                         if (!Enum.TryParse(serverName, out server))
                         {
@@ -2090,16 +2098,16 @@ namespace DAoCToolSuite.ChimpTool
             }
             MoveAccountForm form = new(webID, account) { Owner = this, StartPosition = FormStartPosition.Manual };
             form.SetLocation();
-            form.ShowDialog();
+            _ = form.ShowDialog();
             LoadCharacters();
         }
         #endregion
 
         private void PerformRestoreSettings()
         {
-            var firstName = SearchGridView.SelectedRows[0].Cells["Name"].Value?.ToString()?.Split(' ').First();
-            var realm = SearchGridView.SelectedRows[0].Cells["Realm"].Value?.ToString();
-            var _class = SearchGridView.SelectedRows[0].Cells["Class"].Value?.ToString();
+            string? firstName = SearchGridView.SelectedRows[0].Cells["Name"].Value?.ToString()?.Split(' ').First();
+            string? realm = SearchGridView.SelectedRows[0].Cells["Realm"].Value?.ToString();
+            string? _class = SearchGridView.SelectedRows[0].Cells["Class"].Value?.ToString();
             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(realm) || string.IsNullOrEmpty(_class)) { return; }
             SettingsManagerForm form = new(firstName, realm, _class)
             {
@@ -2107,7 +2115,7 @@ namespace DAoCToolSuite.ChimpTool
                 StartPosition = FormStartPosition.Manual
             };
             form.SetLocation();
-            form.ShowDialog(this);
+            _ = form.ShowDialog(this);
         }
 
 

@@ -1,13 +1,5 @@
 ﻿using SQLLibrary;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -32,7 +24,7 @@ namespace DAoCToolSuite.ChimpTool
                 int offset = 0;// Owner.OwnedForms.Length * 38;  // approx. 10mm
                 Point p = new(Owner.Left + (Owner.Width / 2) - (Width / 2) + offset, Owner.Top + (Owner.Height / 2) - (Height / 2) + offset);
                 Location = p;
-            }            
+            }
         }
         private void AccountComboBox_KeyPress(object? sender, KeyPressEventArgs e)
         {
