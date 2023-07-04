@@ -1,4 +1,4 @@
-**DAoC Tool Suite v1.0.0 Release**
+**DAoC Tool Suite v1.0.1 Release**
 
 Instruction: [DAoCToolsInstructions.docx](https://github.com/Taldren76/DAoC-Tool-Suite/files/11950965/DAoCToolsInstructions.docx)
 
@@ -11,7 +11,12 @@ To Download:
 **Change Log**
 ---
 
-DAoC Tool Suite 1.0.0.0 Release Candidate 1
+DAoC Tool Suite 1.0.1 Release
+---
+Fixes:
+1. Fixed miscalculation in Average Critical Damage Done in LogTool
+
+DAoC Tool Suite 1.0.0 Release Candidate 1
 ---
 Changes:
 1. Renamed Account to ChimpPages
