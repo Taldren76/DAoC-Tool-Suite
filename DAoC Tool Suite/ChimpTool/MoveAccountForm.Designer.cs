@@ -35,12 +35,12 @@
             // 
             // AccountComboBox
             // 
-            AccountComboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             AccountComboBox.FormattingEnabled = true;
             AccountComboBox.Location = new Point(12, 27);
             AccountComboBox.Name = "AccountComboBox";
             AccountComboBox.Size = new Size(236, 23);
             AccountComboBox.TabIndex = 0;
+            AccountComboBox.KeyPress += AccountComboBox_KeyPress;
             // 
             // MoveButton
             // 
@@ -57,9 +57,9 @@
             label1.AutoSize = true;
             label1.Location = new Point(12, 9);
             label1.Name = "label1";
-            label1.Size = new Size(100, 15);
+            label1.Size = new Size(83, 15);
             label1.TabIndex = 2;
-            label1.Text = "Move to account:";
+            label1.Text = "Move to page:";
             // 
             // MoveAccountForm
             // 

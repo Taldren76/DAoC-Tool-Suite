@@ -197,7 +197,7 @@ namespace DAoCToolSuite.ChimpTool.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"{""Servers"": {""Server"": [{""Index"": 41, ""IP"": ""107.23.173.143"", ""Name"": ""YWain1"", ""Port"": 10622}, {""Index"": 49, ""IP"": ""107.23.173.143"", ""Name"": ""YWain2"", ""Port"": 10622}, {""Index"": 50, ""IP"": ""107.23.173.143"", ""Name"": ""YWain3"", ""Port"": 10622}, {""Index"": 51, ""IP"": ""107.23.173.143"", ""Name"": ""YWain4"", ""Port"": 10622}, {""Index"": 52, ""IP"": ""107.23.173.143"", ""Name"": ""YWain5"", ""Port"": 10622}, {""Index"": 53, ""IP"": ""107.23.173.143"", ""Name"": ""YWain6"", ""Port"": 10622}, {""Index"": 54, ""IP"": ""107.23.173.143"", ""Name"": ""YWain7"", ""Port"": 10622}, {""Index"": 55, ""IP"": ""107.23.173.143"", ""Name"": ""YWain8"", ""Port"": 10622}, {""Index"": 56, ""IP"": ""107.23.173.143"", ""Name"": ""YWain9"", ""Port"": 10622}, {""Index"": 57, ""IP"": ""107.23.173.143"", ""Name"": ""YWain10"", ""Port"": 10622}]}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"{""Servers"": {""Server"": [{""Index"": 23, ""IP"": ""107.21.60.95"", ""Name"": ""Gaheris"", ""Port"": 10622}, {""Index"": 41, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain1"", ""Port"": 10622}, {""Index"": 49, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain2"", ""Port"": 10622}, {""Index"": 50, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain3"", ""Port"": 10622}, {""Index"": 51, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain4"", ""Port"": 10622}, {""Index"": 52, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain5"", ""Port"": 10622}, {""Index"": 53, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain6"", ""Port"": 10622}, {""Index"": 54, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain7"", ""Port"": 10622}, {""Index"": 55, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain8"", ""Port"": 10622}, {""Index"": 56, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain9"", ""Port"": 10622}, {""Index"": 57, ""IP"": ""107.23.173.143"", ""Name"": ""Ywain10"", ""Port"": 10622}]}}")]
         public string ServerList {
             get {
                 return ((string)(this["ServerList"]));
@@ -216,6 +216,30 @@ namespace DAoCToolSuite.ChimpTool.Properties {
             }
             set {
                 this["RealmClasses"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Ywain")]
+        public string CharacterLeftClick {
+            get {
+                return ((string)(this["CharacterLeftClick"]));
+            }
+            set {
+                this["CharacterLeftClick"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Gaheris")]
+        public string CharacterShiftLeftClick {
+            get {
+                return ((string)(this["CharacterShiftLeftClick"]));
+            }
+            set {
+                this["CharacterShiftLeftClick"] = value;
             }
         }
     }

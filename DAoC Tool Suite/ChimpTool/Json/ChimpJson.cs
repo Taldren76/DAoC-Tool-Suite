@@ -126,6 +126,7 @@ namespace DAoCToolSuite.ChimpTool.Json
             Servers = new List<string>()
             {
                 "Ywain1","Ywain2","Ywain3","Ywain4","Ywain5","Ywain6","Ywain7","Ywain8","Ywain9","Ywain10",
+                "YWain1","YWain2","YWain3","YWain4","YWain5","YWain6","YWain7","YWain8","YWain9","YWain10",
                 "Pendragon",
                 "Gaheris", "Tintagel"
             };
@@ -142,32 +143,32 @@ namespace DAoCToolSuite.ChimpTool.Json
             bool result = true;
             if (string.IsNullOrEmpty(WebID))
             {
-                Logger.Debug($"Invalid WebID: {WebID}");
+                Logger.Debug($"Invalid WebID.");
                 result &= false;
             }
             if (string.IsNullOrEmpty(Name))
             {
-                Logger.Debug($"Invalid Name: {Name}");
+                Logger.Debug($"Invalid Name.");
                 result &= false;
             }
             if (string.IsNullOrEmpty(Realm) || !Realms.Contains(Realm))
             {
-                Logger.Debug($"Invalid Realm: {Realm}");
+                Logger.Debug($"Invalid Realm: {Realm ?? "null"} WebID: {WebID??"null"} Name: {Name ?? "null"}");
                 result &= false;
             }
             if (string.IsNullOrEmpty(Race) || !Races.Contains(Race))
             {
-                Logger.Debug($"Invalid Race: {Race}");
+                Logger.Debug($"Invalid Race: {Race ?? "null"} WebID: {WebID ?? "null"} Name: {Name ?? "null"}");
                 result &= false;
             }
             if (string.IsNullOrEmpty(Class) || !Classes.Contains(Class))
             {
-                Logger.Debug($"Invalid Class: {Class}");
+                Logger.Debug($"Invalid Class: {Class ?? "null"} WebID: {WebID ?? "null"} Name: {Name ?? "null"}");
                 result &= false;
             }
             if (string.IsNullOrEmpty(Server) || !Servers.Contains(Server))
             {
-                Logger.Debug($"Invalid Server: {Server}");
+                Logger.Debug($"Invalid Server: {Server ?? "null"} WebID: {WebID ?? "null"} Name: {Name ?? "null"}");
                 result &= false;
             }
             return result;

@@ -751,22 +751,22 @@ namespace DAoCToolSuite.CharacterTool
             // RestoreDBButton
             // 
             RestoreDBButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            RestoreDBButton.Location = new Point(87, 300);
+            RestoreDBButton.Location = new Point(85, 300);
             RestoreDBButton.Name = "RestoreDBButton";
-            RestoreDBButton.Size = new Size(75, 23);
+            RestoreDBButton.Size = new Size(80, 23);
             RestoreDBButton.TabIndex = 31;
-            RestoreDBButton.Text = "Restore DB";
+            RestoreDBButton.Text = "Import Json";
             RestoreDBButton.UseVisualStyleBackColor = true;
             RestoreDBButton.Click += RestoreDBButton_Click;
             // 
             // BackupDBButton
             // 
             BackupDBButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            BackupDBButton.Location = new Point(6, 300);
+            BackupDBButton.Location = new Point(2, 300);
             BackupDBButton.Name = "BackupDBButton";
-            BackupDBButton.Size = new Size(75, 23);
+            BackupDBButton.Size = new Size(80, 23);
             BackupDBButton.TabIndex = 30;
-            BackupDBButton.Text = "Backup DB";
+            BackupDBButton.Text = "Export Json";
             BackupDBButton.UseVisualStyleBackColor = true;
             BackupDBButton.Click += BackupDBButton_Click;
             // 
@@ -797,7 +797,7 @@ namespace DAoCToolSuite.CharacterTool
             panel3.Size = new Size(762, 259);
             panel3.TabIndex = 27;
             // 
-            // restoreDataGridView
+            // RestoreDataGridView
             // 
             RestoreDataGridView.AllowUserToAddRows = false;
             RestoreDataGridView.AllowUserToDeleteRows = false;
@@ -828,7 +828,7 @@ namespace DAoCToolSuite.CharacterTool
             RestoreDataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             RestoreDataGridView.Location = new Point(0, 0);
             RestoreDataGridView.Margin = new Padding(4, 3, 4, 3);
-            RestoreDataGridView.Name = "restoreDataGridView";
+            RestoreDataGridView.Name = "RestoreDataGridView";
             RestoreDataGridView.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = SystemColors.Control;

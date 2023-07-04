@@ -1089,13 +1089,31 @@ namespace DAoCToolSuite.CharacterTool
         }
         private static void WriteDBBackup(string json)
         {
+            string fileName;
+            SaveFileDialog saveFileDialog = new()
+            {
+                InitialDirectory = Path.GetDirectoryName(JsonBackupFileFullPath),
+                //FileName = Path.GetFileName(JsonBackupFileFullPath),
+                Filter = "json (*.json)|*.json|All files (*.*)|*.*"
+            };
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileName = saveFileDialog.FileName;
+            }
+            else
+            {
+                return;
+            }
+
             lock (jsonLock)
             {
                 try
                 {
-                    File.WriteAllText(JsonBackupFileFullPath, json);
+                    Logger.Debug($"Writting backup to {fileName}");
+                    JsonBackupFileFullPath = fileName;
+                    File.WriteAllText(fileName, json);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Logger.Error(ex);
                 }
@@ -1115,14 +1133,29 @@ namespace DAoCToolSuite.CharacterTool
 
         private static string ReadDBBackupJson()
         {
+            string fileName;
+            OpenFileDialog openFileDialog = new()
+            {
+                InitialDirectory = Path.GetDirectoryName(JsonBackupFileFullPath),
+                Filter = "json (*.json)|*.json|All files (*.*)|*.*"
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileName = openFileDialog.FileName;
+            }
+            else
+            {
+                return "";
+            }
+
             lock (jsonLock)
             {
                 try
                 {
-                    string json = File.ReadAllText(JsonBackupFileFullPath);
+                    string json = File.ReadAllText(fileName);
                     return json;
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Logger.Error(ex);
                     return "{}";

@@ -12,6 +12,7 @@ using SQLLibrary.Enums;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace DAoCToolSuite.ChimpTool
 {
@@ -60,6 +61,44 @@ namespace DAoCToolSuite.ChimpTool
         private static System.Windows.Forms.ToolTip MouseOverTooltip { get; set; } = new();
         private static List<AccountModel> Accounts { get; set; } = new List<AccountModel>();
         private static List<GuildModel> Guilds { get; set; } = new List<GuildModel>();
+
+        #region ServerList
+        private static List<Server>? _Servers = null;
+        private static List<Server> Servers
+        {
+            get
+            {
+                if (_Servers is null)
+                    _Servers = GetServerList();
+                return _Servers;
+            }
+        }
+        private static List<Server> GetServerList()
+        {
+            string json = Properties.Settings.Default.ServerList;
+            if (string.IsNullOrEmpty(json) || json.Equals("{}"))
+            {
+                Logger.Error("ServerList is invalid.");
+                return new();
+            }
+
+            ServerListINI SLI = JsonConvert.DeserializeObject<ServerListINI>(json) ?? new ServerListINI();
+            if (SLI is null)
+            {
+                Logger.Error("Deserialization of ServerListINI from json is invalid.");
+                return new();
+            }
+
+            Servers? servers = SLI.Servers;
+
+            List<Server>? serversList = servers?.Server;
+
+            if (serversList is null)
+                return new();
+
+            return serversList;
+        }
+        #endregion
 
         #region DataGridView Data
         private static List<CharacterModel> Characters { get; set; } = new List<CharacterModel>();
@@ -1153,7 +1192,7 @@ namespace DAoCToolSuite.ChimpTool
             RemoveButton.Enabled = true;
 
         }
-        private void AddCharacter(string name)
+        private void AddCharacter(string name, ServerCluster server = ServerCluster.Ywain)
         {
             WaitCursor.Push();
             try
@@ -1161,11 +1200,17 @@ namespace DAoCToolSuite.ChimpTool
                 ChimpJson chimp = new();
                 if (UseAPI)
                 {
-                    chimp = CamelotHeraldAPI.GetChimp(name, ServerCluster.Ywain);
+                    Logger.Debug($"Searching for character {name} on {server}.");
+                    chimp = CamelotHeraldAPI.GetChimp(name, server);
                 }
                 if (chimp.IsValid())
                 {
+                    Logger.Debug($"Character found. Adding to database.");
                     SqliteDataAccess.AddCharacter(chimp.ConvertToCharacterModel(), DateTime.Now, AccountComboBox.Text);
+                }
+                else
+                {
+                    Logger.Debug($"Could not find a character {name} on {server}");
                 }
             }
             catch (Exception ex)
@@ -1174,10 +1219,10 @@ namespace DAoCToolSuite.ChimpTool
             }
             WaitCursor.Pop();
         }
-        private void AddNewCharacter()
+        private void AddNewCharacter(ServerCluster server = ServerCluster.Ywain)
         {
             WaitCursor.Push();
-            Logger.Debug("Search button clicked.");
+            Logger.Debug($"Searching for character {SearchComboBox.Text} on {server}");
             try
             {
                 if (SearchComboBox.Text != "")
@@ -1187,7 +1232,7 @@ namespace DAoCToolSuite.ChimpTool
                     ChimpJson chimp = new();
                     if (UseAPI)
                     {
-                        chimp = CamelotHeraldAPI.GetChimp(name, ServerCluster.Ywain);
+                        chimp = CamelotHeraldAPI.GetChimp(name, server);
                     }
 
                     if (!chimp.IsValid() && UseSelenium)
@@ -1200,7 +1245,7 @@ namespace DAoCToolSuite.ChimpTool
 
                         try
                         {
-                            chimp = CamelotHerald.GetChimp(name, ServerCluster.Ywain, 3);
+                            chimp = CamelotHerald.GetChimp(name, server, 3);
                         }
                         catch (System.Exception ex)
                         {
@@ -1210,14 +1255,14 @@ namespace DAoCToolSuite.ChimpTool
 
                     if (!chimp.IsValid())
                     {
-                        _ = MessageBox.Show($"Could not find a character named \"{name}\"\non server cluster \"{ServerCluster.Ywain}\".", "Character Not Found", MessageBoxButtons.OK);
-                        Logger.Debug($"Could not find a character named {name} on server {ServerCluster.Ywain}.");
+                        _ = MessageBox.Show($"Could not find a character named \"{name}\"\non server cluster \"{server}\".", "Character Not Found", MessageBoxButtons.OK);
+                        Logger.Debug($"Could not find a character named {name} on server {server}.");
                         Logger.Debug($"Returned result: {chimp}");
                     }
                     else
                     {
                         SqliteDataAccess.AddCharacter(chimp.ConvertToCharacterModel(), DateTime.Now, AccountComboBox.Text);
-                        Logger.Debug($"Successfully added {chimp.Name} to the repository.");
+                        Logger.Debug($"Successfully added {chimp.Name} to the database.");
                         LoadCharacters();
                         CalculateRPTotals();
                     }
@@ -1233,8 +1278,23 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void SearchButton_Click(object sender, EventArgs e)
         {
+            Logger.Debug("Search button clicked.");
             SearchButton.Enabled = false;
-            AddNewCharacter();
+            if (ModifierKeys.HasFlag(Keys.Shift))
+            {
+                Logger.Debug("Shift key detected.");
+                if (Properties.Settings.Default.CharacterShiftLeftClick.Equals("Gaheris"))
+                    AddNewCharacter(ServerCluster.Gaheris);
+                else
+                    AddNewCharacter(ServerCluster.Ywain);
+            }
+            else
+            {
+                if (Properties.Settings.Default.CharacterLeftClick.Equals("Ywain"))
+                    AddNewCharacter(ServerCluster.Ywain);
+                else
+                    AddNewCharacter(ServerCluster.Gaheris);
+            }
             SearchButton.Enabled = true;
         }
         private void SearchComboBox_CheckEnterKeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
@@ -1278,7 +1338,6 @@ namespace DAoCToolSuite.ChimpTool
         {
             AddAccountButton.Enabled = false;
             AddAccount();
-            AddAccountButton.Enabled = true;
         }
         private void AccountComboBox_CheckEnterKeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
@@ -1293,6 +1352,7 @@ namespace DAoCToolSuite.ChimpTool
             int index = AccountComboBoxIndex;
             if (index < 1)
             {
+                DeleteAccountButton.Enabled = true;
                 return;
             }
 
@@ -1307,7 +1367,7 @@ namespace DAoCToolSuite.ChimpTool
                 LoadCharacters();
                 CalculateRPTotals();
             }
-
+            DeleteAccountButton.Enabled = true;
         }
         private void AccountComboBox_TextChanged(object sender, EventArgs e)
         {
@@ -1461,26 +1521,26 @@ namespace DAoCToolSuite.ChimpTool
                 _ => 3,
             };
 
-            string json = Properties.Settings.Default.ServerList;
-            if (string.IsNullOrEmpty(json) || json.Equals("{}"))
-            {
-                Logger.Error("ServerList is invalid.");
-                LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
-                launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
-                return;
-            }
+            //string json = Properties.Settings.Default.ServerList;
+            //if (string.IsNullOrEmpty(json) || json.Equals("{}"))
+            //{
+            //    Logger.Error("ServerList is invalid.");
+            //    LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+            //    launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+            //    return;
+            //}
 
-            ServerListINI SLI = JsonConvert.DeserializeObject<ServerListINI>(json) ?? new ServerListINI();
-            if (SLI is null)
-            {
-                Logger.Error("Deserialization of ServerListINI from json is invalid.");
-                LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
-                launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
-                return;
-            }
-            Servers? servers = SLI.Servers;
-            List<Server>? serversList = servers?.Server;
-            Server? server = serversList?.Where(x => x is not null && x.Name is not null && x.Name.ToLower().Equals(serverName?.ToLower())).FirstOrDefault();
+            //ServerListINI SLI = JsonConvert.DeserializeObject<ServerListINI>(json) ?? new ServerListINI();
+            //if (SLI is null)
+            //{
+            //    Logger.Error("Deserialization of ServerListINI from json is invalid.");
+            //    LaunchButton.Enabled = LaunchedCharacters.Count <= 2;
+            //    launchToolStripMenuItem.Enabled = LaunchedCharacters.Count <= 2;
+            //    return;
+            //}
+            //Servers? servers = SLI.Servers;
+            //List<Server>? serversList = servers?.Server;
+            Server? server = Servers?.Where(x => x is not null && x.Name is not null && x.Name.ToLower().Equals(serverName?.ToLower())).FirstOrDefault();
             if (server is null)
             {
                 Logger.Error($"Could not find Server {server} in the ServerList");
@@ -1739,7 +1799,7 @@ namespace DAoCToolSuite.ChimpTool
         }
         private void ImportJsonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            restoreToolStripMenuItem.Enabled = false;
+            importJsonToolStripMenuItem.Enabled = false;
             WaitCursor.Push();
             Logger.Debug("Restore MenuItem has been pressed.");
             try
@@ -1753,12 +1813,12 @@ namespace DAoCToolSuite.ChimpTool
             finally
             {
                 WaitCursor.Pop();
-                restoreToolStripMenuItem.Enabled = true;
+                importJsonToolStripMenuItem.Enabled = true;
             }
         }
         private void ExportJsonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            backupToolStripMenuItem.Enabled = false;
+            exportJsonToolStripMenuItem.Enabled = false;
             WaitCursor.Push();
             Logger.Debug("Backup MenuItem has been pressed.");
             try
@@ -1773,9 +1833,9 @@ namespace DAoCToolSuite.ChimpTool
             }
             finally
             {
-                restoreToolStripMenuItem.Enabled = File.Exists(BackupRepositoryFullPath);
+                importJsonToolStripMenuItem.Enabled = File.Exists(BackupRepositoryFullPath);
                 WaitCursor.Pop();
-                backupToolStripMenuItem.Enabled = true;
+                exportJsonToolStripMenuItem.Enabled = true;
             }
         }
         private void LaunchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1796,9 +1856,15 @@ namespace DAoCToolSuite.ChimpTool
             form.SetLocation();
             _ = form.ShowDialog();
         }
-        private void EditToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void ConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            ConfigurationForm form = new()
+            {
+                Owner = this,
+                StartPosition = FormStartPosition.Manual
+            };
+            form.SetLocation();
+            form.ShowDialog();
         }
         private void AssociateAHKToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1864,8 +1930,29 @@ namespace DAoCToolSuite.ChimpTool
             {
                 foreach (KeyValuePair<string, int> character in CharacterList)
                 {
+                    string key = character.Key.Split('(').First().Trim();
+                    int value = character.Value;
+
                     SearchProgressBar.Value += 1;
-                    AddCharacter(character.Key);
+                    ServerCluster server = ServerCluster.Ywain;
+                    var serverName = Servers.Where(x => x.Index == value).FirstOrDefault()?.Name;
+                    if (serverName is not null)
+                    {
+                        if (serverName.Contains("Ywain", StringComparison.OrdinalIgnoreCase))
+                            serverName = "Ywain";
+
+                        if (!Enum.TryParse(serverName, out server))
+                        {
+                            Logger.Warn($"Unknown server {server} with index {value}.");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        Logger.Debug($"Could not determine server cluster for server index {value}.");
+                        continue;
+                    }
+                    AddCharacter(key, server);
                 }
             }
             catch (Exception ex)
@@ -1894,6 +1981,13 @@ namespace DAoCToolSuite.ChimpTool
             _ = form.ShowDialog();
             LoadAccounts();
         }
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Logger.Debug("Restore Settings ToolStrip Context MenuItem Clicked");
+            settingsToolStripMenuItem.Enabled = false;
+            PerformRestoreSettings();
+            settingsToolStripMenuItem.Enabled = true;
+        }
         #endregion
 
         #region Right Click Menu
@@ -1904,7 +1998,6 @@ namespace DAoCToolSuite.ChimpTool
             launchToolStripMenuItem1.Enabled = false;
             PerformLaunch();
         }
-
         private void RC_RefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (sender is not ToolStripMenuItem menuItem)
@@ -1923,7 +2016,6 @@ namespace DAoCToolSuite.ChimpTool
             PerformRefresh();
             menuItem.Enabled = true;
         }
-
         private void RC_DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             deleteToolStripMenuItem.Enabled = false;
@@ -1970,7 +2062,6 @@ namespace DAoCToolSuite.ChimpTool
 
             deleteToolStripMenuItem.Enabled = true;
         }
-
         private void RC_AssociateAHKToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AHKForm form = new(SearchGridView.SelectedRows[0], AccountComboBox.Text)
@@ -1980,6 +2071,27 @@ namespace DAoCToolSuite.ChimpTool
             };
             form.SetLocation();
             _ = form.ShowDialog();
+        }
+        private void SettingsRestoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Logger.Debug("Restore Settings ToolStrip MenuItem Clicked");
+            settingsRestoreToolStripMenuItem.Enabled = false;
+            PerformRestoreSettings();
+            settingsRestoreToolStripMenuItem.Enabled = true;
+        }
+        private void MoveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow row = SearchGridView.SelectedRows[0];
+            string? webID = row.Cells["WebID"].Value.ToString();
+            string? account = AccountComboBox.Text.ToString();
+            if (string.IsNullOrEmpty(webID) || string.IsNullOrEmpty(account))
+            {
+                return;
+            }
+            MoveAccountForm form = new(webID, account) { Owner = this, StartPosition = FormStartPosition.Manual };
+            form.SetLocation();
+            form.ShowDialog();
+            LoadCharacters();
         }
         #endregion
 
@@ -1997,34 +2109,8 @@ namespace DAoCToolSuite.ChimpTool
             form.SetLocation();
             form.ShowDialog(this);
         }
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Logger.Debug("Restore Settings ToolStrip Context MenuItem Clicked");
-            settingsToolStripMenuItem.Enabled = false;
-            PerformRestoreSettings();
-            settingsToolStripMenuItem.Enabled = true;
-        }
-        private void settingsRestoreToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Logger.Debug("Restore Settings ToolStrip MenuItem Clicked");
-            settingsRestoreToolStripMenuItem.Enabled = false;
-            PerformRestoreSettings();
-            settingsRestoreToolStripMenuItem.Enabled = true;
-        }
 
-        private void moveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DataGridViewRow row = SearchGridView.SelectedRows[0];
-            string? webID = row.Cells["WebID"].Value.ToString();
-            string? account = AccountComboBox.Text.ToString();
-            if (string.IsNullOrEmpty(webID) || string.IsNullOrEmpty(account))
-            {
-                return;
-            }
-            MoveAccountForm form = new(webID, account) { Owner = this, StartPosition = FormStartPosition.Manual };
-            form.SetLocation();
-            form.ShowDialog();
-            LoadCharacters();
-        }
+
+
     }
 }

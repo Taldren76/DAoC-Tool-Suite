@@ -92,8 +92,6 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 DebuggerAddress = "127.0.0.1:9222",
                 AcceptInsecureCertificates = true
             };
-            //options.AddArgument("--remote-debugging-port=9222");
-            //options.AddArgument("--ignore-certificate-errors");
             options.AddArgument("--headless");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
@@ -110,7 +108,7 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 Logger.Debug($"Navigating to {url}");
                 driver.Navigate().GoToUrl(new Uri(url));
                 Logger.Debug($"Navigation complete. Url={driver.Url}");
-                IWebElement? characterNameLink = null; // driver.GetIfExists(By.XPath("//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a"));
+                IWebElement? characterNameLink = null; 
 
                 if (driver.GetIfExists(By.XPath("//*[@id='main-group-inner']/div[2]/div[2]/div/table/tbody/tr[2]/td[2]/a"), secondsToTry * 1000, 100) is null) //Delays until a result exists in the table;
                 {
@@ -159,8 +157,6 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 DebuggerAddress = "127.0.0.1:9222",
                 AcceptInsecureCertificates = true
             };
-            //options.AddArgument("--remote-debugging-port=9222");
-            //options.AddArgument("--ignore-certificate-errors");
             options.AddArgument("--headless");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");
@@ -203,8 +199,6 @@ namespace DAoCToolSuite.ChimpTool.Selenium
                 DebuggerAddress = "127.0.0.1:9222",
                 AcceptInsecureCertificates = true
             };
-            //options.AddArgument("--remote-debugging-port=9222");
-            //options.AddArgument("--ignore-certificate-errors");
             options.AddArgument("--headless");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--no-sandbox");

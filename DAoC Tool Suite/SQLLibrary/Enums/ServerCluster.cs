@@ -3,6 +3,8 @@
     public enum ServerCluster
     {
         Ywain,
-        Pendragon
+        Pendragon,
+        Gaheris,
+        Tintagel
     }
 }

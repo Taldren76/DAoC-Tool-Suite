@@ -45,10 +45,16 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ServerList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">{"Servers": {"Server": [{"Index": 41, "IP": "107.23.173.143", "Name": "YWain1", "Port": 10622}, {"Index": 49, "IP": "107.23.173.143", "Name": "YWain2", "Port": 10622}, {"Index": 50, "IP": "107.23.173.143", "Name": "YWain3", "Port": 10622}, {"Index": 51, "IP": "107.23.173.143", "Name": "YWain4", "Port": 10622}, {"Index": 52, "IP": "107.23.173.143", "Name": "YWain5", "Port": 10622}, {"Index": 53, "IP": "107.23.173.143", "Name": "YWain6", "Port": 10622}, {"Index": 54, "IP": "107.23.173.143", "Name": "YWain7", "Port": 10622}, {"Index": 55, "IP": "107.23.173.143", "Name": "YWain8", "Port": 10622}, {"Index": 56, "IP": "107.23.173.143", "Name": "YWain9", "Port": 10622}, {"Index": 57, "IP": "107.23.173.143", "Name": "YWain10", "Port": 10622}]}}</Value>
+      <Value Profile="(Default)">{"Servers": {"Server": [{"Index": 23, "IP": "107.21.60.95", "Name": "Gaheris", "Port": 10622}, {"Index": 41, "IP": "107.23.173.143", "Name": "Ywain1", "Port": 10622}, {"Index": 49, "IP": "107.23.173.143", "Name": "Ywain2", "Port": 10622}, {"Index": 50, "IP": "107.23.173.143", "Name": "Ywain3", "Port": 10622}, {"Index": 51, "IP": "107.23.173.143", "Name": "Ywain4", "Port": 10622}, {"Index": 52, "IP": "107.23.173.143", "Name": "Ywain5", "Port": 10622}, {"Index": 53, "IP": "107.23.173.143", "Name": "Ywain6", "Port": 10622}, {"Index": 54, "IP": "107.23.173.143", "Name": "Ywain7", "Port": 10622}, {"Index": 55, "IP": "107.23.173.143", "Name": "Ywain8", "Port": 10622}, {"Index": 56, "IP": "107.23.173.143", "Name": "Ywain9", "Port": 10622}, {"Index": 57, "IP": "107.23.173.143", "Name": "Ywain10", "Port": 10622}]}}</Value>
     </Setting>
     <Setting Name="RealmClasses" Type="System.String" Scope="User">
       <Value Profile="(Default)">{"Realm": {"Albion": "Armsman,Armswoman,Cabalist,Cleric,Friar,Heretic,Infiltrator,Mauler,Mercenary,Minstrel,Necromancer,Paladin,Reaver,Scout,Sorcerer,Sorceress,Theurgist,Wizard", "Hibernia": "Animist,Bainshee,Bard,Blademaster,Champion,Druid,Eldritch,Enchanter,Enchantress,Hero,Mauler,Mentalist,Nightshade,Ranger,Valewalker,Vampiir,Warden", "Midgard": "Berserker,Bonedancer,Healer,Hunter,Huntress,Mauler,Runemaster,Savage,Shadowblade,Shaman,Skald,Spiritmaster,Thane,Valkyrie,Warlock,Warrior"}}</Value>
+    </Setting>
+    <Setting Name="CharacterLeftClick" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Ywain</Value>
+    </Setting>
+    <Setting Name="CharacterShiftLeftClick" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Gaheris</Value>
     </Setting>
   </Settings>
 </SettingsFile>

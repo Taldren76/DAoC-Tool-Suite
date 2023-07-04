@@ -15,6 +15,60 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
         private const string searchBase = "https://api.camelotherald.com/character/search";
         private const string infoBase = "https://api.camelotherald.com/character/info";
         private const string infoBaseWorkAround = "http://api.camelotherald.com/character/info";
+
+        #region RealmRanks
+        private static Dictionary<int, double>? _RealmRanks = null;
+        public static Dictionary<int, double> RealmRanks
+        {
+            get
+            {
+                _RealmRanks ??= GetRealmRanks();
+                return _RealmRanks;
+            }
+
+        }
+
+        private static Dictionary<int,double> GetRealmRanks()
+        {
+            Dictionary<int, double> realmRanks = new();
+            for (int rr = 0; rr < 100; rr++)
+            {
+                realmRanks.Add(rr + 11, ((50 * Math.Pow(rr, 3)) + (75 * Math.Pow(rr, 2)) + (25 * rr)) / 6);
+            }
+            realmRanks.Add(111, 9111713);
+            realmRanks.Add(112, 10114001);
+            realmRanks.Add(113, 11226541);
+            realmRanks.Add(114, 12461460);
+            realmRanks.Add(115, 13832221);
+            realmRanks.Add(116, 15353765);
+            realmRanks.Add(117, 17042680);
+            realmRanks.Add(118, 18917374);
+            realmRanks.Add(119, 20998286);
+            realmRanks.Add(120, 23308097);
+            realmRanks.Add(121, 25871988);
+            realmRanks.Add(122, 28717906);
+            realmRanks.Add(123, 31876876);
+            realmRanks.Add(124, 35383333);
+            realmRanks.Add(125, 39275499);
+            realmRanks.Add(126, 43595804);
+            realmRanks.Add(127, 48391343);
+            realmRanks.Add(128, 53714390);
+            realmRanks.Add(129, 59622973);
+            realmRanks.Add(130, 66181501);
+            realmRanks.Add(131, 73461466);
+            realmRanks.Add(132, 81542227);
+            realmRanks.Add(133, 90511872);
+            realmRanks.Add(134, 100468178);
+            realmRanks.Add(135, 111519678);
+            realmRanks.Add(136, 123786843);
+            realmRanks.Add(137, 137403395);
+            realmRanks.Add(138, 152517769);
+            realmRanks.Add(139, 169294723);
+            realmRanks.Add(140, 187917143);
+            return realmRanks;
+        }
+        #endregion
+
         public static CharacterInfoResult CharacterInfo(string webID)
         {
             if (webID == null)
@@ -226,7 +280,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                         Race = result?.Race,
                         Class = result?.ClassName,
                         Server = result?.ServerName,
-                        Realm = new List<string>() { "Albion", "Midgard", "Hibernia", "NewJersey" }[realm],
+                        Realm = new List<string>() { "Albion", "Midgard", "Hibernia" }[realm],
 
                         MasterLevel_Level = result?.MasterLevel?.Level.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
                         MasterLevel_Name = result?.MasterLevel?.Path ?? "",
@@ -259,8 +313,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                         Midgard_Deaths = result?.RealmWarStats?.Current?.PlayerKills?.Midgard?.Deaths.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
                         TotalRealmPoints = rps.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
                         IRS = irs.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
-
-                        RealmRank = CalculateRealmRank(rps).ToString("0.0").Replace('.', 'L')
+                        RealmRank = CalculateRealmRank(rps).ToString().Insert(CalculateRealmRank(rps).ToString().Length - 1, "L")
                     };
                     return chimp;
                 }
@@ -336,7 +389,7 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
                             Race = infoResult?.Race,
                             Class = infoResult?.ClassName,
                             Server = infoResult?.ServerName,
-                            Realm = new List<string>() { "Albion", "Midgard", "Hibernia", "NewJersey" }[realm],
+                            Realm = new List<string>() { "Albion", "Midgard", "Hibernia" }[realm],
 
                             MasterLevel_Level = infoResult?.MasterLevel?.Level.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) ?? "0",
                             MasterLevel_Name = infoResult?.MasterLevel?.Path ?? "",
@@ -392,56 +445,19 @@ namespace DAoCToolSuite.ChimpTool.HeraldAPI
             progressBar.Refresh();
             return results;
         }
-        public static double CalculateRealmRank(int realmPoints)
+        public static int CalculateRealmRank(int realmPoints)
         {
-            Dictionary<int, double> realmRanks = new();
-            for (int rr = 0; rr < 100; rr++)
-            {
-                realmRanks.Add(rr + 11, ((50 * Math.Pow(rr, 3)) + (75 * Math.Pow(rr, 2)) + (25 * rr)) / 6);
-            }
-            realmRanks.Add(111, 9111713);
-            realmRanks.Add(112, 10114001);
-            realmRanks.Add(113, 11226541);
-            realmRanks.Add(114, 12461460);
-            realmRanks.Add(115, 13832221);
-            realmRanks.Add(116, 15353765);
-            realmRanks.Add(117, 17042680);
-            realmRanks.Add(118, 18917374);
-            realmRanks.Add(119, 20998286);
-            realmRanks.Add(120, 23308097);
-            realmRanks.Add(121, 25871988);
-            realmRanks.Add(122, 28717906);
-            realmRanks.Add(123, 31876876);
-            realmRanks.Add(124, 35383333);
-            realmRanks.Add(125, 39275499);
-            realmRanks.Add(126, 43595804);
-            realmRanks.Add(127, 48391343);
-            realmRanks.Add(128, 53714390);
-            realmRanks.Add(129, 59622973);
-            realmRanks.Add(130, 66181501);
-            realmRanks.Add(131, 73461466);
-            realmRanks.Add(132, 81542227);
-            realmRanks.Add(133, 90511872);
-            realmRanks.Add(134, 100468178);
-            realmRanks.Add(135, 111519678);
-            realmRanks.Add(136, 123786843);
-            realmRanks.Add(137, 137403395);
-            realmRanks.Add(138, 152517769);
-            realmRanks.Add(139, 169294723);
-            realmRanks.Add(140, 187917143);
-
             try
             {
-                IEnumerable<KeyValuePair<int, double>> test = realmRanks.Where(x => x.Value <= realmPoints);
-                double test2 = test.Select(x => x.Key).Last() / 10.0;
-                return test2;
+                IEnumerable<KeyValuePair<int, double>> test = RealmRanks.Where(x => x.Value <= realmPoints);
+                int realmRank = test.Select(x => x.Key).Last();
+                return realmRank;
             }
             catch (System.Exception ex)
             {
                 Logger.Error(ex);
-                return -1.0;
+                return -1;
             }
-
         }
     }
 }
