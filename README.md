@@ -1,7 +1,9 @@
-DAoC Tool Suite 0.9.9.0 Release Candidate 3
+DAoC Tool Suite 1.0.0.0 Release Candidate 1
 ---
 Changes:
 1. Renamed Account to ChimpPages
+2. Added Settings Configuration Form.
+3. Added the ability to add and launch Gaheris characters.
 
 Fixes:
 1. Will no longer crash if you attempt to associate an ahk with no character selected.
