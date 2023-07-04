@@ -111,7 +111,7 @@ namespace DAoCToolSuite.LogTool
         private int TotalNonCriticalMeleeDamageDone => MeleeDamageDone + (PlayersOnlyFilter ? 0 : NonPlayerMeleeDamageDone);
         private int TotalCriticalMeleeDamageDone => MeleeCriticalDamageDone + (PlayersOnlyFilter ? 0 : NonPlayerMeleeCriticalDamageDone);
         public int AverageMeleeDamageDone => TotalNonCriticalMeleeDamageDone / (MeleeHits == 0 ? 1 : MeleeHits);
-        public int AverageCriticalMeleeDamageDone => TotalNonCriticalMeleeDamageDone / (MeleeCritHits == 0 ? 1 : MeleeCritHits);
+        public int AverageCriticalMeleeDamageDone => TotalCriticalMeleeDamageDone / (MeleeCritHits == 0 ? 1 : MeleeCritHits);
         private int TotalMeleeAttacks => Bladeturned + TotalMeleeEvaded + TotalMeleeParried + TotalMeleeBlocked + MeleeMisses + TotalMeleeHits;
         public double MeleeCritRate => MeleeCritHits / (double)(TotalMeleeHits == 0 ? 1 : TotalMeleeHits);
         public int TotalMeleeDamageDone => TotalNonCriticalMeleeDamageDone + TotalCriticalMeleeDamageDone;
