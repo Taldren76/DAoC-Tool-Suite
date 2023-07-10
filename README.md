@@ -2,10 +2,6 @@
 
 Instructions: [DAoCToolsInstructions.docx](https://github.com/Taldren76/DAoC-Tool-Suite/files/11950965/DAoCToolsInstructions.docx)
 
-For questions, support, and/or feedback:
-  1. Join Hammered Gaming Discord: https://discord.gg/eDfNYC43mt
-  2. Navigate to the #daoc-tool-suite channel under the DAOC channel category.
-
 **Change Log**
 ---
 
