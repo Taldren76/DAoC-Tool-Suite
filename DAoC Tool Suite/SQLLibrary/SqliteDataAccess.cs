@@ -636,8 +636,9 @@ namespace SQLLibrary
 
         public static void UpdateEntryByIndex(int index, SettingsBackUpModel settingsBackUpModel)
         {
+            string date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             string tableName = "SettingsBackup";
-            string updateBackupQuery = $"UPDATE [{tableName}] SET [Realm] = '{settingsBackUpModel.Realm}', [Class] = '{settingsBackUpModel.Class}', [Description] = '{settingsBackUpModel.Description}' WHERE [index] = {index}";
+            string updateBackupQuery = $"UPDATE [{tableName}] SET [Date] = '{date}', [Realm] = '{settingsBackUpModel.Realm}', [Class] = '{settingsBackUpModel.Class}', [Description] = '{settingsBackUpModel.Description}', [INIData] = \"{settingsBackUpModel.INIData}\", [IGNData] = \"{settingsBackUpModel.IGNData}\" WHERE [index] = {index}";
             using IDbConnection conn = new SQLiteConnection(LoadConnectionString());
             lock (thisLock)
             {

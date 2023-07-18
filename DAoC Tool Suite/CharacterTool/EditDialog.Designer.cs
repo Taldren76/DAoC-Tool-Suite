@@ -41,7 +41,11 @@
             BackUpClassComboBox = new ComboBox();
             BackUpRealmComboBox = new ComboBox();
             BackupRealmLabel = new Label();
+            UpdateButton = new Button();
+            panel1 = new Panel();
+            UpdateLabel = new Label();
             panel5.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel5
@@ -159,18 +163,50 @@
             BackupRealmLabel.TabIndex = 16;
             BackupRealmLabel.Text = "Realm:";
             // 
+            // UpdateButton
+            // 
+            UpdateButton.Location = new Point(645, 15);
+            UpdateButton.Name = "UpdateButton";
+            UpdateButton.Size = new Size(75, 23);
+            UpdateButton.TabIndex = 22;
+            UpdateButton.Text = "Update";
+            UpdateButton.UseVisualStyleBackColor = true;
+            UpdateButton.Click += UpdateButton_Click;
+            // 
+            // panel1
+            // 
+            panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(UpdateLabel);
+            panel1.Controls.Add(UpdateButton);
+            panel1.Location = new Point(12, 183);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(737, 53);
+            panel1.TabIndex = 26;
+            // 
+            // UpdateLabel
+            // 
+            UpdateLabel.AutoSize = true;
+            UpdateLabel.Location = new Point(12, 19);
+            UpdateLabel.Name = "UpdateLabel";
+            UpdateLabel.Size = new Size(298, 15);
+            UpdateLabel.TabIndex = 23;
+            UpdateLabel.Text = "Update existing entry with current INI and IGN file data.";
+            // 
             // EditDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(760, 190);
+            ClientSize = new Size(760, 248);
+            Controls.Add(panel1);
             Controls.Add(panel5);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "EditDialog";
-            Text = "EditDialog";
+            Text = "Edit Record";
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -188,5 +224,8 @@
         public ComboBox BackUpClassComboBox;
         public ComboBox BackUpRealmComboBox;
         private Label BackupRealmLabel;
+        private Button UpdateButton;
+        private Panel panel1;
+        private Label UpdateLabel;
     }
 }

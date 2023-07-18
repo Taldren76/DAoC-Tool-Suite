@@ -164,5 +164,62 @@ namespace DAoCToolSuite.CharacterTool
                 Logger.Error(ex);
             }
         }
+
+        private void UpdateButton_Click(object sender, EventArgs e)
+        {
+
+
+            try
+            {
+                SettingsBackUpModel settingsBackup = new()
+                {
+                    FirstName = SelectedRow?.Cells["FirstName"]?.Value?.ToString(),
+                    Realm = SelectedRow?.Cells["Realm"]?.Value?.ToString(),
+                    Class = SelectedRow?.Cells["Class"]?.Value?.ToString(),
+                    Path = SelectedRow?.Cells["Path"]?.Value?.ToString(),
+                    Description = SelectedRow?.Cells["Description"]?.Value?.ToString(),
+                    INIFileName = SelectedRow?.Cells["INIFileName"]?.Value?.ToString(),
+                    IGNFileName = SelectedRow?.Cells["IGNFileName"]?.Value?.ToString()
+                };
+
+                string? directoryPath = settingsBackup.Path;
+
+                if (directoryPath is not null)
+                {
+                    string? iniContents = ParseDirectory.GetFileContents(directoryPath + $"\\{settingsBackup.INIFileName}");
+                    string? ignContents = ParseDirectory.GetFileContents(directoryPath + $"\\{settingsBackup.IGNFileName}");
+
+                    if (iniContents is not null)
+                        settingsBackup.INIData = @iniContents;
+                    else
+                        settingsBackup.INIData = SelectedRow?.Cells["INIData"]?.Value?.ToString();
+
+                    if (ignContents is not null)
+                        settingsBackup.IGNData = @ignContents;
+                    else
+                        settingsBackup.IGNData = SelectedRow?.Cells["IGNData"]?.Value?.ToString();
+                }
+                else
+                {
+                    Logger.Error($"Entry for {settingsBackup.FirstName} has an invalid file path. Entry corrupted.");
+                    return;
+                }
+
+
+                string? dbIndexStr = SelectedRow?.Cells["index"]?.Value?.ToString();
+                int dbIndex = int.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
+                if (dbIndex < 0)
+                {
+                    return;
+                }
+
+                SqliteDataAccess.UpdateEntryByIndex(dbIndex, settingsBackup);
+                Close();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+        }
     }
 }

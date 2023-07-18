@@ -930,7 +930,7 @@ namespace DAoCToolSuite.CharacterTool
             MinimumSize = new Size(816, 489);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "CharacterTool v1.0.0";
+            Text = "CharacterTool v1.1.0";
             FormClosing += MainForm_FormClosing;
             DAoCDirectoryPanel.ResumeLayout(false);
             DAoCDirectoryPanel.PerformLayout();
