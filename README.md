@@ -5,6 +5,11 @@ Instructions: [DAoCToolsInstructions.docx](https://github.com/Taldren76/DAoC-Too
 **Change Log**
 ---
 
+DAoC Tool Suite 1.1.0 Release
+---
+Changes
+1. Added ability to update exiting record in Character Restore with current INI and IGN file data within the Edit Record dialog box.
+
 DAoC Tool Suite 1.0.1 Release
 ---
 Fixes:
