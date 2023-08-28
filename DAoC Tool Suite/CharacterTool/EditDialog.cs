@@ -167,10 +167,9 @@ namespace DAoCToolSuite.CharacterTool
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-
-
             try
             {
+                Logger.Debug($"Reading contents of DB for character {SelectedRow?.Cells["FirstName"]?.Value?.ToString()}");
                 SettingsBackUpModel settingsBackup = new()
                 {
                     FirstName = SelectedRow?.Cells["FirstName"]?.Value?.ToString(),
@@ -189,15 +188,36 @@ namespace DAoCToolSuite.CharacterTool
                     string? iniContents = ParseDirectory.GetFileContents(directoryPath + $"\\{settingsBackup.INIFileName}");
                     string? ignContents = ParseDirectory.GetFileContents(directoryPath + $"\\{settingsBackup.IGNFileName}");
 
+                    string? currentIniContents = SelectedRow?.Cells["INIData"]?.Value?.ToString();
+                    string? currentIgnContents = SelectedRow?.Cells["IGNData"]?.Value?.ToString();
+
+                    if (iniContents != currentIniContents)
+                        Logger.Debug($"Updating INI data in database");
+
                     if (iniContents is not null)
+                    {
                         settingsBackup.INIData = @iniContents;
+                    }
                     else
-                        settingsBackup.INIData = SelectedRow?.Cells["INIData"]?.Value?.ToString();
+                    {
+                        Logger.Error($"Could not read INI data from {$"{directoryPath}\\{settingsBackup.INIFileName}"}");
+                        Logger.Debug("Writting original INI data back to DB");
+                        settingsBackup.INIData = @currentIniContents;
+                    }
+
+                    if (ignContents != currentIgnContents)
+                        Logger.Debug($"Updating IGN data in database");
 
                     if (ignContents is not null)
+                    {
                         settingsBackup.IGNData = @ignContents;
+                    }
                     else
-                        settingsBackup.IGNData = SelectedRow?.Cells["IGNData"]?.Value?.ToString();
+                    {
+                        Logger.Error($"Could not read IGN data from {$"{directoryPath}\\{settingsBackup.IGNFileName}"}");
+                        Logger.Debug("Writting original IGN data back to DB");
+                        settingsBackup.IGNData = @currentIgnContents;
+                    }
                 }
                 else
                 {
@@ -210,10 +230,12 @@ namespace DAoCToolSuite.CharacterTool
                 int dbIndex = int.TryParse(dbIndexStr, out dbIndex) ? dbIndex : -1;
                 if (dbIndex < 0)
                 {
+                    Logger.Error("Could not find the an entry in the Database matching the selected Row.");
                     return;
                 }
 
                 SqliteDataAccess.UpdateEntryByIndex(dbIndex, settingsBackup);
+                Logger.Debug("Successfully wrote updated entry to DB");
                 Close();
             }
             catch (Exception ex)

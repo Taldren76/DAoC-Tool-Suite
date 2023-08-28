@@ -115,7 +115,7 @@ namespace DAoCToolSuite.ChimpTool.Json
             //TODO: Make this load the copy from settings.
             Classes = new List<string>()
             {
-                "Animist","Bainshee","Bard","Blademaster","Champion","Druid","Eldritch","Enchanter","Enchantress","Hero","Mauler","Mentalist","Nightshade","Ranger","Valewalker","Vampiir","Warden",
+                "Animist","Bainshee","Bard","Blademaster","Champion","Druid","Eldritch","Enchanter","Enchantress","Hero","Heroine","Mauler","Mentalist","Nightshade","Ranger","Valewalker","Vampiir","Warden",
                 "Armsman","Armswoman","Cabalist","Cleric","Friar","Heretic","Infiltrator","Mercenary","Minstrel","Necromancer","Paladin","Reaver","Scout","Sorcerer", "Sorceress", "Theurgist","Wizard",
                 "Berserker","Bonedancer","Healer","Hunter","Huntress","Runemaster","Savage","Shadowblade","Shaman","Skald","Spiritmaster","Thane","Valkyrie","Warlock","Warrior"
             };
