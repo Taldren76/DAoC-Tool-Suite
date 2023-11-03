@@ -1,9 +1,15 @@
-**DAoC Tool Suite v1.0.1 Release**
+**DAoC Tool Suite v1.1.1 Release**
 
 Instructions: [DAoCToolsInstructions.docx](https://github.com/Taldren76/DAoC-Tool-Suite/files/11950965/DAoCToolsInstructions.docx)
 
+Note: If you have an issue launching DAoCTools please try and run the DAoCToolsResetSettings.exe and try again.
+
 **Change Log**
 ---
+DAoC Tool Suite 1.1.1 Release
+---
+Changes
+1. Can now add female hunters to the database.
 
 DAoC Tool Suite 1.1.0 Release
 ---
