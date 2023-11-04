@@ -2,7 +2,7 @@
 
 Instructions: [DAoCToolsInstructions.docx](https://github.com/Taldren76/DAoC-Tool-Suite/files/11950965/DAoCToolsInstructions.docx)
 
-Note: If you have an issue launching DAoCTools please try and run the DAoCToolsResetSettings.exe and try again.
+$\textcolor{red}{\textsf{NOTE: If you have an issue launching DAoCTools please try and run the DAoCToolsResetSettings.exe and try again.}}$
 
 **Change Log**
 ---
